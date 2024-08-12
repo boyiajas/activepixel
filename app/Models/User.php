@@ -22,6 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_number',
+        'status',
+        'position',
+        'last_login',
     ];
 
     /**
@@ -43,4 +47,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    /* protected static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $getUser = self::orderBy('id', 'desc')->first();
+
+            if ($getUser) {
+                $latestID = intval(substr($getUser->id, 3));
+                $nextID = $latestID + 1;
+            } else {
+                $nextID = 1;
+            }
+            $model->id = 'KH_' . sprintf("%03s", $nextID);
+            while (self::where('id', $model->id)->exists()) {
+                $nextID++;
+                $model->id = 'KH_' . sprintf("%03s", $nextID);
+            }
+        });
+    } */
 }

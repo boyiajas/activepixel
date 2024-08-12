@@ -21,14 +21,15 @@ class PermissionsTableSeeder extends Seeder
 
         // Picture permissions
         Permission::create(['name' => 'view pictures']);
-        Permission::create(['name' => 'upload pictures']);
+        Permission::create(['name' => 'create pictures']);
         Permission::create(['name' => 'edit pictures']);
         Permission::create(['name' => 'delete pictures']);
 
         // Order permissions
         Permission::create(['name' => 'view orders']);
-        Permission::create(['name' => 'process orders']);
-        Permission::create(['name' => 'manage orders']);
+        Permission::create(['name' => 'create orders']);
+        Permission::create(['name' => 'edit orders']);
+        Permission::create(['name' => 'delete orders']);
 
         // Event permissions
         Permission::create(['name' => 'view events']);
