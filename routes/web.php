@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,13 @@ Auth::routes();
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::controller(PageController::class)->group(function () {
+    Route::get('/contact-us', 'contact');
+    Route::get('/about-us', 'about');
+});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

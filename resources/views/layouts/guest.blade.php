@@ -4,7 +4,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>Home Login</title>
+	<title>
+		@yield('title')
+	</title>
 	<link rel="shortcut icon" type="image/x-icon" href="{{URL::to('assets/img/favicon.png')}}">
 	<link rel="stylesheet" href="{{URL::to('assets/css/bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{URL::to('assets/plugins/fontawesome/css/fontawesome.min.css')}}">
@@ -19,6 +21,19 @@
 
 <body>
 	@yield('content')
+
+	<!-- the narbar content start here --->
+
+
+
+
+	<!-- the navbar content ends here -->
+
+
+	<!-- the footer content goes in here -->
+
+	<!-- the footer content ends here -->
+
 
 	<script src="{{URL::to('assets/js/jquery-3.5.1.min.js')}}"></script>
 	<script src="{{URL::to('assets/js/popper.min.js')}}"></script>
