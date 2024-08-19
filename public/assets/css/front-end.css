@@ -15,6 +15,10 @@ body, html {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better card effect */
 }
 
+h4{
+    font-weight: bold;
+}
+
 
 
 /* Style for the banner image */
