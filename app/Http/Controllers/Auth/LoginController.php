@@ -85,8 +85,13 @@ class LoginController extends Controller
             Session::put('department', $user->department);
 
             Toastr::success('Login successfully :)','Success');
+
+            if(Auth::user()->hasRole('user')){
+                return redirect()->intended('customer/dashboard');
+            }
            
-            return redirect()->intended('dashboard');
+            return redirect()->intended('admin/dashboard');
+
         } else {
             Toastr::error('fail, WRONG USERNAME OR PASSWORD :)','Error');
             return redirect('login');

@@ -17,7 +17,7 @@
                                     <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Enter Email" value="{{ old('email') }}">
                                 </div>
                                 <div class="form-group" hidden>
-                                    <input type="text" class="form-control @error('role_name') is-invalid @enderror" name="role_name" value="Normal User">
+                                    <input type="text" class="form-control @error('role_name') is-invalid @enderror" name="role_name" value="user">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Enter Password">

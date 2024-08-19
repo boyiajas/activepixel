@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('position')->nullable();
             $table->string('last_login')->nullable();
+            $table->json('billing_information')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

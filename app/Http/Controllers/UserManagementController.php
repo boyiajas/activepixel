@@ -19,7 +19,12 @@ class UserManagementController extends Controller
     /** user list */
     public function userList()
     {
-        return view('usermanagement.listuser');
+        $entity = 'users';
+        $entityName = 'Users';
+        $columns = ['id', 'name', 'email', 'last_login', 'phone_number', 'role_name', 'status']; // Customize columns as needed
+
+        return view('admin.templates.form-list-template', compact('entity', 'entityName', 'columns'));
+        //return view('usermanagement.listuser');
     }
 
      /** edit record */

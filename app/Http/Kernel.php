@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        'sync.guest.cart' => \App\Http\Middleware\SyncGuestCart::class,
     ];
 }
