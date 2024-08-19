@@ -1,10 +1,118 @@
-/* about us page style start here */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+.card{
+    background-color: white;
+    border-radius: 5px; /* Adjust the radius as needed */
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1355px; /* Adjust width as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better card effect */
+}
+
+h4{
+    font-weight: bold;
+}
 
 
-/* about us page style ends here */
 
+/* Style for the banner image */
 
-/* contact us page style start here */
+.container {
+    
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
+h1 {
+    font-size: 36px;
+    color: #333;
+    font-weight: bold;
+}
 
+p {
+    font-size: 18px;
+    color:#333;
+}
+.icon-section {
+    display: flex;
+    justify-content: right; /* Align the content to the right */
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.icon-box {
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    width: 200px;
+    margin: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    justify-content: right;
+}
+
+.icon-box img {
+    width: 80px;
+    height: 80px;
+     /* Make images rounded */
+}
+
+.icon-box h3 {
+    font-size: 20px;
+    margin-top: 15px;
+    color: #333;
+}
+
+.icon-box p {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Grid layout for two columns */
+.icon-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Create two equal columns */
+    
+    justify-content:right ; /* Align the grid to the right */
+}
+.about-section {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.about-content {
+    flex: 1;
+    
+}
+
+.about-image img{
+    width: 150px; /* Adjust size as needed */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 15px; /* Rounded edges */
+    object-fit: cover;
+}
+
+.rounded-image {
+    width: 230px; /* Adjust the size as needed */
+    height: 150px; /* Keeps the aspect ratio of the image */
+    border-radius: 15px; /* Rounds the corners, adjust the value as needed */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.row {
+    margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+    .icon-section {
+        grid-template-columns: 1fr; /* Stack icons in one column on smaller screens */
+        justify-content: center; /* Center align on smaller screens */
+    }
+}
 /* contact us page style ends here */

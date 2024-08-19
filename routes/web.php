@@ -46,6 +46,8 @@ Route::get('/', function () {
 Route::controller(PageController::class)->group(function () {
     Route::get('/contact-us', 'contact');
     Route::get('/about-us', 'about');
+    Route::get('/terms-and-conditions', 'terms');
+    Route::get('/privacy-policy', 'privacy');
 });
 
 // Category Routes
