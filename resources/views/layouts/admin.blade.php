@@ -13,14 +13,18 @@
 	<link rel="stylesheet" href="{{ URL::to('assets/css/feathericon.min.css') }}">
 	<link rel="stylehseet" href="https://cdn.oesmith.co.uk/morris-0.5.1.css">
 	<link rel="stylesheet" href="{{ URL::to('assets/plugins/morris/morris.css') }}">
-	<link rel="stylesheet" href="{{ URL::to('assets/css/style.css') }}"> </head>
+	<link rel="stylesheet" href="{{ URL::to('assets/css/style.css') }}"> 
+	<link rel="stylesheet" href="{{ URL::to('assets/css/animate.css') }}"> 
 	<link rel="stylesheet" type="text/css" href="{{ URL::to('assets/css/bootstrap-datetimepicker.min.css') }}">
+	
 
 	{{-- message toastr --}}
 	<link rel="stylesheet" href="{{ URL::to('assets/css/toastr.min.css') }}">
 	<script src="{{ URL::to('assets/js/toastr_jquery.min.js') }}"></script>
 	<script src="{{ URL::to('assets/js/toastr.min.js') }}"></script>
 
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js" defer></script>
+</head>
 <body>
 	<div class="main-wrapper">
 		<div class="header">
@@ -121,7 +125,7 @@
 		@include('sidebar.menusidebar')
         @yield('content')
 	</div>
-	<script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+	<!-- {{-- <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> --}} -->
 	<script src="{{ URL::to('assets/js/jquery-3.5.1.min.js') }}"></script>
 	<script src="{{ URL::to('assets/js/popper.min.js') }}"></script>
 	<script src="{{ URL::to('assets/js/bootstrap.min.js') }}"></script>
@@ -137,6 +141,7 @@
 	<script src="{{ URL::to('assets/js/chart.morris.js') }}"></script>
 
 	@yield('script')
+	@yield('style')
 	
 </body>
 </html>

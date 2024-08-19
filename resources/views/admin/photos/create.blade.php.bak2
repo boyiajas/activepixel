@@ -1,0 +1,306 @@
+@extends('layouts.admin')
+@section('content')
+    {{-- message --}}
+    {!! Toastr::message() !!}
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title mt-5">Upload Photo</h3>
+                    </div>
+                </div>
+            </div>
+            <form action="{{ route('admin.photos.store') }}" method="POST" id="photo-upload-form" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row formtype">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Photo Name</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Race Number</label>
+                                    <input type="number" class="form-control @error('race_number') is-invalid @enderror" name="race_number" value="{{ old('race_number') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input type="text" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Stock Status</label>
+                                    <select class="form-control @error('stock_status') is-invalid @enderror" name="stock_status">
+                                        <option value="in_stock" {{ old('stock_status') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
+                                        <option value="out_of_stock" {{ old('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Downloadable</label>
+                                    <input type="checkbox" name="downloadable" value="1" {{ old('downloadable') ? 'checked' : '' }}>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Update Date</label>
+                                    <input type="date" class="form-control @error('update_date') is-invalid @enderror" name="update_date" value="{{ old('update_date') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Published Date</label>
+                                    <input type="date" class="form-control @error('published_date') is-invalid @enderror" name="published_date" value="{{ old('published_date') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dropzone-container">
+                        <div id="file-uploadd" class="dropzone"></div>
+                        <img id="lead_image" src="" alt="Uploaded Image" style="display:none;" />
+                        <input type="hidden" name="lead_image" value="" style="display:none;"/>
+                        <div id="lead_url"></div>
+                    </div>
+                    
+                    <!-- Lead Image Upload Section -->
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label>Upload Lead Image (Only one image)</label>
+                            <div class="dropzone" id="lead-image-dropzone"></div>
+                            <input type="hidden" name="lead_image_path" id="lead-image-path">
+                        </div>
+                        <div class="col-md-3">
+                            <div id="fileUpload" class="dropzone"></div>
+                        </div>
+                    </div>
+
+                    <!-- Regular Images Upload Section -->
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label>Upload Regular Images (Multiple images allowed)</label>
+                            <div class="dropzone" id="regular-images-dropzone"></div>
+                            <input type="hidden" name="regular_images_paths[]" id="regular-images-paths">
+                        </div>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-primary buttonedit1">Upload Photos</button>
+            </form>
+        </div>
+    </div>
+
+    @section('script')
+    <!-- Dropzone.js script -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+
+    <script>
+        
+        
+        Dropzone.options.fileUploadd = {
+            url: "{{ route('admin.photos.store') }}",
+            method: 'post',
+            maxFiles: 1,
+            maxFilesize: 2, // MB
+            acceptedFiles: 'image/*',
+            dictDefaultMessage: "Drag and drop or click to upload the lead image",
+            addRemoveLinks: true,
+            dictRemoveFile: "Remove",
+            previewsContainer: "#lead_url",
+            thumbnailWidth: 120,
+            thumbnailHeight: 120,
+            success: function(file, response) {
+                document.getElementById('lead_image').value = response.filePath;
+            },
+            error: function(file, response) {
+                console.error(response);
+            },
+            init: function() {
+                this.on("maxfilesexceeded", function(file) {
+                    this.removeAllFiles();
+                    this.addFile(file);
+                });
+            }
+        };
+
+
+        // Lead Image Dropzone Configuration
+        Dropzone.options.leadImageDropzone = {
+            url: "{{ route('admin.photos.store') }}",
+            method: 'post',
+            maxFiles: 1,
+            maxFilesize: 2, // MB
+            acceptedFiles: 'image/*',
+            dictDefaultMessage: "Drag and drop or click to upload the lead image",
+            addRemoveLinks: true,
+            dictRemoveFile: "Remove",
+            previewsContainer: "#fileUpload",
+            thumbnailWidth: 120,
+            thumbnailHeight: 120,
+            success: function(file, response) {
+                document.getElementById('lead-image-path').value = response.filePath;
+            },
+            error: function(file, response) {
+                console.error(response);
+            },
+            init: function() {
+                this.on("maxfilesexceeded", function(file) {
+                    this.removeAllFiles();
+                    this.addFile(file);
+                });
+            }
+        };
+
+            
+        // Regular Images Dropzone Configuration
+        Dropzone.options.regularImagesDropzone = {
+            url: "{{ route('admin.photos.store') }}",
+            method: 'post',
+            maxFilesize: 2, // MB
+            acceptedFiles: 'image/*',
+            dictDefaultMessage: "Drag and drop or click to upload regular images",
+            addRemoveLinks: true,
+            dictRemoveFile: "Remove",
+            success: function(file, response) {
+                let pathsInput = document.getElementById('regular-images-paths');
+                let currentPaths = pathsInput.value ? JSON.parse(pathsInput.value) : [];
+                currentPaths.push(response.filePath);
+                pathsInput.value = JSON.stringify(currentPaths);
+            },
+            error: function(file, response) {
+                console.error(response);
+            },
+            removedfile: function(file) {
+                // Handle file removal logic if needed
+                let pathsInput = document.getElementById('regular-images-paths');
+                let currentPaths = pathsInput.value ? JSON.parse(pathsInput.value) : [];
+                currentPaths = currentPaths.filter(path => path !== file.upload.filename);
+                pathsInput.value = JSON.stringify(currentPaths);
+
+                // Remove the file preview element
+                var fileRef;
+                return (fileRef = file.previewElement) != null ? fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            }
+        };
+    </script>
+    @endsection
+
+    @section('style')
+    <!-- Custom Dropzone Styles -->
+    <style>
+
+.dropzone-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    border: 2px dashed #007bff;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.dz-message {
+    text-align: center;
+    font-size: 18px;
+    color: #6c757d;
+    margin-top: 20px;
+}
+
+.dropzone {
+    border: none;
+    background: transparent;
+}
+
+#lead_image {
+    margin-top: 20px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+#lead_url {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #28a745;
+    text-align: center;
+}
+
+
+
+
+
+
+        .dropzone {
+            border: 2px dashed #007bff;
+            border-radius: 5px;
+            background: #f8f9fa;
+            padding: 20px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .dropzone .dz-message {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .dropzone.dz-started .dz-message {
+            display: none;
+        }
+
+        .dropzone .dz-preview {
+            display: inline-block;
+            margin: 10px;
+            position: relative;
+        }
+
+        .dropzone .dz-preview .dz-image {
+            width: 120px;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .dropzone .dz-preview .dz-remove {
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            color: #dc3545;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: white;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .dropzone .dz-preview .dz-success-mark,
+        .dropzone .dz-preview .dz-error-mark {
+            display: none;
+        }
+
+        .dropzone .dz-preview .dz-filename {
+            display: none;
+        }
+
+        .dropzone .dz-preview .dz-file-icon {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+    </style>
+    @endsection
+@endsection

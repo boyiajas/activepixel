@@ -20,6 +20,8 @@
 	<script src="{{ URL::to('assets/js/toastr.min.js') }}"></script>
 
 <body>
+	{{-- message --}}
+	{!! Toastr::message() !!}
 	@yield('content')
 
 	<!-- the narbar content start here --->
