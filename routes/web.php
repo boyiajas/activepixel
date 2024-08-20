@@ -158,7 +158,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth'], function()
     // -----------------------------login----------------------------------------//
     Route::controller(LoginController::class)->group(function () {
         Route::get('/login', 'login')->name('login');
-        Route::post('/login', 'authenticate');
+        Route::post('/login', 'authenticate')->middleware('sync.guest.cart');
         Route::get('/logout', 'logout')->name('logout');
     });
 
