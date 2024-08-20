@@ -260,110 +260,15 @@
         <div class="footer-section">
             <h3>FOLLOW US</h3>
             <div class="social-icons">
-                <a href="#"><img src="instagram_icon.png" alt="Instagram"></a>
-                <a href="#"><img src="facebook_icon.png" alt="Facebook"></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
             </div>
         </div>
     </div>
     <div class="footer-bottom">
         <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath.jpeg</p>
     </div>
-</footer>
-
-<style>
-   footer {
-    color: #fff;
-    text-align: center;
-    font-family: Arial, sans-serif;
-}
-
-.footer-container {
-    padding: 20px;
-    background-color: #0097b2;
-    display: flex;
-    justify-content: space-around;
-    align-items: stretch; /* Ensures all sections have the same height */
-    flex-wrap: wrap;
-}
-
-.footer-section {
-    text-align: center;
-    padding: 0 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.footer-section h3 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    text-transform: uppercase;
-}
-
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1; /* Makes the ul take up available space */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.footer-section ul li {
-    margin-bottom: 10px;
-}
-
-.footer-section ul li a {
-    color: #5ce1e6;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.footer-section ul li a:hover {
-    text-decoration: underline;
-}
-
-.footer-divider {
-    width: 1px;
-    height: auto; /* The divider will now adjust to the height of the container */
-    background-color: #ffffff;
-    margin: 0 20px;
-}
-
-.social-icons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1; /* Ensures the social icons take up available space */
-}
-
-.social-icons a {
-    margin: 0 10px;
-    display: inline-block;
-}
-
-.social-icons img {
-    width: 30px;
-    height: 30px;
-}
-
-.footer-bottom {
-    padding: 20px;
-    font-size: 14px;
-    background-color: #5ce1e6;
-}
-
-.footer-bottom p {
-    margin: 0;
-}
-
-
-
-
-</style>
-    
+</footer>  
 
 	<!-- the footer content ends here -->
 
