@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
+use Illuminate\Support\Str;
 
 
 class PhotoController extends Controller
@@ -271,4 +272,26 @@ class PhotoController extends Controller
             return redirect()->back();
         }
     }
+
+    public function individualPhoto(Photo $photo)
+    {
+        //$photo = Photo::with(['lead_image', 'regular_images'])->findOrFail($photo);
+        $regular_images = $photo->regularImages(); 
+        $lead_image = $photo->leadImage()?->file_path;
+
+        // Fetch 4 recommended photos from the same event
+        $recommendedPhotos = Photo::where('event_id', $photo->event_id)
+                                ->where('id', '!=', $photo->id)
+                                ->with('lead_image')
+                                ->take(4)
+                                ->get();
+
+        // Check if guest token exists in session, if not, generate one
+        if (!session()->has('guest_token')) {
+            session(['guest_token' => Str::uuid()]);
+        }
+
+        return view('photos.show', compact('photo', 'recommendedPhotos', 'lead_image', 'regular_images'));
+    }
+
 }
