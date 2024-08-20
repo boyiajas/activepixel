@@ -46,7 +46,11 @@ Route::get('/', function () {
 Route::controller(PageController::class)->group(function () {
     Route::get('/contact-us', 'contact');
     Route::get('/about-us', 'about');
+    Route::get('/terms-and-conditions', 'terms');
+    Route::get('/privacy-policy', 'privacy');
 });
+
+Route::get('/individual-photos/{photo}', [PhotoController::class, 'individualPhoto'])->name('individual.photos');
 
 // Category Routes
 Route::resource('categories', CategoryController::class)->only(['index', 'show']);
@@ -90,7 +94,7 @@ Route::group(['middleware'=>'auth'],function()
 Route::group(['middleware' => ['sync.guest.cart']], function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 });
 
   // Admin Routes
@@ -127,8 +131,8 @@ Route::middleware(['auth', 'role:user|admin|manager|photographer'])->group(funct
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
     //Route::resource('cart', CartController::class)->only(['index']);
-    Route::post('cart/add/{photo}', [CartController::class, 'add'])->name('cart.add');
-    Route::delete('cart/remove/{photo}', [CartController::class, 'remove'])->name('cart.remove');
+    //Route::post('cart/add/{photo}', [CartController::class, 'add'])->name('cart.add');
+    //Route::delete('cart/remove/{photo}', [CartController::class, 'remove'])->name('cart.remove');
 
     // Checkout and Payment
     Route::prefix('checkout')->group(function () {

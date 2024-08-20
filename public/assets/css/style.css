@@ -2330,9 +2330,9 @@ html.menu-opened body {
 .login-wrapper .loginbox .login-left {
 	align-items: center;
 	background: #009688;
-	background: -moz-linear-gradient(-45deg, #009688 0%, #06c6b4 52%, #009688 100%, #06c6b4 100%);
-	background: -webkit-linear-gradient(-45deg, #009688 0%, #06c6b4 52%, #009688 100%, #06c6b4 100%);
-	background: linear-gradient(135deg, #009688 0%, #06c6b4 52%, #009688 100%, #06c6b4 100%);
+	background: -moz-linear-gradient(-45deg, #0097b2 0%, #5ce1e6 52%, #0097b2 100%, #5ce1e6 100%);
+	background: -webkit-linear-gradient(-45deg, #0097b2 0%, #5ce1e6 52%, #0097b2 100%, #5ce1e6 100%);
+	background: linear-gradient(135deg, #0097b2 0%, #5ce1e6 52%, #0097b2 100%, #5ce1e6 100%);
 	border-radius: 6px 0 0 6px;
 	flex-direction: column;
 	justify-content: center;

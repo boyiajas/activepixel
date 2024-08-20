@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Brian2694\Toastr\Facades\Toastr;
 
 class CartController extends Controller
 {
@@ -50,27 +51,54 @@ class CartController extends Controller
         $photoId = $request->photo_id;
         $quantity = $request->quantity ?? 1;
 
-        if (Auth::check()) {
-            // User is logged in
-            $cartItem = Cart::firstOrCreate([
-                'user_id' => Auth::id(),
-                'photo_id' => $photoId,
-            ]);
-        } else {
-            // User is a guest
-            $guestToken = session('guest_token', Cart::generateGuestToken());
-            session(['guest_token' => $guestToken]);
+        try {
+            if (Auth::check()) {
+                // User is logged in
+                $cartItem = Cart::firstOrCreate([
+                    'user_id' => Auth::id(),
+                    'photo_id' => $photoId,
+                ]);
+            } else {
+                // User is a guest
+                $guestToken = session('guest_token', Cart::generateGuestToken());
+                session(['guest_token' => $guestToken]);
 
-            $cartItem = Cart::firstOrCreate([
-                'guest_token' => $guestToken,
-                'photo_id' => $photoId,
-            ]);
+                $cartItem = Cart::firstOrCreate([
+                    'guest_token' => $guestToken,
+                    'photo_id' => $photoId,
+                ]);
+            }
+
+            $cartItem->quantity += $quantity;
+            $cartItem->save();
+
+            Toastr::success('Item added to cart.','Success');
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+
+            Toastr::error('Item added to cart fail :)','Error');
+            return redirect()->back();
         }
+    }
 
-        $cartItem->quantity += $quantity;
-        $cartItem->save();
+    public function removeFromCart(Request $request, Cart $cart)
+    {
+        try{
+            if($cart->quantity > 1){
+                $cart->quantity -= 1;
+                $cart->save();
+            }else{  
+                $cart->delete();
+            }
 
-        return redirect()->back()->with('success', 'Item added to cart.');
+            Toastr::success('One Item deleted from cart.','Success');
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+            Toastr::error('Item deleted from cart fail :)','Error');
+            return redirect()->back();
+        }
     }
 
     /**
