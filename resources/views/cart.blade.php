@@ -36,7 +36,9 @@
                                 <td>
                                     <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                        @method('DELETE')
+                                        
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </td>
                                 <td>R{{ number_format($item->photo->price * $item->quantity, 2) }}</td>

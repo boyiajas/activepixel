@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->uuid('guest_token')->nullable();
             $table->foreignId('photo_id')->constrained()->onDelete('cascade');
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable()->default(0);
             $table->timestamps();
         });
     }

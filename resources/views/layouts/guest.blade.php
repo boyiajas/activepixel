@@ -78,7 +78,22 @@
         background-color: transparent; /* Ensure no background color is applied */
     }
 		
-    
+    .cart{
+        background-color: #009ce7;
+        background-color: #fff;
+        color: #009ce7;
+        border-radius: 15px;
+        padding: 3px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-shadow: 2px 2px 2px 2px #0086c6;
+    }
+    .cart i, span{
+        color: #009ce7;
+    }
+    .cart span{
+        font-size: 20px;
+    }
 	
     </style>
 </head>
@@ -112,8 +127,31 @@
                 </li>
                 <li class="nav-item">
 
-                    <a class="nav-link" href="/cart">
-					<i class="fa-solid fa-cart-shopping"></i>
+                    <a class="nav-link cart" href="/cart">
+                        
+                            <i class="fas fa-shopping-cart"></i> 
+                            <span>
+                                @php
+                                    $cartItems = []; 
+                                    $totalPrice = 0;
+
+                                    if (Auth::check()) {
+                                        // Get cart items for logged-in user
+                                        $cartItems = App\Models\Cart::where('user_id', Auth::id())->get();
+                                    } else {
+                                        // Get cart items for guest user
+                                        $guestToken = session('guest_token');
+                                        if ($guestToken) {
+                                            $cartItems = App\Models\Cart::where('guest_token', $guestToken)->get();
+                                        }
+                                    }
+                                    $qty = 0;
+                                    foreach($cartItems as $item){
+                                        $qty += $item->quantity;
+                                    }
+                                    echo $qty;
+                                @endphp 
+                            </span>
                         <!-- <img src="assets/img/cart.jpg" alt="Transparent Image" class="transparent-image" style="height: 24px;"> -->
                     </a>
                 </li>
