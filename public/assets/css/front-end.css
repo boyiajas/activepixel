@@ -13,12 +13,20 @@ body, html {
     margin: 20px auto;
     max-width: 1355px; /* Adjust width as needed */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better card effect */
+    z-index: 1;
 }
 
 h4{
     font-weight: bold;
+    font-size: 24px;
+    font-family: sans-serif
 }
 
+h5{
+    font-weight: bold;
+    font-size: 16px;
+    font-family: sans-serif
+}
 
 
 /* Style for the banner image */
@@ -36,8 +44,9 @@ h1 {
 }
 
 p {
-    font-size: 18px;
+    font-size: 16px;
     color:#333;
+    font-family: sans-serif;
 }
 .icon-section {
     display: flex;
