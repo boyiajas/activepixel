@@ -159,6 +159,70 @@
         </div>
     </nav>
 
+    <style>
+        .crumb {
+            background-image: url('assets/img/runners.jpeg');
+            filter: brightness(0.5);
+            height: 200px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            animation: fadeInImage 2s ease-in forwards;
+            z-index: 1;
+
+        }
+
+        @keyframes fadeInImage {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+            padding: 10px 20px;
+            /* Optional: Adds some padding around the text */
+            /* Optional: Rounds the corners of the background */
+        }
+
+        .overlay-text h1 {
+            font-size: 70px;
+            /* Adjust the font size as needed */
+            margin: 0;
+            /* Removes default margin */
+            font-family: 'Arial', sans-serif;
+            /* Optional: Customize the font */
+            color: white;
+            font-weight: bold;
+        }
+
+        .about-icon-box {
+            width: 300px;
+        }
+
+        .about-icon-box img {
+            box-shadow: 2px 2px 2px 2px #aaa;
+            border-radius: 15px;
+            width: 200px;
+            height: 150px;
+        }
+    </style>
+    <div class="crumb">
+        <div class="overlay-text">
+            <h1>@yield('crumb-overlay-text') </h1>
+        </div>
+    </div>
+
 	@yield('content')
 
     <!-- Bootstrap JS and dependencies -->
@@ -171,6 +235,40 @@
 
 
 	<!-- the footer content goes in here -->
+    
+    <footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>MORE INFO</h3>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-divider"></div> <!-- Divider -->
+        <div class="footer-section">
+            <h3>LEGALS & HELP</h3>
+            <ul>
+                <li><a href="#">Terms & Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">POPIA</a></li>
+                <li><a href="#">Need Help?</a></li>
+            </ul>
+        </div>
+        <div class="footer-divider"></div> <!-- Divider -->
+        <div class="footer-section">
+            <h3>FOLLOW US</h3>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath.jpeg</p>
+    </div>
+</footer>  
 
 	<!-- the footer content ends here -->
 

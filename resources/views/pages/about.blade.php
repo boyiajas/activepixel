@@ -2,69 +2,7 @@
 @section('title') About us @stop
 @section('content')
 
-<style>
-    .crumb {
-        background-image: url('assets/img/runners.jpeg');
-        filter: brightness(0.5);
-        height: 300px;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        animation: fadeInImage 2s ease-in forwards;
-        z-index: 1;
-
-    }
-
-    @keyframes fadeInImage {
-        0% {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    .overlay-text {
-        position: absolute;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        text-align: center;
-        z-index: 2;
-        padding: 10px 20px;
-        /* Optional: Adds some padding around the text */
-        /* Optional: Rounds the corners of the background */
-    }
-
-    .overlay-text h1 {
-        font-size: 70px;
-        /* Adjust the font size as needed */
-        margin: 0;
-        /* Removes default margin */
-        font-family: 'Arial', sans-serif;
-        /* Optional: Customize the font */
-        color: white;
-        font-weight: bold;
-    }
-
-    .about-icon-box {
-        width: 300px;
-    }
-
-    .about-icon-box img {
-        box-shadow: 2px 2px 2px 2px #aaa;
-        border-radius: 15px;
-        width: 200px;
-        height: 150px;
-    }
-</style>
-<div class="crumb">
-    <div class="overlay-text">
-        <h1>About Us</h1>
-    </div>
-</div>
+@section('crumb-overlay-text') About Us @stop
 
 <div class="card">
 
