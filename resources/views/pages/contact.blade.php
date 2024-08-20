@@ -1,76 +1,106 @@
 @extends('layouts.guest')
-@section('title') Contact us @stop
+@section('title', 'Contact Us')
+
 @section('content')
-
-<h3>contact us</h3>
-<div class="form-container">
-        <h2>Send Us A Message</h2>
-        <p class="subheading">All fields marked with * are required</p>
-        <form>
-            <div class="form-group">
-                <label for="first-name">Name <span>*</span></label>
-                <div class="name-fields">
-                    <input type="text" id="first-name" name="first-name" placeholder="First" required>
-                    <input type="text" id="last-name" name="last-name" placeholder="Last" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="contact-number">Contact Number</label>
-                <input type="text" id="contact-number" name="contact-number" placeholder="Contact Number">
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email <span>*</span></label>
-                <input type="email" id="email" name="email" placeholder="Email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="message">Comment or Message <span>*</span></label>
-                <textarea id="message" name="message" placeholder="Comment or Message" required></textarea>
-            </div>
-
-            <button type="submit">Submit</button>
-        </form>
+@section('crumb-overlay-text') Contact Us @stop
+<div class="card">
+<div class="contact-container">
+    <div class="contact-header">
+        
+        <h1>CONTACT US</h1>
+        <p>Send us a mail, we would love to hear from you!</p>
+        <p>Email: info@activepixel.com</p>
     </div>
-
-</body>
-
-@endsection<div class="info-section">
-            <div class="info-item">
-                <img src="location-icon.png" alt="Address Icon">
-                <div>
-                    <h3>ADDRESS</h3>
-                    <p>14 Bamboo Lane, New Germany, Kwa-Zulu Natal, South Africa</p>
-                </div>
-            </div>
-            <div class="info-item">
-                <img src="phone-icon.png" alt="Phone Icon">
-                <div>
-                    <h3>PHONE</h3>
-                    <p>(+27) 73 341 8052</p>
-                </div>
-            </div>
-            <div class="info-item">
-                <img src="email-icon.png" alt="Email Icon">
-                <div>
-                    <h3>Email</h3>
-                    <p>info@activepixel.co.za</p>
-                </div>
-            </div>
-            <div class="info-item">
-                <img src="website-icon.png" alt="Website Icon">
-                <div>
-                    <h3>WEBSITE</h3>
-                    <p>www.activepixel.co.za</p>
-                </div>
-            </div>
-            <div class="social-media">
-                <h3>Follow Us</h3>
-                <div class="social-icons">
-                    <img src="facebook-icon.png" alt="Facebook Icon">
-                    <img src="instagram-icon.png" alt="Instagram Icon">
-                </div>
-            </div>
+    
+    <form class="contact-form">
+        <div class="form-group">
+            <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
+            <input type="text" id="last-name" name="last-name" placeholder="Last Name" required>
         </div>
-    </div>
+        
+        <div class="form-group">
+            <input type="text" id="contact-number" name="contact-number" placeholder="Contact Number">
+            <input type="email" id="email" name="email" placeholder="Email Address" required>
+        </div>
+        
+        <div class="form-group">
+            <textarea id="message" name="message" placeholder="Your Message..." required></textarea>
+        </div>
+        
+        <button type="submit">SUBMIT</button>
+    </form>
+</div>
+</div> 
+<style>
+    .contact-container {
+        max-width: 800px;
+        margin: 0 auto; /* Center the container horizontally */
+        padding: 20px;
+        text-align: center; /* Center text and elements inside the container */
+    }
+
+    .contact-header h1 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .contact-header p {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .contact-form {
+        margin-top: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 48%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-group textarea {
+        width: 100%;
+        height: 150px;
+        resize: none;
+    }
+
+    button[type="submit"] {
+        background-color: #5ce1e6;
+        color: white;
+        padding: 15px 30px;
+        font-size: 18px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0097b2;
+    }
+
+    @media (max-width: 768px) {
+        .form-group {
+            flex-direction: column;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+@endsection
+

@@ -121,6 +121,70 @@
         </div>
     </nav>
 
+    <style>
+        .crumb {
+            background-image: url('assets/img/runners.jpeg');
+            filter: brightness(0.5);
+            height: 200px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            animation: fadeInImage 2s ease-in forwards;
+            z-index: 1;
+
+        }
+
+        @keyframes fadeInImage {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+            padding: 10px 20px;
+            /* Optional: Adds some padding around the text */
+            /* Optional: Rounds the corners of the background */
+        }
+
+        .overlay-text h1 {
+            font-size: 70px;
+            /* Adjust the font size as needed */
+            margin: 0;
+            /* Removes default margin */
+            font-family: 'Arial', sans-serif;
+            /* Optional: Customize the font */
+            color: white;
+            font-weight: bold;
+        }
+
+        .about-icon-box {
+            width: 300px;
+        }
+
+        .about-icon-box img {
+            box-shadow: 2px 2px 2px 2px #aaa;
+            border-radius: 15px;
+            width: 200px;
+            height: 150px;
+        }
+    </style>
+    <div class="crumb">
+        <div class="overlay-text">
+            <h1>@yield('crumb-overlay-text') </h1>
+        </div>
+    </div>
+
 	@yield('content')
 
     <!-- Bootstrap JS and dependencies -->
@@ -133,6 +197,135 @@
 
 
 	<!-- the footer content goes in here -->
+    
+    <footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>MORE INFO</h3>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-divider"></div> <!-- Divider -->
+        <div class="footer-section">
+            <h3>LEGALS & HELP</h3>
+            <ul>
+                <li><a href="#">Terms & Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">POPIA</a></li>
+                <li><a href="#">Need Help?</a></li>
+            </ul>
+        </div>
+        <div class="footer-divider"></div> <!-- Divider -->
+        <div class="footer-section">
+            <h3>FOLLOW US</h3>
+            <div class="social-icons">
+                <a href="#"><img src="instagram_icon.png" alt="Instagram"></a>
+                <a href="#"><img src="facebook_icon.png" alt="Facebook"></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath.jpeg</p>
+    </div>
+</footer>
+
+<style>
+   footer {
+    color: #fff;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container {
+    padding: 20px;
+    background-color: #0097b2;
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch; /* Ensures all sections have the same height */
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    text-align: center;
+    padding: 0 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.footer-section h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Makes the ul take up available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.footer-section ul li {
+    margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+    color: #5ce1e6;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer-divider {
+    width: 1px;
+    height: auto; /* The divider will now adjust to the height of the container */
+    background-color: #ffffff;
+    margin: 0 20px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; /* Ensures the social icons take up available space */
+}
+
+.social-icons a {
+    margin: 0 10px;
+    display: inline-block;
+}
+
+.social-icons img {
+    width: 30px;
+    height: 30px;
+}
+
+.footer-bottom {
+    padding: 20px;
+    font-size: 14px;
+    background-color: #5ce1e6;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+
+
+
+</style>
+    
 
 	<!-- the footer content ends here -->
 
