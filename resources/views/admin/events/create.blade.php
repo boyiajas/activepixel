@@ -14,7 +14,7 @@
                     </div>
                 </div>
             </div>
-            <form action="{{ route('admin.events.store') }}" method="POST" id="event-create-form">
+            <form action="{{ route('admin.events.store') }}" method="POST" id="event-create-form" enctype="multipart/form-data">
                 @csrf
                 <div class="row pb-5">
                     <div class="col-lg-12">
