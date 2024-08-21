@@ -239,13 +239,13 @@
             height: 150px;
         }
 
-        .Ecard {
-            background-color: white;
+        .banner {
+            background-color: #0097b2;
             border-radius: 5px;
             /* Adjust the radius as needed */
             padding: 20px;
             margin: 20px auto;
-            max-width: 1355px;
+            max-width: auto;
             /* Adjust width as needed */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             /* Optional: Add shadow for better card effect */
@@ -272,19 +272,19 @@
             <div class="footer-section">
                 <h3>MORE INFO</h3>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about-us">About</a></li>
+                    <li><a href="/contact-us">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-divider"></div> <!-- Divider -->
             <div class="footer-section">
                 <h3>LEGALS & HELP</h3>
                 <ul>
-                    <li><a href="#">Terms & Conditions</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                    <li><a href="/privacy-policy">Privacy Policy</a></li>
                     <li><a href="#">POPIA</a></li>
-                    <li><a href="#">Need Help?</a></li>
+                    <li><a href="/contact-us">Need Help?</a></li>
                 </ul>
             </div>
             <div class="footer-divider"></div> <!-- Divider -->

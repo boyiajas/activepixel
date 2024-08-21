@@ -282,7 +282,7 @@
                     <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                     <li><a href="/privacy-policy">Privacy Policy</a></li>
                     <li><a href="#">POPIA</a></li>
-                    <li><a href="#">Need Help?</a></li>
+                    <li><a href="/contact-us">Need Help?</a></li>
                 </ul>
             </div>
             <div class="footer-divider"></div> <!-- Divider -->

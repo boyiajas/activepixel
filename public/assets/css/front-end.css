@@ -253,11 +253,12 @@ footer {
     font-size: 16px;
     margin-left: 10px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .events-text h2 {
     font-size: 24px;
-    color: #00AFC1;
+    color: white;
     font-weight: bold;
     text-align: center;
 }

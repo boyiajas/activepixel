@@ -15,7 +15,7 @@
     </div>
 </div>
 </div>
-<div class="Ecard">
+<div class="banner">
     <div class="events-text">
         <h2>2024 EVENTS</h2>
     </div>
