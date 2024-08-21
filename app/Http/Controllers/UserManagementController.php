@@ -52,6 +52,7 @@ class UserManagementController extends Controller
                  'name'         => $request->name,
                  'email'        => $request->email,
                  'phone_number' => $request->phone_number,
+                 'position' => $request->position,
                  // Removed 'position' since roles will be used instead
              ];
      
@@ -141,10 +142,10 @@ class UserManagementController extends Controller
                                 <i class="fas fa-ellipsis-v ellipse_color"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="' . url('users/add/edit/' . $record->id) . '">
+                                <a class="dropdown-item" href="' . route('admin.users.edit', ['user_id' => $record->id]) . '">
                                     <i class="fas fa-pencil-alt m-r-5"></i> Edit
                                 </a>
-                                <a class="dropdown-item" href="' . url('users/delete/' . $record->id) . '">
+                                <a class="dropdown-item" href="' . route('admin.users.delete', ['user_id' => $record->id]) . '">
                                     <i class="fas fa-trash-alt m-r-5"></i> Delete
                                 </a>
                             </div>
@@ -174,11 +175,11 @@ class UserManagementController extends Controller
     }
     
      /** delete record */
-     public function userDelete($id)
+     public function userDelete($user_id)
      {
          try {
  
-             $deleteRecord = User::find($id);
+             $deleteRecord = User::find($user_id);
              $deleteRecord->delete();
              Toastr::success('User deleted successfully :)','Success');
              return redirect()->back();

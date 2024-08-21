@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
@@ -24,6 +25,36 @@ class EventController extends Controller
         $columns = ['id', 'name', 'description', 'slug','category_names']; // Customize columns as needed
 
         return view('admin.templates.form-list-template', compact('entity', 'entityName', 'columns'));
+    }
+
+    public function allEvents(Request $request)
+    {
+        $query = Event::query();
+
+        // Apply filters based on the request
+        if ($request->has('year')) {
+            $query->whereYear('start_date', $request->input('year'));
+        }
+        if ($request->has('month')) {
+            $query->whereMonth('start_date', $request->input('month'));
+        }
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+        if ($request->has('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        $events = $query->paginate(12); // Paginate results, adjust the number as needed
+        return view('events.index', compact('events'));
+    }
+
+    public function showEventPhotos(Event $event)
+    {
+        $event = Event::findOrFail($event->id);
+        $photos = Photo::where('event_id', $event->id)->images()->paginate(10);
+
+        return view('events.photos', compact('event', 'photos'));
     }
 
     /**
@@ -92,7 +123,7 @@ class EventController extends Controller
                             <a href="#" class="avatar avatar-sm mr-2">
                                 <img class="avatar-img rounded-circle" src="' . $eventModel->event_image_url . '" alt="Event Image">
                             </a>
-                            <a href="#">' . $record->name . '
+                            <a href="' . route('admin.events.show', $record->id) . '">' . $record->name . '
                                 <span>' . $record->id . '</span>
                             </a>
                         </h2>
@@ -216,6 +247,12 @@ class EventController extends Controller
     public function show(Event $event)
     {
         return view('admin.events.show', compact('event'));
+    }
+
+    public function individualEvents(Event $event)
+    {
+
+        return view('events.show', compact('event'));
     }
 
     /**

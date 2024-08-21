@@ -130,7 +130,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#events">Events</a>
+                    <a class="nav-link" href="/events/all">Events</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about-us">About Us</a>
@@ -139,7 +139,7 @@
 
             <!-- Centered Logo -->
             <a class="navbar-brand" href="#">
-                <img src="assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;">
+                <img src="/assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;">
             </a>
 
             <!-- Right-aligned links -->
@@ -188,7 +188,7 @@
         }
 
         .crumb {
-            background-image: url('assets/img/runners.jpeg');
+            background-image: url('/assets/img/runners.jpeg');
             filter: brightness(0.5);
             height: 200px;
             background-repeat: no-repeat;
