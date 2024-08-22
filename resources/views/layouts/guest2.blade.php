@@ -130,7 +130,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#events">Events</a>
+                    <a class="nav-link" href="/events/all">Events</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/about-us">About Us</a>
@@ -174,7 +174,7 @@
                                 echo $qty;
                             @endphp
                         </span>
-                        <!-- <img src="assets/img/cart.jpg" alt="Transparent Image" class="transparent-image" style="height: 24px;"> -->
+
                     </a>
                 </li>
             </ul>
@@ -241,8 +241,6 @@
 
         .banner {
             background-color: #0097b2;
-            border-radius: 5px;
-            /* Adjust the radius as needed */
             padding: 20px;
             margin: 20px auto;
             max-width: auto;
