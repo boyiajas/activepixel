@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 	<title>Home Dashboard</title>
-	<link rel="shortcut icon" type="image/x-icon" href="{{ URL::to('assets/img/favicon.png') }}">
+	<link rel="shortcut icon" type="image/x-icon" href="{{ URL::to('assets/img/favicon.ico') }}">
 	<link rel="stylesheet" href="{{ URL::to('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ URL::to('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
 	<link rel="stylesheet" href="{{ URL::to('assets/plugins/fontawesome/css/all.min.css') }}">
@@ -104,8 +104,8 @@
 						<div class="user-header">
 							<div class="avatar avatar-sm"> <img src="{{ URL::to('assets/img/profiles/avatar-01.jpg') }}" alt="User Image" class="avatar-img rounded-circle"> </div>
 								<div class="user-text">
-									<h6>Soeng Souy</h6>
-									<p class="text-muted mb-0">{{ Auth::user()->role_name }}</p>
+									<h6>{{ Auth::user()->name }} </h6>
+									<p class="text-muted mb-0">{{ Auth::user()->getRoleNames()->first() ?? '' }}</p>
 								</div>
 							</div>
 						<a class="dropdown-item" href="{{ route('profile') }}">My Profile</a> 
