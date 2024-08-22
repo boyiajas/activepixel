@@ -57,10 +57,16 @@ Route::resource('categories', CategoryController::class)->only(['index', 'show']
 Route::get('categories/{category}/photos', [CategoryController::class, 'photos'])->name('categories.photos');
 
 // Event Routes
-Route::resource('events', EventController::class)->only(['index', 'show']);
-Route::get('events/{event}/photos', [EventController::class, 'photos'])->name('events.photos');
-Route::get('events/search', [EventController::class, 'search'])->name('events.search');
-Route::get('events/{event}/categories', [EventController::class, 'categories'])->name('events.categories');
+//Route::resource('events', EventController::class)->only(['index', 'show']);
+Route::controller(EventController::class)->group(function (){
+    Route::get('events/all', 'allEvents')->name('events.all');
+    Route::get('events/{event}', 'individualEvents')->name('events.individual');
+    Route::get('events/{event}/photos',  'showEventPhotos')->name('events.photos');
+    Route::get('events/search', 'search')->name('events.search');
+    Route::get('events/{event}/categories',  'categories')->name('events.categories');
+
+});
+
 
 
 
@@ -192,9 +198,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::controller(UserManagementController::class)->group(function () {
             Route::get('users/list', 'userList')->name('admin.users.index');
             Route::get('users/create', 'userAddNew')->name('admin.users.create'); /** add new users */
-            Route::get('users/edit/{user_id}', 'userView'); /** add new users */
+            Route::get('users/edit/{user_id}', 'userView')->name('admin.users.edit'); /** add new users */
             Route::post('users/update', 'userUpdate')->name('users/update'); /** update record */
-            Route::get('users/delete/{id}', 'userDelete')->name('users/delete'); /** delere record */
+            Route::get('users/delete/{user_id}', 'userDelete')->name('admin.users.delete'); /** delere record */
             Route::get('get-users-data', 'getUsersData')->name('get-users-data'); /** get all data users */
             Route::get('users/log', 'userList')->name('admin.users.log');
             

@@ -41,11 +41,12 @@
                                     <!-- <input type="text" class="form-control @error('role_name') is-invalid @enderror" name="role_name" value="{{ $userData->role_name }}"> -->
                                     <select class="form-control @error('role_name') is-invalid @enderror" name="role_name">
                                         @foreach($roles as $role)
-                                            <option value="{{ $role->name }}" {{ $role->name == $userData->role_name ? 'selected' : '' }}>
+                                            <option value="{{ $role->name }}" {{ old('role_name', $role->name) == $userRoles[0]->name ? 'selected' : '' }}>
                                                 {{ $role->name }}
                                             </option>
                                         @endforeach
                                     </select>
+                                   
                                 </div>
                             </div>
                             <div class="col-md-4">
