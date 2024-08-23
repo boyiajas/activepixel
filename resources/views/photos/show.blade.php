@@ -27,8 +27,8 @@
                 <div class="row">
                     @foreach($recommendedPhotos as $recommended)
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('photos.show', $recommended->id) }}">
-                                <img src="{{ asset('storage/'.$recommended->lead_image->file_path) }}" alt="{{ $recommended->name }}" class="img-fluid">
+                            <a href="{{ route('individual.photos', $recommended->id) }}">
+                                <img src="{{ asset('/'.$recommended->leadImage()?->file_path) }}" alt="{{ $recommended->name }}" class="img-fluid">
                                 <p class="mt-2">{{ $recommended->name }}</p>
                             </a>
                         </div>

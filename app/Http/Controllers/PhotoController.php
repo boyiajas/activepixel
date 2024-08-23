@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Photo;
+use App\Models\Upload;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\Event;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 use DB;
+use ZipArchive;
 use Illuminate\Support\Str;
 
 
@@ -117,13 +121,21 @@ class PhotoController extends Controller
                                 <i class="fas fa-ellipsis-v ellipse_color"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="' . route('admin.photos.edit', ['photo' => $record->id]) . '">
+                                <a class="dropdown-item" href="' . route('admin.photos.show', $record->id) . '">
+                                    <i class="fas fa-eye m-r-5"></i> View
+                                </a>
+                                <a class="dropdown-item" href="' . route('admin.photos.edit', $record->id) . '">
                                     <i class="fas fa-pencil-alt m-r-5"></i> Edit
                                 </a>
-                                <a class="dropdown-item" href="' . route('admin.photos.destroy', ['photo' => $record->id]) . '" data-method="DELETE" data-confirm="Are you sure you want to delete this photo?">
-                                    <i class="fas fa-trash-alt m-r-5"></i> Delete
-                                </a>
+                                <form action="' . route('admin.photos.destroy', ['photo' => $record->id]) . '" method="POST" style="display:inline;">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <button type="submit" class="dropdown-item" onclick="return confirm(\'Are you sure you want to delete this event?\')">
+                                        <i class="fas fa-trash-alt m-r-5"></i> Delete
+                                    </button>
+                                </form>
                             </div>
+                            
                         </div>
                     </td>';
 
@@ -249,32 +261,190 @@ class PhotoController extends Controller
         return view('admin.photos.index', compact('photos'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Photo $photo)
     {
         try {
-
-            // Delete the file from storage
-            if ($photo->path) {
-                Storage::disk('public')->delete($photo->path);
-            }
             
+            // Delete all associated uploaded files from storage
+            $uploads = $photo->upload()->get();
+
+            foreach ($uploads as $upload) {
+                // Get the full path to the original file
+                $originalFilePath = public_path($upload->file_path);//dd($upload);
+
+                // Extract the directory and base filename without the size suffix and extension
+                $directory = pathinfo($originalFilePath, PATHINFO_DIRNAME);
+                $filename = pathinfo($originalFilePath, PATHINFO_FILENAME);  // Filename without extension
+                $extension = $upload->extension;//dd($directory, $filename, $extension, $originalFilePath);
+
+                // Define the different image sizes used in the storeImage function
+                $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+
+                // Delete the resized images
+                foreach ($sizes as $size) {
+                    $sizedFilePath = $directory . '/' . $filename . $size . '.' . $extension;
+                    if (File::exists($sizedFilePath)) {
+                        File::delete($sizedFilePath);
+                    }
+                }
+
+                // Delete the original image file
+                if (File::exists($originalFilePath)) {
+                    File::delete($originalFilePath);
+                }
+
+                // Delete the record from the uploads table
+                $upload->delete();
+            }
+
+            // Delete the photo record
             $photo->delete();
 
-            Toastr::success('Photo deleted successfully :)','Success');
+            Toastr::success('Photo deleted successfully :)', 'Success');
+
             return redirect()->back();
 
         } catch (\Throwable $th) {
-            
-            Toastr::error('Photo delete fail :)','Error');
+            Toastr::error('Photo delete failed :)', 'Error');
             return redirect()->back();
         }
     }
 
+    public function importBulkPhotos(Event $event_id)
+    {
+        $categories = Category::all();
+        return view('admin.photos.import-bulk-photos', ['event'=> $event_id], compact('categories'));
+    }
+
+    public function importBulkPhotosStore(Request $request)
+    {
+        $request->validate([
+            'zip_file' => 'required|file|mimes:zip'
+        ]);
+
+        $event = Event::findOrFail($request->event_id);
+        // Get the uploaded file
+        $zipFile = $request->file('zip_file');
+        $zip = new ZipArchive;
+
+        if ($zip->open($zipFile) === TRUE) {
+
+            try {
+                // Create a temporary directory to extract files
+                $extractPath = storage_path('app/public/temp/' . uniqid());
+                File::makeDirectory($extractPath, 0755, true, true);
+
+                // Extract the ZIP file
+                $zip->extractTo($extractPath);
+                $zip->close();
+
+                // Enter the extracted directory (assuming there's a single subdirectory)
+                $subdirectories = File::directories($extractPath);
+                if (count($subdirectories) === 1) {
+                    $extractPath = $subdirectories[0];
+                }
+
+                // Process each folder within the extracted directory
+                $folders = File::directories($extractPath);
+
+                foreach ($folders as $folder) {
+                    $folderName = basename($folder); 
+
+                    // Extract race_number, price, and description from the folder name
+                    if (preg_match('/^(\d+)_([\d\.]+)_(.*)$/', $folderName, $matches)) {
+                        $raceNumber = $matches[1];
+                        $price = $matches[2];
+                        $description = $matches[3]; 
+
+                        // Process images within the folder
+                        $images = File::files($folder); 
+
+                        if(count($images) > 0){
+
+                            $photo = new Photo([
+                                'name' => $raceNumber,
+                                'race_number' => $raceNumber,
+                                'price' => $price,
+                                'description' => $description,
+                                'event_id' => $event->id,
+                                'stock_status' => 'in_stock',
+                                'downloadable' => true,
+                                //'category_id' => $request->input('category_id'),
+                            ]);
+
+                            $photo->save();
+
+                            foreach ($images as $image) {
+                                $imageName = $image->getFilename();
+                                $extension = strtolower($image->getExtension());
+                                $photoType = ($imageName === '1.jpeg' || $imageName === '1.jpg' || $imageName === '1.png') ? 'lead_image' : 'regular';                             
+
+                                //dd($images, $imageName, $extension, $photoType, $photo);
+                                // Save the image file
+                                $directory = 'uploads/photos/' . $photo->id . '/';
+                                $filename = $photoType . '_' . Str::random(12) . '.' . $extension;
+
+                                if (!File::exists($directory)) {
+                                    File::makeDirectory($directory, 0755, true);
+                                }
+
+                                //dd($image->getPathname(), public_path($directory . $filename), $directory, $filename);
+
+                                //$image->move(public_path($directory), $filename);
+                                // Move the file to the new directory
+                                File::move($image->getPathname(), $directory . $filename);
+
+                                // Process the image
+                                $imagePath = $directory . $filename;
+                                $imageInstance = Image::make($imagePath);
+                                if ($photoType === 'lead_image') {
+                                    //$imageInstance->fit(265, 163)->save($directory . 'lead_265_163_' . $filename);
+                                    //$imageInstance->fit(400, 161)->save($directory . 'lead_400_161_' . $filename);
+                                    $imageInstance->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
+                                    $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
+                                   
+                                } else {
+                                    //$imageInstance->fit(143, 83)->save($directory . 'regular_143_83_' . $filename);
+                                    //$imageInstance->fit(835, 467)->save($directory . 'regular_835_467_' . $filename);
+                                    $imageInstance->fit(143, 83)->save($directory . $filename . '_143_83.' . $extension);
+                                    $imageInstance->fit(835, 467)->save($directory . $filename . '_835_467.' . $extension);
+                                }
+
+                                // Save the upload record
+                                Upload::create([
+                                    'photo_id' => $photo->id,
+                                    'photo_type' => $photoType,
+                                    'file_name' => $filename,
+                                    'file_path' => $imagePath,
+                                    'extension' => $extension,
+                                ]);
+                            }
+                        }
+
+                    } else {
+                        // Handle folder name not matching the expected pattern
+                        continue;
+                    }
+                }
+
+                // Clean up the extracted files
+                File::deleteDirectory($extractPath);
+
+                return redirect()->route('admin.events.show', $event->id)->with('success', 'Photos imported successfully.');
+
+            } catch (\Exception $e) {
+                // Handle any errors that occur during the extraction or processing
+                File::deleteDirectory($extractPath); // Clean up
+                return redirect()->route('admin.events.show', $event->id)->with('error', 'Failed to import photos: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('admin.events.show', $event->id)->with('error', 'Failed to open the ZIP file.');
+    }
+
     public function individualPhoto(Photo $photo)
     {
+        //dd($photo);
         //$photo = Photo::with(['lead_image', 'regular_images'])->findOrFail($photo);
         $regular_images = $photo->regularImages(); 
         $lead_image = $photo->leadImage()?->file_path;
@@ -282,9 +452,9 @@ class PhotoController extends Controller
         // Fetch 4 recommended photos from the same event
         $recommendedPhotos = Photo::where('event_id', $photo->event_id)
                                 ->where('id', '!=', $photo->id)
-                                ->with('lead_image')
+                                //->with('lead_image')
                                 ->take(4)
-                                ->get();
+                                ->get(); 
 
         // Check if guest token exists in session, if not, generate one
         if (!session()->has('guest_token')) {
