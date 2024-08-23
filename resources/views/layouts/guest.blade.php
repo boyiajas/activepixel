@@ -24,8 +24,6 @@
 
     {{-- message toastr --}}
 
-
-
     <style>
         .navbar-brand {
             position: absolute;
@@ -42,6 +40,8 @@
 
         .nav-item {
             margin-right: 15px;
+            position: relative;
+            display: inline-block;
         }
 
         .nav-item:last-child {
@@ -54,6 +54,7 @@
 
         .navbar {
             background-color: #0097b2;
+            padding: 0px;
             /* Change to your desired color */
         }
 
@@ -61,6 +62,10 @@
             color: #ffffff;
             /* Change to the color you want for text */
             font-weight: bold;
+            padding: 20px 20px;
+            /* Adjust padding as needed */
+            display: inline-block;
+            position: relative;
         }
 
         .navbar-nav .nav-link:hover {
@@ -68,10 +73,29 @@
             /* Text color on hover */
             background-color: #5ce1e6;
             /* Background color on hover */
-            text-decoration: underline;
+            /* text-decoration: underline; */
             /* Underline on hover */
             border-radius: 2px;
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar-nav .nav-link::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #5ce1e6;
+            z-index: -1;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease-in-out;
+            border-radius: 4px;
+        }
+
+        .navbar-nav .nav-link:hover::before {
+            transform: scaleY(1);
         }
 
         .navbar-nav .nav-link img {
@@ -116,6 +140,67 @@
         .cart span {
             font-size: 20px;
         }
+        
+        .navbar-toggler{
+            display: none;
+        }
+
+        .nav-link-cart{
+            padding: 14px 20px !important;
+        }
+
+         /* Mobile navbar styles */
+    @media (max-width: 767px) {
+        .navbar-nav {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .navbar-brand {
+            position: static;
+            transform: none;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .navbar-collapse {
+            display: none;
+        }
+
+        .navbar-toggler {
+            display: block;
+            background-color: #5ce1e6;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            color: #ffffff;
+        }
+
+        .navbar-toggler:focus {
+            outline: none;
+        }
+
+        .navbar-nav {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            background-color: #0097b2;
+            padding: 10px;
+        }
+
+        .navbar-nav.active {
+            display: flex;
+        }
+
+        .nav-item {
+            width: 100%;
+            text-align: left;
+        }
+    }
     </style>
 </head>
 
@@ -124,6 +209,8 @@
     {!! Toastr::message() !!}
     <nav class="navbar">
         <div class="container">
+             <!-- Navbar Toggler for Mobile -->
+            <button class="navbar-toggler" onclick="toggleNavbar()">☰</button>
             <!-- Left-aligned links -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -149,31 +236,34 @@
                 </li>
                 <li class="nav-item">
 
-                    <a class="nav-link cart" href="/cart">
+                    <a class="nav-link nav-link-cart" href="/cart">
+                        <div class="cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>
+                                @php
+                                    $cartItems = [];
+                                    $totalPrice = 0;
 
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>
-                            @php
-                                $cartItems = [];
-                                $totalPrice = 0;
-
-                                if (Auth::check()) {
-                                    // Get cart items for logged-in user
-                                    $cartItems = App\Models\Cart::where('user_id', Auth::id())->get();
-                                } else {
-                                    // Get cart items for guest user
-                                    $guestToken = session('guest_token');
-                                    if ($guestToken) {
-                                        $cartItems = App\Models\Cart::where('guest_token', $guestToken)->get();
+                                    if (Auth::check()) {
+                                        // Get cart items for logged-in user
+                                        $cartItems = App\Models\Cart::where('user_id', Auth::id())->get();
+                                    } else {
+                                        // Get cart items for guest user
+                                        $guestToken = session('guest_token');
+                                        if ($guestToken) {
+                                            $cartItems = App\Models\Cart::where('guest_token', $guestToken)->get();
+                                        }
                                     }
-                                }
-                                $qty = 0;
-                                foreach ($cartItems as $item) {
-                                    $qty += $item->quantity;
-                                }
-                                echo $qty;
-                            @endphp
-                        </span>
+                                    $qty = 0;
+                                    foreach ($cartItems as $item) {
+                                        $qty += $item->quantity;
+                                    }
+                                    echo $qty;
+                                @endphp
+                            </span>
+                        </div>
+
+                        
                         <!-- <img src="assets/img/cart.jpg" alt="Transparent Image" class="transparent-image" style="height: 24px;"> -->
                     </a>
                 </li>
@@ -282,7 +372,7 @@
                     <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
                     <li><a href="/privacy-policy">Privacy Policy</a></li>
                     <li><a href="#">POPIA</a></li>
-                    <li><a href="#">Need Help?</a></li>
+                    <li><a href="/contact-us">Need Help?</a></li>
                 </ul>
             </div>
             <div class="footer-divider"></div> <!-- Divider -->
@@ -300,7 +390,12 @@
     </footer>
 
     <!-- the footer content ends here -->
-
+    <script>
+        function toggleNavbar() {
+            var navbar = document.querySelector('.navbar-nav');
+            navbar.classList.toggle('active');
+        }
+    </script>
 
     <script src="{{URL::to('assets/js/jquery-3.5.1.min.js')}}"></script>
     <script src="{{URL::to('assets/js/popper.min.js')}}"></script>

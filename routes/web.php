@@ -206,18 +206,19 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             
         });
 
-        Route::resource('photos', PhotoController::class)->except(['show'])->names([
-            'index' => 'admin.photos.index',
-            'create' => 'admin.photos.create',
-            'edit' => 'admin.photos.edit',
-            'update' => 'admin.photos.update',
-            'store' => 'admin.photos.store',
-            'destroy' => 'admin.photos.destroy',
-            
-        ]);
+        Route::prefix('photos')->controller(PhotoController::class)->group(function () {
+            Route::get('index', 'index')->name('admin.photos.index');
+            Route::get('create', 'create')->name('admin.photos.create');
+            Route::get('edit/{photo}', 'edit')->name('admin.photos.edit');
+            Route::post('update/{photo}', 'update')->name('admin.photos.update');
+            Route::post('store/{photo}', 'store')->name('admin.photos.store');
+            Route::delete('destroy/{photo}', 'destroy')->name('admin.photos.destroy');
+            Route::get('show/{photo}', 'show')->name('admin.photos.show');
+        });
 
         Route::get('photos/data', [PhotoController::class, 'getPhotosData'])->name('get-photos-data');
-        Route::get('photos/import', [PhotoController::class,'importPhotos'])->name('admin.photos.import');
+        Route::get('photos/import/{event_id}', [PhotoController::class,'importBulkPhotos'])->name('admin.photos.bulk.import');
+        Route::post('photos/import/{event_id}', [PhotoController::class,'importBulkPhotosStore'])->name('admin.photos.bulk.store');
 
 
         Route::controller(UploadController::class)->group(function (){

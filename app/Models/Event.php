@@ -14,8 +14,8 @@ class Event extends Model
         'name',
         'description',
         'slug',
-        /* 'start_date',
-        'end_date', */
+        'start_date',
+        'end_date', 
         'location',
         'event_image',
     ];

@@ -15,7 +15,7 @@
                             <a href="{{ route('admin.events.index') }}" class="btn btn-primary float-right veiwbutton">< Go Back</a> 
                             <a href="{{ route('admin.photos.create', ['event_id' => $event->id]) }}" class="btn btn-primary float-right mr-2">Add Photo</a>
                             <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-primary float-right mr-2">Edit Event</a>
-                            <a href="{{ route('admin.photos.import', ['event_id' => $event->id]) }}" class="btn btn-primary float-right mr-2">Import Photos</a>
+                            <a href="{{ route('admin.photos.bulk.import', ['event_id' => $event->id]) }}" class="btn btn-primary float-right mr-2">Import Photos</a>
                         </div>
                     </div>
                 </div>
