@@ -35,7 +35,7 @@ use App\Http\Controllers\PaymentMethodController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
+//Auth::routes();
 //require __DIR__.'/auth.php';
 
 Route::controller(PageController::class)->group(function () {
@@ -100,6 +100,9 @@ Route::group(['middleware' => ['sync.guest.cart']], function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+    // Authentication routes
+    Auth::routes();
 });
 
   // Admin Routes
@@ -132,7 +135,7 @@ Route::post('/subscribe', [PageController::class, 'subscribe'])->name('subscribe
 
 
 // User Profile & Shopping Cart
-Route::middleware(['auth', 'role:user|admin|manager|photographer'])->group(function () {
+Route::middleware(['auth', 'role:user|admin|manager|photographer', 'sync.guest.cart'])->group(function () {
     Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
     //Route::resource('cart', CartController::class)->only(['index']);
@@ -242,19 +245,19 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             'edit' => 'admin.orders.edit',
             'destroy' => 'admin.orders.destroy',
         ]);
+
+        Route::prefix('categories')->controller(CategoryController::class)->group(function () {
+            Route::get('index', 'index')->name('admin.categories.index');
+            Route::get('create', 'create')->name('admin.categories.create');
+            Route::get('edit/{category}', 'edit')->name('admin.categories.edit');
+            Route::put('update/{category}', 'update')->name('admin.categories.update');
+            Route::post('store', 'store')->name('admin.categories.store');
+            Route::delete('destroy/{category}', 'destroy')->name('admin.categories.destroy');
+            Route::get('show/{category}', 'show')->name('admin.categories.show');
+            Route::delete('delete', 'deleteSelected')->name('delete-categories-data');
+            Route::get('data', 'getCategoryData')->name('get-categories-data');
+        });
     
-        Route::resource('categories', CategoryController::class)->except(['show'])->names([
-            'index' => 'admin.categories.index',
-            'create' => 'admin.categories.create',
-            'edit' => 'admin.categories.edit',
-            'update' => 'admin.categories.update',
-            'store' => 'admin.categories.store',
-            'destroy' => 'admin.categories.destroy',
-        ]);
-
-        Route::get('categories/data', [CategoryController::class, 'getCategoryData'])->name('get-categories-data');
-
-
         Route::prefix('events')->controller(EventController::class)->group(function () {
             Route::get('index', 'index')->name('admin.events.index');
             Route::get('create', 'create')->name('admin.events.create');
@@ -267,20 +270,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         });
 
         Route::get('events/data', [EventController::class, 'getEventData'])->name('get-events-data');
-       /*  Route::get('events/{event}', [EventController::class, 'show'])->name('admin.events.show');
-        Route::delete('/events/delete', [EventController::class, 'deleteSelected'])->name('delete-events-data');
- */
-        /* Route::resource('events', EventController::class)->except(['show'])->names([
-            'index' => 'admin.events.index',
-            'create' => 'admin.events.create',
-            'edit' => 'admin.events.edit',
-            'update' => 'admin.events.update',
-            'store' => 'admin.events.store',
-            /* 'show' => 'admin.events.show', *
-            'destroy' => 'admin.events.destroy',
-        ]); */
-
-        
+              
 
 
         Route::controller(SettingController::class)->group(function () {

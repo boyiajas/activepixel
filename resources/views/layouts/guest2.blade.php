@@ -396,8 +396,8 @@
             <div class="footer-section">
                 <h3>FOLLOW US</h3>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/activepixel_official" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/people/Active-Pixel/61558232257425" target="_blank"><i class="fab fa-facebook"></i></a>
                 </div>
             </div>
         </div>
