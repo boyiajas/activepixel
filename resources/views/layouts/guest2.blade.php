@@ -7,7 +7,7 @@
     <title>
         @yield('title') 
     </title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{URL::to('assets/img/favicon.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{URL::to('assets/img/favicon.ico')}}">
     <link rel="stylesheet" href="{{URL::to('assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{URL::to('assets/plugins/fontawesome/css/fontawesome.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{URL::to('assets/plugins/fontawesome/css/all.min.css')}}">
@@ -24,9 +24,24 @@
 
     {{-- message toastr --}}
 
-
-
     <style>
+        .event-card{
+            padding: 0px;
+        }
+        .event-card .card-img-top{
+            height: 200px;
+        }
+        .event-card .card-body{
+            padding: 10px;
+        }
+        .event-gallery{
+            min-height: 300px;
+        }
+        body{
+            background-color: #fff;
+            height: fit-content;
+        }
+    
         .navbar-brand {
             position: absolute;
             left: 50%;
@@ -381,8 +396,8 @@
             <div class="footer-section">
                 <h3>FOLLOW US</h3>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/activepixel_official" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/people/Active-Pixel/61558232257425" target="_blank"><i class="fab fa-facebook"></i></a>
                 </div>
             </div>
         </div>

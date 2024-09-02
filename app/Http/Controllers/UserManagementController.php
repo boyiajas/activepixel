@@ -190,4 +190,23 @@ class UserManagementController extends Controller
              return redirect()->back();
          }
      }
+
+     public function deleteSelected(Request $request)
+    {
+        try {
+            $userIds = $request->input('ids', []);
+
+            // Fetch the selected users
+            $users = User::whereIn('id', $userIds)->get();
+
+            foreach ($users as $user) {
+                // Delete the user record
+                $user->delete();
+            }
+
+            return response()->json(['status' => 'success', 'message' => 'Selected users deleted successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to delete selected users.']);
+        }
+    }
 }
