@@ -9,13 +9,15 @@
 	<link rel="stylesheet" href="{{ URL::to('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ URL::to('assets/plugins/fontawesome/css/fontawesome.min.css') }}">
 	<link rel="stylesheet" href="{{ URL::to('assets/plugins/fontawesome/css/all.min.css') }}">
-	<link rel="stylesheet" href="{{ URL::to('assets/plugins/datatables/datatables.min.css') }}">
+	<!-- <link rel="stylesheet" href="{{ URL::to('assets/plugins/datatables/datatables.min.css') }}"> -->
 	<link rel="stylesheet" href="{{ URL::to('assets/css/feathericon.min.css') }}">
 	<link rel="stylehseet" href="https://cdn.oesmith.co.uk/morris-0.5.1.css">
 	<link rel="stylesheet" href="{{ URL::to('assets/plugins/morris/morris.css') }}">
 	<link rel="stylesheet" href="{{ URL::to('assets/css/style.css') }}"> 
 	<link rel="stylesheet" href="{{ URL::to('assets/css/animate.css') }}"> 
 	<link rel="stylesheet" type="text/css" href="{{ URL::to('assets/css/bootstrap-datetimepicker.min.css') }}">
+
+
 	
 
 	{{-- message toastr --}}
@@ -133,12 +135,19 @@
 	<script src="{{ URL::to('assets/plugins/raphael/raphael.min.js') }}"></script>
 	<script src="{{ URL::to('assets/js/moment.min.js') }}"></script>
 	<script src="{{ URL::to('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-	<script src="{{ URL::to('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ URL::to('assets/plugins/datatables/datatables.min.js') }}"></script>
+	<!-- <script src="{{ URL::to('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+	<script src="{{ URL::to('assets/plugins/datatables/datatables.min.js') }}"></script> -->
 	<script src="{{ URL::to('assets/js/script.js') }}"></script>
 	<script src="{{ URL::to('assets/js/moment.min.js') }}"></script>
 	<script src="{{ URL::to('assets/plugins/morris/morris.min.js') }}"></script>
 	<script src="{{ URL::to('assets/js/chart.morris.js') }}"></script>
+
+	<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js" defer></script> -->
+	<script type="text/javascript" src="https://cdn.datatables.net/2.1.4/js/dataTables.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/dataTables.select.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/select.dataTables.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js" defer></script>
 
 	@yield('script')
 	@yield('style')

@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\File;
 use DB;
 use ZipArchive;
 use Illuminate\Support\Str;
+use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use App\Jobs\ProcessBulkPhotos;
 
 
 class PhotoController extends Controller
@@ -30,6 +34,20 @@ class PhotoController extends Controller
         $columns = ['id', 'name', 'race_number', 'price', 'stock_status', 'downloadable', 'category_name','event_name']; // Customize columns as needed
 
         return view('admin.templates.form-list-template', compact('entity', 'entityName', 'columns'));
+    }
+
+    public function getImage($filename)
+{
+        $path = $filename; // Adjust the folder as needed
+
+        if (Storage::exists($path)) {
+            $file = Storage::get($path);
+            $type = Storage::mimeType($path);
+
+            return response($file, 200)->header('Content-Type', $type);
+        } else {
+            abort(404, 'Image not found.');
+        }
     }
 
     /**
@@ -94,8 +112,8 @@ class PhotoController extends Controller
         foreach ($records as $key => $record) {
 
             // Assuming you have an Eloquent model `Photo` where `leadImage()` returns the image file path.
-            $photoModel = Photo::find($record->id);
-            $imageUrl =  ($photoModel->leadImage()?->file_path) ?  '/'.$photoModel->leadImage()?->file_path : url('/assets/img/placeholder.jpg'); // Fallback to default image if not found
+            $photoModel = Photo::find($record->id); 
+            $imageUrl =  ($photoModel->leadImage()?->file_path) ?  url($photoModel->leadImage()?->file_path) : url('/assets/img/placeholder.jpg'); // Fallback to default image if not found
 
             $downloadable = $record->downloadable ? 'Yes' : 'No';
             $stock_status = $record->stock_status ? 'In Stock' : 'Out of Stock';
@@ -261,6 +279,76 @@ class PhotoController extends Controller
         return view('admin.photos.index', compact('photos'));
     }
 
+    public function deleteSelected(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['error' => 'No IDs provided'], 400);
+        }
+
+        try {
+            foreach ($ids as $id) {
+                $photo = Photo::find($id);
+
+                if (!$photo) {
+                    continue; // Skip if photo not found
+                }
+
+                // Delete all associated uploaded files from storage
+                $uploads = $photo->upload()->get();
+
+                foreach ($uploads as $upload) {
+                    // Get the full path to the original file
+                    $originalFilePath = public_path($upload->file_path);
+                    \Log::info("the upload path is {$upload->file_path}");
+
+                    // Extract the directory and base filename without the size suffix and extension
+                    $directory = pathinfo($originalFilePath, PATHINFO_DIRNAME);
+                    $filename = pathinfo($originalFilePath, PATHINFO_FILENAME);  // Filename without extension
+                    $extension = $upload->extension;
+
+                    // Define the different image sizes used in the storeImage function
+                    $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+
+                    // Delete the resized images
+                    foreach ($sizes as $size) {
+                        $sizedFilePath = $originalFilePath . $size . '.' . $extension;
+                        if (File::exists($sizedFilePath)) {
+                            \Log::info("here we are deleting the resize {$size} with located in {$sizedFilePath}");
+                            File::delete($sizedFilePath);
+                        }
+                    }
+
+                    // Delete the original image file
+                    if (File::exists($originalFilePath)) {
+                        \Log::info("here we are deleting the original file: {$originalFilePath}");
+                        File::delete($originalFilePath);
+                    }
+
+                     // Check if the directory is empty and delete it if it is
+                    if (is_dir($directory) && count(glob($directory . '/*')) === 0) {
+                        \Log::info("Deleting empty directory: {$directory}");
+                        rmdir($directory);
+                    }
+
+                    // Delete the record from the uploads table
+                    $upload->delete();
+                }
+
+                // Delete the photo record
+                $photo->delete();
+            }
+
+            Toastr::success('Selected photos deleted successfully :)', 'Success');
+
+            return response()->json(['success' => 'Selected rows deleted successfully']);
+        } catch (\Throwable $th) {
+            Toastr::error('Failed to delete selected photos :)', 'Error');
+            return response()->json(['error' => 'Failed to delete selected rows'], 500);
+        }
+    }
+
     public function destroy(Photo $photo)
     {
         try {
@@ -282,7 +370,7 @@ class PhotoController extends Controller
 
                 // Delete the resized images
                 foreach ($sizes as $size) {
-                    $sizedFilePath = $directory . '/' . $filename . $size . '.' . $extension;
+                    $sizedFilePath = $originalFilePath . $size . '.' . $extension;
                     if (File::exists($sizedFilePath)) {
                         File::delete($sizedFilePath);
                     }
@@ -291,6 +379,12 @@ class PhotoController extends Controller
                 // Delete the original image file
                 if (File::exists($originalFilePath)) {
                     File::delete($originalFilePath);
+                }
+
+                // Check if the directory is empty and delete it if it is
+                if (is_dir($directory) && count(glob($directory . '/*')) === 0) {
+                    \Log::info("Deleting empty directory: {$directory}");
+                    rmdir($directory);
                 }
 
                 // Delete the record from the uploads table
@@ -316,130 +410,105 @@ class PhotoController extends Controller
         return view('admin.photos.import-bulk-photos', ['event'=> $event_id], compact('categories'));
     }
 
-    public function importBulkPhotosStore(Request $request)
+    public function checkChunk(Request $request, $event_id)
     {
-        $request->validate([
-            'zip_file' => 'required|file|mimes:zip'
-        ]);
+        $chunkNumber = $request->input('resumableChunkNumber');
+        $chunkSize = $request->input('resumableChunkSize');
+        $identifier = $request->input('resumableIdentifier');
+        $filename = $request->input('resumableFilename');
 
-        $event = Event::findOrFail($request->event_id);
-        // Get the uploaded file
-        $zipFile = $request->file('zip_file');
-        $zip = new ZipArchive;
+        // Remove the unique part from the identifier
+        $identifierParts = explode('-', $identifier);
 
-        if ($zip->open($zipFile) === TRUE) {
+         // Create regex pattern to match chunk files
+        //$chunkFileName = $filename . '-[^]+-' . $identifierParts[0].'-'.'[^-]+.'. $chunkNumber . '.part';
+        // Create regex pattern to match chunk files
+        $chunkFileName = $filename . '-\w+-' . $identifierParts[0] . '-\w+.' . $chunkNumber . '.part';
+        // Create regex pattern to match chunk files
+        // Create regex pattern to match chunk files
+        $pattern = '/^' . preg_quote($filename, '/') . '-\w+-' . preg_quote($identifierParts[0], '/') . '-\w*' . '\.' . $chunkNumber . '\.part$/';
 
-            try {
-                // Create a temporary directory to extract files
-                $extractPath = storage_path('app/public/temp/' . uniqid());
-                File::makeDirectory($extractPath, 0755, true, true);
+        // Generate the chunk file name
+        //$chunkFileName = $filename . '-' . $identifier . '-' . $chunkNumber . '.part';
+        $chunkFileName2 = $filename . '.part';
+        $chunkPath = storage_path('app/chunks/' . $chunkFileName);
 
-                // Extract the ZIP file
-                $zip->extractTo($extractPath);
-                $zip->close();
+        // Get all files in the chunks directory
+        $chunkDirectory = storage_path('app/chunks/');
+        $files = File::files($chunkDirectory);
 
-                // Enter the extracted directory (assuming there's a single subdirectory)
-                $subdirectories = File::directories($extractPath);
-                if (count($subdirectories) === 1) {
-                    $extractPath = $subdirectories[0];
-                }
-
-                // Process each folder within the extracted directory
-                $folders = File::directories($extractPath);
-
-                foreach ($folders as $folder) {
-                    $folderName = basename($folder); 
-
-                    // Extract race_number, price, and description from the folder name
-                    if (preg_match('/^(\d+)_([\d\.]+)_(.*)$/', $folderName, $matches)) {
-                        $raceNumber = $matches[1];
-                        $price = $matches[2];
-                        $description = $matches[3]; 
-
-                        // Process images within the folder
-                        $images = File::files($folder); 
-
-                        if(count($images) > 0){
-
-                            $photo = new Photo([
-                                'name' => $raceNumber,
-                                'race_number' => $raceNumber,
-                                'price' => $price,
-                                'description' => $description,
-                                'event_id' => $event->id,
-                                'stock_status' => 'in_stock',
-                                'downloadable' => true,
-                                //'category_id' => $request->input('category_id'),
-                            ]);
-
-                            $photo->save();
-
-                            foreach ($images as $image) {
-                                $imageName = $image->getFilename();
-                                $extension = strtolower($image->getExtension());
-                                $photoType = ($imageName === '1.jpeg' || $imageName === '1.jpg' || $imageName === '1.png') ? 'lead_image' : 'regular';                             
-
-                                //dd($images, $imageName, $extension, $photoType, $photo);
-                                // Save the image file
-                                $directory = 'uploads/photos/' . $photo->id . '/';
-                                $filename = $photoType . '_' . Str::random(12) . '.' . $extension;
-
-                                if (!File::exists($directory)) {
-                                    File::makeDirectory($directory, 0755, true);
-                                }
-
-                                //dd($image->getPathname(), public_path($directory . $filename), $directory, $filename);
-
-                                //$image->move(public_path($directory), $filename);
-                                // Move the file to the new directory
-                                File::move($image->getPathname(), $directory . $filename);
-
-                                // Process the image
-                                $imagePath = $directory . $filename;
-                                $imageInstance = Image::make($imagePath);
-                                if ($photoType === 'lead_image') {
-                                    //$imageInstance->fit(265, 163)->save($directory . 'lead_265_163_' . $filename);
-                                    //$imageInstance->fit(400, 161)->save($directory . 'lead_400_161_' . $filename);
-                                    $imageInstance->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                                    $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
-                                   
-                                } else {
-                                    //$imageInstance->fit(143, 83)->save($directory . 'regular_143_83_' . $filename);
-                                    //$imageInstance->fit(835, 467)->save($directory . 'regular_835_467_' . $filename);
-                                    $imageInstance->fit(143, 83)->save($directory . $filename . '_143_83.' . $extension);
-                                    $imageInstance->fit(835, 467)->save($directory . $filename . '_835_467.' . $extension);
-                                }
-
-                                // Save the upload record
-                                Upload::create([
-                                    'photo_id' => $photo->id,
-                                    'photo_type' => $photoType,
-                                    'file_name' => $filename,
-                                    'file_path' => $imagePath,
-                                    'extension' => $extension,
-                                ]);
-                            }
-                        }
-
-                    } else {
-                        // Handle folder name not matching the expected pattern
-                        continue;
-                    }
-                }
-
-                // Clean up the extracted files
-                File::deleteDirectory($extractPath);
-
-                return redirect()->route('admin.events.show', $event->id)->with('success', 'Photos imported successfully.');
-
-            } catch (\Exception $e) {
-                // Handle any errors that occur during the extraction or processing
-                File::deleteDirectory($extractPath); // Clean up
-                return redirect()->route('admin.events.show', $event->id)->with('error', 'Failed to import photos: ' . $e->getMessage());
+        // Check if any file matches the regex pattern
+        foreach ($files as $file) {
+            
+            $fileName = pathinfo($file, PATHINFO_BASENAME); //return response()->json(['file'=> $fileName,'pattern' => $pattern], 200);
+            if (preg_match($pattern, $fileName)) {
+                return response()->json(['chunkExists' => true, 'file' => $fileName], 200);
             }
         }
 
-        return redirect()->route('admin.events.show', $event->id)->with('error', 'Failed to open the ZIP file.');
+        // Log the chunk check request for debugging purposes
+       /*  \Log::info("Checking chunk {$chunkNumber} for identifier {$identifier} at path: {$chunkPath}");
+
+        // Check if the chunk exists
+        if (File::exists($chunkPath)) {
+            return response()->json(['chunkExists' => true], 200);
+        }
+ */
+        return response()->json(['chunkExists' => false, 'chunkFileName' => $chunkFileName, 'chunkFileName2' => $chunkFileName2, 'dump' => $request->all()], 404);
+    }
+
+    public function importBulkPhotosStore(Request $request, Event $event_id)
+    {   //dd($request->hasFile('zip_file'));
+        $receiver = new FileReceiver('zip_file', $request, HandlerFactory::classFromRequest($request));
+
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException();
+        }
+        // Log the chunk check request for debugging purposes
+        
+        $save = $receiver->receive();
+
+        if ($save->isFinished()) {
+
+            $file = $save->getFile(); // get file
+            $extension = $file->getClientOriginalExtension();
+            $fileName = str_replace('.'.$extension, '', $file->getClientOriginalName()); //file name without extenstion
+            $fileName .= '_' . md5(time()) . '.' . $extension; // a unique file name
+    
+            $disk = Storage::disk('local'); // save to local disk (you can change this to a specific disk)
+            $path = $disk->putFileAs('uploads/photos/zipfile', $file, $fileName); // store the file */
+    
+    
+            // File has been uploaded fully
+            //$file = $save->getFile();
+            //$zipFilePath = $file->getPathname();
+            
+            //dd($zipFilePath);
+            // Ensure that the path is correct and file exists before processing
+            $fullPath = storage_path('app/' . $path);
+
+            if (File::exists($fullPath)) {
+                // Delete the original file
+                unlink($file->getPathname());
+                // Assuming the photo_action is sent as part of the request
+                $photoAction = $request->input('import_option'); // default to 'skip'
+                $photoType = $request->input('photo_type');
+
+                // Dispatch a job to process the photos in the background
+                ProcessBulkPhotos::dispatch($fullPath, $event_id->id, $photoAction, $photoType);
+
+                return response()->json(['message' => 'Upload successful and processing started'], 200);
+            } else {
+                return response()->json(['message' => 'File not found after upload'], 404);
+            }
+        }
+
+        // If chunk is not complete, return progress
+        $handler = $save->handler();
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
     }
 
     public function individualPhoto(Photo $photo)

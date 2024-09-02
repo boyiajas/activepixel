@@ -52,7 +52,7 @@ class EventController extends Controller
     public function showEventPhotos(Event $event)
     {
         $event = Event::findOrFail($event->id);
-        $photos = Photo::where('event_id', $event->id)->images()->paginate(10);
+        $photos = Photo::where('event_id', $event->id)->images()->paginate(24);
 
         return view('events.photos', compact('event', 'photos'));
     }
@@ -325,11 +325,109 @@ class EventController extends Controller
         }
     }
 
+
+    public function deleteSelected(Request $request)
+    {
+        try {
+            $eventIds = $request->input('ids', []);
+
+            // Fetch the selected events
+            $events = Event::whereIn('id', $eventIds)->get();
+
+            foreach ($events as $event) {
+                // Delete associated photos and their uploads
+                foreach ($event->photos as $photo) {
+                    $uploads = $photo->upload()->get();
+
+                    foreach ($uploads as $upload) {
+                        $filePath = public_path($upload->file_path);
+
+                        // Delete different image sizes
+                        $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                        foreach ($sizes as $size) {
+                            $sizedFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . $size . '.' . $upload->extension;
+                            if (File::exists($sizedFilePath)) {
+                                File::delete($sizedFilePath);
+                            }
+                        }
+
+                        // Delete the original file
+                        if (File::exists($filePath)) {
+                            File::delete($filePath);
+                        }
+
+                        // Delete the upload record from the database
+                        $upload->delete();
+                    }
+
+                    // Delete the photo record
+                    $photo->delete();
+                }
+
+                // Delete the event image if it exists
+                if ($event->event_image && File::exists(public_path($event->event_image))) {
+                    File::delete(public_path($event->event_image));
+                }
+
+                // Delete the event itself
+                $event->delete();
+            }
+
+            return response()->json(['status' => 'success', 'message' => 'Selected events deleted successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to delete selected events.']);
+        }
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Event $event)
     {
-        //
+        try {
+            // Delete associated photos and their uploads
+            foreach ($event->photos as $photo) {
+                // Get the uploads associated with the photo
+                $uploads = $photo->upload()->get();
+
+                foreach ($uploads as $upload) {
+                    // Get the file path
+                    $filePath = public_path($upload->file_path);
+
+                    // Delete different image sizes
+                    $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                    foreach ($sizes as $size) {
+                        $sizedFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . $size . '.' . $upload->extension;
+                        if (File::exists($sizedFilePath)) {
+                            File::delete($sizedFilePath);
+                        }
+                    }
+
+                    // Delete the original file
+                    if (File::exists($filePath)) {
+                        File::delete($filePath);
+                    }
+
+                    // Delete the upload record from the database
+                    $upload->delete();
+                }
+
+                // Delete the photo record
+                $photo->delete();
+            }
+
+            // Delete the event image if it exists
+            if ($event->event_image && File::exists(public_path($event->event_image))) {
+                File::delete(public_path($event->event_image));
+            }
+
+            // Delete the event itself
+            $event->delete();
+
+            return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Event deletion failed.');
+        }
     }
 }

@@ -118,9 +118,9 @@
                 <div class="col-md-12 col-lg-6">
                     <div class="card card-chart">
                         <div class="card-header">
-                            <h4 class="card-title">ROOMS BOOKED</h4> </div>
+                            <h4 class="card-title">OVERALL STATISTICS</h4> </div>
                         <div class="card-body">
-                            <div id="donut-chart"></div>
+                            <div id="donut-chart"></div> <!-- assets/js/chart.morris.js -->
                         </div>
                     </div>
                 </div>

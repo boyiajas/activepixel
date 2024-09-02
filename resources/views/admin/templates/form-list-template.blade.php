@@ -41,10 +41,32 @@
         </div>
     </div>
 
+    @section('style')
+        <link rel="stylesheet" href="{{ URL::to('assets/css/dataTables.dataTables.css') }}">
+        <link rel="stylehseet" href="https://cdn.datatables.net/select/2.0.5/css/select.dataTables.css">
+        <link rel="stylesheet" href="{{ URL::to('assets/css/buttons.dataTables.css') }}">
+
+        <style>
+            
+            .selected{
+                /* background-color: red !important; */
+            }
+            table.dataTable > tbody > tr.selected > * {
+                box-shadow: inset 0 0 0 9999px rgba(0, 151, 178, 0.4);
+                
+                color: rgb(255, 255, 255);
+            }
+            table.dataTable > tbody > tr > .selected {
+                background-color: rgba(0, 151, 178, 0.4);
+                color: white;
+            }
+        </style>
+    @endsection
+
     @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#{{ $entityName }}List').DataTable({
+            var table = $('#{{ $entityName }}List').DataTable({
                 processing: true,
                 serverSide: true,
                 ordering: true,
@@ -56,12 +78,86 @@
                         console.log("Response Text: ", xhr.responseText);
                     }
                 },
+                pagingType: 'full_numbers',
+                /* lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, "All"]
+                ], */
+                                
                 columns: [
                     @foreach($columns as $column)
                         { data: '{{ $column }}', name: '{{ $column }}' },
                     @endforeach
                     { data: 'action', name: 'action', orderable: false, searchable: false }
-                ]
+                ],
+                 select: {
+                    style: 'multi'  // Allows multiple row selection
+                }, 
+               /*  dom: 'Bfrtip', */  // Button control
+
+               layout: {
+                    topStart: {
+                        buttons: [
+                            'pageLength',
+                            {
+                                text: 'Delete Selected',
+                                action: function () {
+                                    let selectedRows = table.rows({ selected: true }).data().toArray();
+                                    let ids = selectedRows.map(row => row.id);
+
+                                    if(ids.length === 0) {
+                                        alert('No rows selected');
+                                        return;
+                                    }
+
+                                    if(confirm('Are you sure you want to delete the selected rows?')) {
+                                        $.ajax({
+                                            url: "{{ route('delete-'.$entity.'-data') }}",  // API endpoint to delete
+                                            type: 'DELETE',
+                                            data: {
+                                                ids: ids,
+                                                _token: '{{ csrf_token() }}'  // Include CSRF token
+                                            },
+                                            success: function(response) {
+                                                table.ajax.reload();  // Reload the table after deletion
+                                                alert('Rows deleted successfully');
+                                            },
+                                            error: function(xhr, status, error) {
+                                                alert('Failed to delete rows');
+                                                console.error(error);
+                                            }
+                                        });
+                                    }
+                                }
+                            },
+
+                            'selected',
+                            'selectAll',
+                            'selectNone',
+                            
+                           /*  'selectRows', */
+                        ]
+                    }
+               },
+               select: true,
+                
+                               
+                /* layout: {
+                    topStart: {
+                        buttons: [
+                            'selected',
+                            'selectedSingle',
+                            'selectAll',
+                            'selectNone',
+                            'selectRows',
+                            'selectColumns',
+                            'selectCells',
+                            'delete'
+                        ]
+                    }
+                },
+                select: true */
+
             });
         });
     </script>

@@ -38,12 +38,8 @@ use App\Http\Controllers\PaymentMethodController;
 Auth::routes();
 //require __DIR__.'/auth.php';
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
-
-
 Route::controller(PageController::class)->group(function () {
+    Route::get('/', 'index')->name('welcome');
     Route::get('/contact-us', 'contact');
     Route::get('/about-us', 'about');
     Route::get('/terms-and-conditions', 'terms');
@@ -67,8 +63,11 @@ Route::controller(EventController::class)->group(function (){
 
 });
 
+Route::get('uploads/photos/{filename}', [PhotoController::class, 'getImage'])->name('image.view');
 
 
+
+Route::get('admin/photos/import/bulk/{event_id}', [PhotoController::class,'checkChunk'])->name('admin.photos.bulk.store');
 
 // Photo Routes
 Route::resource('photos', PhotoController::class)->only(['index', 'show']);
@@ -203,6 +202,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('users/delete/{user_id}', 'userDelete')->name('admin.users.delete'); /** delere record */
             Route::get('get-users-data', 'getUsersData')->name('get-users-data'); /** get all data users */
             Route::get('users/log', 'userList')->name('admin.users.log');
+            Route::delete('users/delete', 'deleteSelected')->name('delete-users-data');
             
         });
 
@@ -211,14 +211,17 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('create', 'create')->name('admin.photos.create');
             Route::get('edit/{photo}', 'edit')->name('admin.photos.edit');
             Route::post('update/{photo}', 'update')->name('admin.photos.update');
-            Route::post('store/{photo}', 'store')->name('admin.photos.store');
+            Route::post('store', 'store')->name('admin.photos.store');
             Route::delete('destroy/{photo}', 'destroy')->name('admin.photos.destroy');
             Route::get('show/{photo}', 'show')->name('admin.photos.show');
+            Route::delete('/photos/delete', 'deleteSelected')->name('delete-photos-data');
         });
 
         Route::get('photos/data', [PhotoController::class, 'getPhotosData'])->name('get-photos-data');
         Route::get('photos/import/{event_id}', [PhotoController::class,'importBulkPhotos'])->name('admin.photos.bulk.import');
-        Route::post('photos/import/{event_id}', [PhotoController::class,'importBulkPhotosStore'])->name('admin.photos.bulk.store');
+        //Route::get('photos/import/bulk/{event_id}', [PhotoController::class,'checkChunk'])->name('admin.photos.bulk.store');
+        Route::post('photos/import/bulk/{event_id}', [PhotoController::class,'importBulkPhotosStore'])->name('admin.photos.bulk.store');
+        
 
 
         Route::controller(UploadController::class)->group(function (){
@@ -251,18 +254,33 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 
         Route::get('categories/data', [CategoryController::class, 'getCategoryData'])->name('get-categories-data');
 
-        Route::resource('events', EventController::class)->except(['show'])->names([
+
+        Route::prefix('events')->controller(EventController::class)->group(function () {
+            Route::get('index', 'index')->name('admin.events.index');
+            Route::get('create', 'create')->name('admin.events.create');
+            Route::get('edit/{event}', 'edit')->name('admin.events.edit');
+            Route::put('update/{event}', 'update')->name('admin.events.update');
+            Route::post('store', 'store')->name('admin.events.store');
+            Route::delete('destroy/{event}', 'destroy')->name('admin.events.destroy');
+            Route::get('show/{event}', 'show')->name('admin.events.show');
+            Route::delete('/photos/delete', 'deleteSelected')->name('delete-events-data');
+        });
+
+        Route::get('events/data', [EventController::class, 'getEventData'])->name('get-events-data');
+       /*  Route::get('events/{event}', [EventController::class, 'show'])->name('admin.events.show');
+        Route::delete('/events/delete', [EventController::class, 'deleteSelected'])->name('delete-events-data');
+ */
+        /* Route::resource('events', EventController::class)->except(['show'])->names([
             'index' => 'admin.events.index',
             'create' => 'admin.events.create',
             'edit' => 'admin.events.edit',
             'update' => 'admin.events.update',
             'store' => 'admin.events.store',
-            /* 'show' => 'admin.events.show', */
+            /* 'show' => 'admin.events.show', *
             'destroy' => 'admin.events.destroy',
-        ]);
+        ]); */
 
-        Route::get('events/data', [EventController::class, 'getEventData'])->name('get-events-data');
-        Route::get('events/{event}', [EventController::class, 'show'])->name('admin.events.show');
+        
 
 
         Route::controller(SettingController::class)->group(function () {
