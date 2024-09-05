@@ -138,6 +138,10 @@ class ProcessBulkPhotos implements ShouldQueue
                             $imagePath = $directory . $filename;
                             $imageInstance = Image::make($imagePath);
 
+                            // Apply watermark and save as a new file
+                            $watermarkImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark.' . $extension;
+                            $this->applyWatermark($imageInstance, $watermarkImagePath);
+
                             $imageInstance->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
                             $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
 
@@ -151,77 +155,6 @@ class ProcessBulkPhotos implements ShouldQueue
                         }
                     }
 
-                       /*  if ($photo) {
-                            $existingLeadImage = $photo->leadImage();
-
-                            switch ($this->photoAction) {
-                                case 'skip':
-                                    if ($existingLeadImage) {
-                                        \Log::info("Skipping photo with race number: {$raceNumber} as it already exists.");
-                                        continue 2; // Skip to the next image
-                                    }
-                                    break;
-
-                                case 'replace':
-                                    if ($existingLeadImage) {
-                                        $existingLeadImage->delete();
-                                        \Log::info("Deleted existing lead image for photo with race number: {$raceNumber}");
-                                    }
-                                    break;
-
-                                case 'duplicate':
-                                    // Duplicate logic here (if needed)
-                                    break;
-
-                                default:
-                                    \Log::warning("Unknown action for photo with race number: {$raceNumber}");
-                                    continue 2;
-                            }
-                        } else {
-                            $photo = new Photo([
-                                'name' => $raceNumber,
-                                'race_number' => $raceNumber,
-                                'price' => $price,
-                                'description' => $description,
-                                'photo_type' => $this->photoType,
-                                'event_id' => $this->eventId,
-                                'stock_status' => 'in_stock',
-                                'downloadable' => true,
-                            ]);
-                            $photo->save();
-                        }
-
-                        $photoId = $photo->id;
-
-                        $directory = 'public/uploads/photos/' . $photoId . '/';
-                        $directoryToSave = 'uploads/photos/' . $photoId . '/';
-                        $filename = $this->photoType . '_' . Str::random(12) . '.' . $extension;
-
-                        if (!File::exists($directory)) {
-                            File::makeDirectory($directory, 0755, true);
-                            \Log::info("Directory did not exist and was created: {$directory}");
-                        } else {
-                            \Log::info("Directory already exists: {$directory}");
-                        }
-
-                        \Log::info("Moving file to: {$directory}{$filename}");
-                        File::move($image->getPathname(), $directory . $filename);
-
-                        $imagePath = $directory . $filename;
-                        $imageInstance = Image::make($imagePath);
-
-                        $imageInstance->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                        $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
-
-                        Upload::create([
-                            'photo_id' => $photoId,
-                            'photo_type' => $this->photoType,
-                            'file_name' => $filename,
-                            'file_path' => $directoryToSave . $filename,
-                            'extension' => $extension,
-                        ]);
-                    }
- */
                     File::deleteDirectory($extractPath);
                     \Log::info("Completed processing bulk photos and cleaned up temporary files.");
 
@@ -241,6 +174,14 @@ class ProcessBulkPhotos implements ShouldQueue
         } else {
             \Log::error("Unable to open ZIP file for processing: {$this->zipFilePath}");
         }
+    }
+
+    protected function applyWatermark($imageInstance, $watermarkImagePath)
+    {
+        $watermark = Image::make(public_path('assets/img/watermark.png'));
+
+        // Apply the watermark at the center of the image
+        $imageInstance->insert($watermark, 'center')->save($watermarkImagePath);
     }
 
     protected function cleanupChunks()
