@@ -43,7 +43,18 @@
         <div class="col-md-7">
             <!-- Lead Image Display -->
             <div class="lead-image mb-4 zoomable">
-                <img src="{{ asset($lead_image) }}" alt="{{ $photo->name }}" class="img-fluid zoomable__img">
+                @php
+                    // Find the position of the last dot (.) before the extension
+                    $lastDotPosition = strrpos($lead_image, '.');
+
+                    // Extract the base name and the extension
+                    $baseName = substr($lead_image, 0, $lastDotPosition);
+                    $extension = substr($lead_image, $lastDotPosition);
+
+                    // Create the watermarked image path
+                    $watermarked_image = $baseName . '.watermark' . $extension;
+                @endphp
+                <img src="{{ asset($watermarked_image) }}" alt="{{ $photo->name }}" class="img-fluid zoomable__img">
                 <div class="zoom-icon">
                     <i class="fas fa-search-plus"></i>
                 </div>
