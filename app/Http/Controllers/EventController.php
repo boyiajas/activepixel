@@ -49,13 +49,71 @@ class EventController extends Controller
         return view('events.index', compact('events'));
     }
 
-    public function showEventPhotos(Event $event)
+    /* public function showEventPhotos(Event $event)
     {
         $event = Event::findOrFail($event->id);
         $photos = Photo::where('event_id', $event->id)->images()->paginate(24);
 
         return view('events.photos', compact('event', 'photos'));
+    } */
+    /* public function showEventPhotos(Event $event, Request $request)
+    {
+        $event = Event::findOrFail($event->id);
+        
+        // Check if this is an AJAX request
+        if ($request->ajax()) {
+            $photos = Photo::where('event_id', $event->id)->paginate(6);
+            return response()->json([
+                'photos' => $photos->items(),
+                'current_page' => $photos->currentPage(),
+                'last_page' => $photos->lastPage(),
+            ]);
+        }
+    
+        $photos = Photo::where('event_id', $event->id)->paginate(6); // Load 6 photos initially
+        return view('events.photos', compact('event', 'photos'));
+    } */
+
+    public function showEventPhotos(Event $event, Request $request)
+    {
+        //dd(request()->all());
+        $event = Event::findOrFail($event->id);
+        
+        // Handle AJAX request
+        if ($request->page) {
+            $photos = Photo::where('event_id', $event->id)->paginate(6);
+
+            
+            return response()->json([
+                'photos' => $photos->map(function ($photo) {
+
+                    // Find the position of the last dot (.) before the extension
+                    $lastDotPosition = strrpos($photo->leadImage()?->file_path, '.');
+
+                    // Extract the base name and the extension
+                    $baseName = substr($photo->leadImage()?->file_path, 0, $lastDotPosition);
+                    $extension = substr($photo->leadImage()?->file_path, $lastDotPosition);
+
+                    // Create the watermarked image path
+                    $watermarked_image = $baseName . '.watermark' . $extension;
+
+                    return [
+                        'id' => $photo->id,
+                        'name' => $photo->name,
+                        'price' => $photo->price,
+                        'lead_image' => $watermarked_image,
+                    ];
+                }),
+                'current_page' => $photos->currentPage(),
+                'last_page' => $photos->lastPage(),
+            ]);
+        }
+
+        // Initial page load
+        $photos = Photo::where('event_id', $event->id)->paginate(6); // Load 6 photos initially
+        return view('events.photos', compact('event', 'photos'));
     }
+
 
     /**
      * Show the form for creating a new resource.

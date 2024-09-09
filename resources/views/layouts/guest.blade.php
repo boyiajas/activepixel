@@ -226,7 +226,7 @@
 
             <!-- Centered Logo -->
             <a class="navbar-brand" href="#">
-                <img src="/assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;">
+                <img src="/assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;border-radius: 3px;">
             </a>
 
             <!-- Right-aligned links -->
@@ -391,6 +391,14 @@
 
     <!-- the footer content ends here -->
     <script>
+        $(document).ready(function()
+        { 
+            /* $(document).bind("contextmenu",function(e){
+                    return false;
+            });  */
+        });
+
+
         function toggleNavbar() {
             var navbar = document.querySelector('.navbar-nav');
             navbar.classList.toggle('active');
@@ -402,6 +410,7 @@
     <script src="{{URL::to('assets/js/bootstrap.min.js')}}"></script>
     <script src="{{URL::to('assets/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
     <script src="{{URL::to('assets/js/script.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 </body>
 
 </html>

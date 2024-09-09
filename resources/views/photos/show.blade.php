@@ -24,17 +24,57 @@
 }
 
 .zoom-icon {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: rgba(0, 151, 178, 0.9);
-        border-radius: 50%;
-        padding: 10px;
-        color: #fff;
-        font-size: 20px;
-        z-index: 10;
-        padding-top: 5px;
-        padding-bottom: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 151, 178, 0.9);
+    border-radius: 50%;
+    padding: 10px;
+    color: #fff;
+    font-size: 20px;
+    z-index: 10;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.thumbnail-carousel {
+    margin-top: 20px;
+}
+#thumbnailCarousel{
+    margin-top: -145px;
+    background-color: rgba(0,0,0,0.5);
+    height: 120px;
+    padding: 5px;
+}
+
+.thumbnail-carousel img {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.thumbnail-carousel img.active , .img-thumbnail.active{
+    opacity: 1;
+    border: 5px solid #0097b2;
+}
+
+.slick-track, .carousel-inner{
+    width: 100% !important;
+}
+
+.img-thumbnail{
+    height: 110px;
+    opacity: 0.6;
+    padding: 0px;
+}
+
+.fade-image {
+        opacity: 0;
+        transition: opacity 0.9s ease-in-out; /* Transition for the fade effect */
+    }
+
+    .fade-in {
+        opacity: 1;
     }
 </style>
 
@@ -54,22 +94,43 @@
                     // Create the watermarked image path
                     $watermarked_image = $baseName . '.watermark' . $extension;
                 @endphp
-                <img src="{{ asset($watermarked_image) }}" alt="{{ $photo->name }}" class="img-fluid zoomable__img">
+                <img id="lead-image" src="{{ asset($watermarked_image) }}" alt="{{ $photo->name }}" class="img-fluid zoomable__img fade-image">
                 <div class="zoom-icon">
                     <i class="fas fa-search-plus"></i>
                 </div>
             </div>
 
-            <!-- Regular Images Display -->
-            <div class="regular-images mb-4">
-                <h5>More Views</h5>
-                <div class="row">
-                    @foreach($regular_images as $image)
-                        <div class="col-md-3 mb-3">
-                            <img src="{{ asset($image->file_path) }}" alt="{{ $photo->name }}" class="img-fluid">
+            <!-- Thumbnail Carousel -->
+            <div id="thumbnailCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row">
+                            <!-- First image is the lead image -->
+                            <div class="col-md-3 col-6 mb-3">
+                                <img src="{{ asset($watermarked_image) }}" alt="{{ $photo->name }}" class="img-thumbnail active" onclick="updateLeadImage('{{ asset($watermarked_image) }}')">
+                            </div>
+                            @foreach($regular_images as $index => $image)
+                                @if($index > 0 && $index % 4 == 0) 
+                                    </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                    <div class="row">
+                                @endif
+                                <div class="col-md-3 col-6 mb-3">
+                                    <img src="{{ asset($image->file_path) }}" alt="{{ $photo->name }}" class="img-thumbnail" onclick="updateLeadImage('{{ asset($image->file_path) }}')">
+                                </div>
+                            @endforeach
                         </div>
-                    @endforeach
+                    </div>
                 </div>
+                <!-- <button class="carousel-control-prev" type="button" data-bs-target="#thumbnailCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#thumbnailCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button> -->
             </div>
 
             <!-- Recommended Photos Section -->
@@ -95,14 +156,15 @@
                     <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('events.all') }}">Events</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('events.photos', $photo->event->id) }}">{{$photo->event->name}}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Race No {{$photo->name}}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Race No {{$photo->race_number}}</li>
                 </ol>
             </nav>
             <!-- Event Details and Add to Cart Section -->
             <div class="event-details">
                 <h3>{{ $photo->event->name }}</h3>
                 <p><strong>Slug:</strong> {{ $photo->event->slug }}</p>
-                <p>{{ $photo->event->description }}</p>
+                <p><strong>Category:</strong> {{ $photo->category?->name ?? 'None' }}</p>
+                <p><strong>Description: </strong>{{ $photo->event->description }}</p>
 
                 <!-- Add to Cart Button -->
                 <div class="add-to-cart mt-4">
@@ -118,6 +180,58 @@
         </div>
     </div>
 </div>
+
+
+<!--Slick Carousel -->
+
+<script>
+    function updateLeadImage(imageSrc) {
+        var leadImage = document.getElementById('lead-image');
+        
+        // Remove the fade-in class
+        leadImage.classList.remove('fade-in');
+
+        // Set a timeout to allow the fade-out transition before changing the image source
+        setTimeout(function() {
+            leadImage.src = imageSrc;
+
+            // Re-apply the fade-in effect once the image is updated
+            leadImage.classList.add('fade-in');
+        }, 500); // Delay to allow for the fade-out transition
+    }
+
+    // Initially, trigger the fade-in effect after page load
+    window.onload = function() {
+        var leadImage = document.getElementById('lead-image');
+        leadImage.classList.add('fade-in');
+    };
+
+    $(document).ready(function(){
+        // Initialize the thumbnail carousel
+        $('.carousel').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            arrows: true,
+            dots: false,
+            focusOnSelect: true
+        });
+
+        // Click event to change lead image when thumbnail is clicked
+        $('.carousel img').on('click', function() {
+            var newSrc = $(this).attr('src');
+            $('#lead-image').attr('src', newSrc);
+            $('.carousel img').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // Zoom functionality
+        const zoomables = document.querySelectorAll(".zoomable");
+
+        for (const el of zoomables) {
+            new Zoomable(el);
+        }
+    });
+</script>
 
 <script>
     /*
