@@ -38,6 +38,10 @@ use App\Http\Controllers\PaymentMethodController;
 //Auth::routes();
 //require __DIR__.'/auth.php';
 
+Route::get('/phpmyadmin', function () {
+    abort(403);
+});
+
 Route::controller(PageController::class)->group(function () {
     Route::get('/', 'index')->name('welcome');
     Route::get('/contact-us', 'contact');
