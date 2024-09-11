@@ -64,6 +64,7 @@ Route::controller(EventController::class)->group(function (){
     Route::get('events/{event}/photos',  'showEventPhotos')->name('events.photos');
     Route::get('events/search', 'search')->name('events.search');
     Route::get('events/{event}/categories',  'categories')->name('events.categories');
+    Route::post('events/{event}/import-photos', 'importPhotosSpreadSheet')->name('admin.events.importPhotos');
 
 });
 

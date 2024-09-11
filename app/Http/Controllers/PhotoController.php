@@ -301,34 +301,38 @@ class PhotoController extends Controller
                 foreach ($uploads as $upload) {
                     // Get the full path to the original file
                     $originalFilePath = public_path($upload->file_path);
-                    \Log::info("the upload path is {$upload->file_path}");
+                    //\Log::info("the upload path is {$upload->file_path}");
 
                     // Extract the directory and base filename without the size suffix and extension
                     $directory = pathinfo($originalFilePath, PATHINFO_DIRNAME);
                     $filename = pathinfo($originalFilePath, PATHINFO_FILENAME);  // Filename without extension
                     $extension = $upload->extension;
+                    $originalFilePathWithoutExtension = $directory . '/' . $filename;
 
                     // Define the different image sizes used in the storeImage function
-                    $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                    $sizes = ['_200_300','.watermark_200_300', '.watermark'];
 
                     // Delete the resized images
                     foreach ($sizes as $size) {
-                        $sizedFilePath = $originalFilePath . $size . '.' . $extension;
+                        $sizedFilePath = $originalFilePathWithoutExtension . $size . '.' . $extension;
                         if (File::exists($sizedFilePath)) {
-                            \Log::info("here we are deleting the resize {$size} with located in {$sizedFilePath}");
+                            //\Log::info("here we are deleting the resize {$size} with located in {$sizedFilePath}");
                             File::delete($sizedFilePath);
                         }
                     }
 
+
+
+
                     // Delete the original image file
                     if (File::exists($originalFilePath)) {
-                        \Log::info("here we are deleting the original file: {$originalFilePath}");
+                        //\Log::info("here we are deleting the original file: {$originalFilePath}");
                         File::delete($originalFilePath);
                     }
 
                      // Check if the directory is empty and delete it if it is
                     if (is_dir($directory) && count(glob($directory . '/*')) === 0) {
-                        \Log::info("Deleting empty directory: {$directory}");
+                        //\Log::info("Deleting empty directory: {$directory}");
                         rmdir($directory);
                     }
 
@@ -364,26 +368,31 @@ class PhotoController extends Controller
                 $directory = pathinfo($originalFilePath, PATHINFO_DIRNAME);
                 $filename = pathinfo($originalFilePath, PATHINFO_FILENAME);  // Filename without extension
                 $extension = $upload->extension;//dd($directory, $filename, $extension, $originalFilePath);
+                // Combine the directory and filename to get the original path without extension
+                $originalFilePathWithoutExtension = $directory . '/' . $filename;
+                //\Log::info("resize path : {$originalFilePathWithoutExtension}");
 
                 // Define the different image sizes used in the storeImage function
-                $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                $sizes = ['_200_300','.watermark_200_300', '.watermark'];
+
 
                 // Delete the resized images
-                foreach ($sizes as $size) {
-                    $sizedFilePath = $originalFilePath . $size . '.' . $extension;
+                foreach ($sizes as $size) { 
+                    $sizedFilePath = $originalFilePathWithoutExtension . $size . '.' . $extension; //\Log::info("resize path : {$sizedFilePath}");
+                    //$sizedFilePath = $originalFilePath . $size . '.' . $extension;
                     if (File::exists($sizedFilePath)) {
                         File::delete($sizedFilePath);
                     }
                 }
 
                 // Delete the original image file
-                if (File::exists($originalFilePath)) {
+                if (File::exists($originalFilePath)) { \Log::info("resize path : {$originalFilePath}");
                     File::delete($originalFilePath);
                 }
 
                 // Check if the directory is empty and delete it if it is
                 if (is_dir($directory) && count(glob($directory . '/*')) === 0) {
-                    \Log::info("Deleting empty directory: {$directory}");
+                    //\Log::info("Deleting empty directory: {$directory}");
                     rmdir($directory);
                 }
 
@@ -456,6 +465,7 @@ class PhotoController extends Controller
  */
         return response()->json(['chunkExists' => false, 'chunkFileName' => $chunkFileName, 'chunkFileName2' => $chunkFileName2, 'dump' => $request->all()], 404);
     }
+
 
     public function importBulkPhotosStore(Request $request, Event $event_id)
     {   //dd($request->hasFile('zip_file'));
