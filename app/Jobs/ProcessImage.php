@@ -59,11 +59,12 @@ class ProcessImage implements ShouldQueue
                     Log::info('Successfully resized avatar to 200x200 and saved to: ' . $this->file_location);
                     break;
                 case 'lead_image':
-                    $image->fit(265, 163)->save($this->directory . $this->filename . '_265_163.' . $this->extension);
-                    $image->fit(400, 161)->save($this->directory . $this->filename . '_400_161.' . $this->extension);
+                   
+                    $image->fit(200, 300)->save($this->directory . $this->filename . '_200_300.' . $this->extension);
+                    /* $image->fit(400, 161)->save($this->directory . $this->filename . '_400_161.' . $this->extension);
                     $image->fit(143, 83)->save($this->directory . $this->filename . '_143_83.' . $this->extension);
                     $image->fit(835, 467)->save($this->directory . $this->filename . '_835_467.' . $this->extension);
-                    $image->fit(1920, 600)->save($this->directory . $this->filename . '_1920_600.' . $this->extension);
+                    $image->fit(1920, 600)->save($this->directory . $this->filename . '_1920_600.' . $this->extension); */
                     //$image->fit(265, 163)->save($this->file_location);
                    /*  Log::info('Successfully resized lead image to 265x163 and saved to: ' . $this->file_location);
                     $image->fit(400, 161)->save($this->getVariantPath('_400_161'));
@@ -76,22 +77,22 @@ class ProcessImage implements ShouldQueue
                     Log::info('Successfully resized lead image to 1920x600 and saved to: ' . $this->getVariantPath('_1920_600')); */
                     break;
                 case 'regular':
-                    $image->fit(143, 83)->save($this->getVariantPath('_143_83'));
-                    Log::info('Successfully resized regular image to 143x83 and saved to: ' . $this->getVariantPath('_143_83'));
+                    $image->fit(200, 300)->save($this->getVariantPath('_200_300'));
+                    /* Log::info('Successfully resized regular image to 143x83 and saved to: ' . $this->getVariantPath('_143_83'));
                     $image->fit(835, 467)->save($this->getVariantPath('_835_467'));
-                    Log::info('Successfully resized regular image to 835x467 and saved to: ' . $this->getVariantPath('_835_467'));
+                    Log::info('Successfully resized regular image to 835x467 and saved to: ' . $this->getVariantPath('_835_467')); */
                     break;
                 case 'event_photo':
-                    $image->fit(265, 163)->save($this->file_location);
+                    $image->fit(200, 300)->save($this->file_location);
                     Log::info('Successfully resized event photo to 265x163 and saved to: ' . $this->file_location);
-                    $image->fit(800, 600)->save($this->file_location);
-                    Log::info('Successfully resized event photo to 800x600 and saved to: ' . $this->file_location);
+                    /* $image->fit(800, 600)->save($this->file_location);
+                    Log::info('Successfully resized event photo to 800x600 and saved to: ' . $this->file_location); */
                     break;
                 case 'category_photo':
-                    $image->fit(265, 163)->save($this->file_location);
+                    /*$image->fit(265, 163)->save($this->file_location);
                     Log::info('Successfully resized category photo to 265x163 and saved to: ' . $this->file_location);
                     $image->fit(400, 300)->save($this->file_location);
-                    Log::info('Successfully resized category photo to 400x300 and saved to: ' . $this->file_location);
+                    Log::info('Successfully resized category photo to 400x300 and saved to: ' . $this->file_location); */
                     break;
             }
             /* switch ($this->photo_type) {

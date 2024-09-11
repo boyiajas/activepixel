@@ -92,7 +92,7 @@ class UploadController extends Controller
                 $existingExtension = $existingUpload->extension;
 
                 // Define sizes used for lead_image
-                $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                $sizes = ['_200_300','.watermark_200_300'];
 
                 // Delete resized images
                 foreach ($sizes as $size) {
@@ -151,15 +151,13 @@ class UploadController extends Controller
                     $image->fit(200, 200)->save($file_location);
                     break;
                 case 'lead_image':
-                    $image->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                    $image->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
-                    $image->fit(143, 83)->save($directory . $filename . '_143_83.' . $extension);
+                    $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
 
-                    $this->applyWatermark($file_location, $directory, $filename, $extension);
+                    $watermarkResizeImagePath = $directory . $filename . '.watermark_200_300.' . $extension;
+                    $this->applyWatermark($file_location, $directory, $filename, $extension, $watermarkResizeImagePath);
                     break;
                 case 'regular':
-                    $image->fit(143, 83)->save($directory . $filename . '_143_83.' . $extension);
-                    $image->fit(835, 467)->save($directory . $filename . '_835_467.' . $extension);
+                    $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
                     break;
             }
 
@@ -237,20 +235,19 @@ class UploadController extends Controller
                     $image->fit(200, 200)->save($file_location);
                     break;
                 case 'lead_image':
-                    $image->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                    $image->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
-                    $image->fit(143, 83)->save($directory . $filename . '_143_83.' . $extension);
+                    $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
+                    
                     //$image->fit(835, 467)->save($directory . $filename . '_835_467.' . $extension);
                     //$image->fit(1920, 600)->save($directory . $filename . '_1920_600.' . $extension);
 
                     // Apply watermark and save as a new file
                     //$this->applyWatermark($image, $directory, $filename, $extension);
-                    $this->applyWatermark($file_location, $directory, $filename, $extension);
+                    $watermarkResizeImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark_200_300.' . $extension;
+                    $this->applyWatermark($file_location, $directory, $filename, $extension, $watermarkResizeImagePath);
                     break;
                 case 'regular':
-                    $image->fit(143, 83)->save($directory . $filename . '_143_83.' . $extension);
-                    $image->fit(835, 467)->save($directory . $filename . '_835_467.' . $extension);
-
+                    $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
+                    
                     // Apply watermark and save as a new file
                     /* $watermarkImagePath = $directory . $filename . '.watermark.' . $extension;
                     $this->applyWatermark($image, $watermarkImagePath); */
@@ -279,22 +276,8 @@ class UploadController extends Controller
         $imageInstance->insert($watermark, 'center')->save($watermarkImagePath);
     } */
 
-    protected function applyWatermark($imagePath, $directory, $filename, $extension)
+    protected function applyWatermark($imagePath, $directory, $filename, $extension, $watermarkResizeImagePath)
     {
-        /* $originalImage = Image::make($imagePath);
-        $watermarkImagePath = public_path('assets/img/watermark.png');
-
-        // Load the watermark image
-        $watermark = Image::make($watermarkImagePath);
-
-        // Apply the watermark to the center of the original image
-        $originalImage->insert($watermark, 'center');
-
-        // Save the watermarked image
-        $watermarkedImagePath = $directory . $filename . '.watermark.' . $extension;
-        $originalImage->save($watermarkedImagePath);
-
-        return $watermarkedImagePath; */
         // Load the original image
         $originalImage = Image::make($imagePath);
 
@@ -319,6 +302,10 @@ class UploadController extends Controller
         // Save the watermarked image
         $watermarkedImagePath = $directory . $filename . '.watermark.' . $extension;
         $originalImage->save($watermarkedImagePath);
+
+        // Now, instead of reapplying the watermark, just resize the already watermarked image
+        $resizedImage = Image::make($watermarkImagePath); // Load the watermarked image
+        $resizedImage->fit(200, 300)->save($watermarkResizeImagePath); // Resize and save the 200x300 image
 
         //return $watermarkedImagePath;
     }
@@ -368,23 +355,29 @@ class UploadController extends Controller
         $extension = $file->extension;
 
         // Define the different image sizes used in the storeImage function
-        $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+        $sizes = ['_200_300','.watermark_200_300', '.watermark'];
 
         // Delete the resized images
         foreach ($sizes as $size) {
-            $sizedFilePath = $directory . '/' . $filename . $size . '.' . $extension;
+            $sizedFilePath = $directory . '/' . $filename . $size . '.' . $extension; \Log::info("resize path : {$sizedFilePath}");
             if (File::exists($sizedFilePath)) {
                 File::delete($sizedFilePath);
             }
         }
 
         // Delete the original image file
-        if (File::exists($originalFilePath)) {
+        if (File::exists($originalFilePath)) { \Log::info("resize path : {$originalFilePath}");
             File::delete($originalFilePath);
         }
 
+        // Check if the directory is empty and delete it if it is
+        if (is_dir($directory) && count(glob($directory . '/*')) === 0) {
+            \Log::info("Deleting empty directory: {$directory}");
+            rmdir($directory);
+        }
+
         // Delete the record from the database
-        $file->delete();
+        //$file->delete();
 
         return response()->json('File deleted successfully', 200);
     }

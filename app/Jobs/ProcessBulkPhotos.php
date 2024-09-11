@@ -138,12 +138,15 @@ class ProcessBulkPhotos implements ShouldQueue
                             $imagePath = $directory . $filename;
                             $imageInstance = Image::make($imagePath);
 
+                            $imageInstance->fit(200, 300)->save($directory . pathinfo($filename, PATHINFO_FILENAME) . '_200_300.' . $extension);
+
                             // Apply watermark and save as a new file
                             $watermarkImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark.' . $extension;
-                            $this->applyWatermark($imageInstance, $watermarkImagePath);
+                            $watermarkResizeImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark_200_300.' . $extension;
+                            $this->applyWatermark($imageInstance, $watermarkImagePath, $watermarkResizeImagePath);
 
-                            $imageInstance->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                            $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension);
+                            
+                            /* $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension); */
 
                             Upload::create([
                                 'photo_id' => $photoId,
@@ -176,12 +179,28 @@ class ProcessBulkPhotos implements ShouldQueue
         }
     }
 
-    protected function applyWatermark($imageInstance, $watermarkImagePath)
+    protected function applyWatermark($imageInstance, $watermarkImagePath, $watermarkResizeImagePath)
     {
         $watermark = Image::make(public_path('assets/img/watermark.png'));
 
+        // Get the dimensions of the original image
+        $originalWidth = $imageInstance->width();
+        $originalHeight = $imageInstance->height();
+
+        // Calculate new watermark size (80% of original image width)
+        $watermarkWidth = $originalWidth * 0.9;
+        $watermarkHeight = ($watermarkWidth / $watermark->width()) * $watermark->height();
+
+        // Resize the watermark
+        $watermark->resize($watermarkWidth, $watermarkHeight);
+
         // Apply the watermark at the center of the image
         $imageInstance->insert($watermark, 'center')->save($watermarkImagePath);
+
+        // Now, instead of reapplying the watermark, just resize the already watermarked image
+        $resizedImage = Image::make($watermarkImagePath); // Load the watermarked image
+        $resizedImage->fit(200, 300)->save($watermarkResizeImagePath); // Resize and save the 200x300 image
+
     }
 
     protected function cleanupChunks()

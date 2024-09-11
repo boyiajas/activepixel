@@ -16,6 +16,8 @@
                             <a href="{{ route('admin.photos.create', ['event_id' => $event->id]) }}" class="btn btn-primary float-right mr-2">Add Photo</a>
                             <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-primary float-right mr-2">Edit Event</a>
                             <a href="{{ route('admin.photos.bulk.import', ['event_id' => $event->id]) }}" class="btn btn-primary float-right mr-2">Import Photos</a>
+                            <!-- Import Spreadsheet Button -->
+                            <button type="button" class="btn btn-primary float-right mr-2" data-toggle="modal" data-target="#importSpreadsheetModal">Import Spreadsheet</button>
                         </div>
                     </div>
                 </div>
@@ -31,7 +33,7 @@
                     <h4 class="mb-2">Event Name: {{ $event->name }}</h4>
                     <p><strong>Slug:</strong> {{ $event->slug }}</p>
                     <p><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('F d, Y') }}</p>
-                    <br/><br/><br/>
+                    
                     <!-- Navigation Tabs -->
                     <ul class="nav nav-tabs nav-tabs-solid">
                         <li class="nav-item">
@@ -193,6 +195,30 @@
                 </div>
             </div>
             @endforeach
+
+            <!-- Import Spreadsheet Modal -->
+            <div class="modal fade" id="importSpreadsheetModal" tabindex="-1" role="dialog" aria-labelledby="importSpreadsheetLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="importSpreadsheetLabel">Import Spreadsheet</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('admin.events.importPhotos', $event->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="photo_spreadsheet">Select Spreadsheet (CSV/XLSX)</label>
+                                    <input type="file" class="form-control" name="photo_spreadsheet" required accept=".csv,.xlsx">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Import</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

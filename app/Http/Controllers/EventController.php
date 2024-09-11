@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Illuminate\Support\Arr;
 
@@ -74,6 +75,49 @@ class EventController extends Controller
         return view('events.photos', compact('event', 'photos'));
     } */
 
+    public function importPhotosSpreadSheet(Request $request, $eventId)
+    {
+        try{
+            $request->validate([
+                'photo_spreadsheet' => 'required|mimes:csv,xlsx|max:2048',
+            ]);
+
+            // Load the uploaded file
+            $file = $request->file('photo_spreadsheet');//dd($file);
+
+            // Read the file contents and process the data
+            $data = Excel::toArray([], $file)[0];  // Assumes first sheet
+            //dd($data, $eventId);
+             // Skip the header row (row 0)
+            foreach ($data as $index => $row) {
+                if ($index == 0) {
+                    continue; // Skip header row
+                }
+
+                if (!empty($row[0])) {  // Assuming race_number is in column 0
+                    // Find the Photo by race number
+                    $photo = Photo::where('event_id', $eventId)
+                        ->where('race_number', $row[0])
+                        ->first();
+
+                    // If photo is found, update the name and description
+                    if ($photo) {
+                        $photo->name = $row[1] ?? $photo->name; // Assuming name is in column 1
+                        $photo->description = $row[2] ?? $photo->description; // Assuming description is in column 2
+                        $photo->save();
+                    }
+                }
+            }
+
+            Toastr::success('Photo information updated successfully.', 'Success');
+            return redirect()->back();
+
+        }catch(\Exception $e){
+            Toastr::error('Photos information updated failed.'.$e->getMessage(),'Error');
+            return redirect()->back();
+        }
+    }
+
     public function showEventPhotos(Event $event, Request $request)
     {
         //dd(request()->all());
@@ -100,6 +144,7 @@ class EventController extends Controller
                     return [
                         'id' => $photo->id,
                         'name' => $photo->name,
+                        'race_number' => $photo->race_number,
                         'price' => $photo->price,
                         'lead_image' => $watermarked_image,
                     ];
@@ -401,7 +446,7 @@ class EventController extends Controller
                         $filePath = public_path($upload->file_path);
 
                         // Delete different image sizes
-                        $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                        $sizes = ['_200_300','.watermark_200_300', '.watermark'];
                         foreach ($sizes as $size) {
                             $sizedFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . $size . '.' . $upload->extension;
                             if (File::exists($sizedFilePath)) {
@@ -454,7 +499,7 @@ class EventController extends Controller
                     $filePath = public_path($upload->file_path);
 
                     // Delete different image sizes
-                    $sizes = ['_143_83', '_265_163', '_400_161', '_835_467', '_1920_600'];
+                    $sizes = ['_200_300','.watermark_200_300', '.watermark'];
                     foreach ($sizes as $size) {
                         $sizedFilePath = pathinfo($filePath, PATHINFO_DIRNAME) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . $size . '.' . $upload->extension;
                         if (File::exists($sizedFilePath)) {
@@ -481,7 +526,7 @@ class EventController extends Controller
             }
 
             // Delete the event itself
-            $event->delete();
+            $event->delete(); 
 
             return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
         } catch (\Throwable $th) {

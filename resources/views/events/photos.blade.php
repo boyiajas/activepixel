@@ -97,7 +97,7 @@
                         @endphp
                             <img src="/{{ $watermarked_image }}" alt="{{ $photo->name }}" class="card-img-top">
                             <div class="card-body">
-                                <h5 class="card-title">Race No: {{ $photo->name }}</h5>
+                                <h5 class="card-title">Race No: {{ $photo->race_number }}</h5>
                                 <p class="card-text">Price: R{{ number_format($photo->price, 2) }}</p>
                                 
                                 <form action="{{ route('cart.add', ['photo_id' => $photo->id]) }}" method="POST" class="d-flex align-items-center justify-content-between">
@@ -147,7 +147,7 @@
                             <div class="card photo-card h-30 mt-0">
                                 <img src="/${photo.lead_image}" alt="${photo.name}" class="card-img-top">
                                 <div class="card-body">
-                                    <h5 class="card-title">Race No: ${photo.name}</h5>
+                                    <h5 class="card-title">Race No: ${photo.race_number}</h5>
                                     <p class="card-text">Price: R${photo.price}</p>
                                     <form action="/cart/add/${photo.id}" method="POST" class="d-flex align-items-center justify-content-between">
                                         @csrf
