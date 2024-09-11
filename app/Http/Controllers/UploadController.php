@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Upload;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -41,9 +42,10 @@ class UploadController extends Controller
         $photo = $request->file('file');
         $photo_type = $request->photo_type;
         $photo_id = $request->photo_id;
+        $result = Photo::find($photo_id);
 
         // Validate file upload
-        if (!$photo->isValid()) {
+        if (!$result) {
             return response()->json('Invalid file upload', 400);
         }
 
@@ -166,115 +168,6 @@ class UploadController extends Controller
             return response()->json('Error uploading file', 400);
         }
     }
-
-    public function storeImageOld(Request $request)
-    {
-        $photo = $request->file('file');
-        $photo_type = $request->photo_type;
-        $photo_id = $request->photo_id;
-
-        // Validate file upload
-        if (!$photo->isValid()) {
-            return response()->json('Invalid file upload', 400);
-        }
-
-        $photo_name = $photo->getClientOriginalName();
-
-        $extension = strtolower($photo->getClientOriginalExtension());
-        $userId = Auth::user()->id;
-
-        switch ($photo_type){
-
-            case 'avatar':  // Naming Scheme for User Avatar
-                $directory = 'uploads/users/avatar/';
-                $filename = 'userAvatar_' . Str::random(12);
-                break;
-            case 'lead_image':
-                $directory = 'uploads/photos/'.$userId. '/';
-                $filename = 'lead_image_'. strtolower(str_replace(' ', '-', $photo_name)) . '_' . Str::random(12);
-                break;
-            case 'regular':
-                $directory = 'uploads/photos/'.$userId.'/';
-                $filename = 'image_'. strtolower(str_replace(' ', '-', $photo_name)) . '_' . Str::random(12); 
-                break;
-            default:
-                $directory = 'uploads/misc/';
-                $filename = 'misc_' . Str::random(12);
-                break;
-        }
-
-        $file_location = $directory . $filename . '.' . $extension;
-
-         // Ensure directory exists
-        if (!File::exists($directory)) {
-            File::makeDirectory($directory, 0755, true);
-        }
-
-        $upload_success = $photo->move($directory, $filename . '.' . $extension);
-
-        if ($upload_success) {
-
-            // Save the file details using the Upload model
-            $upload = Upload::create([
-                'photo_id' => $photo_id,
-                'photo_type' => $photo_type,
-                'file_name' => $photo_name,
-                'file_path' => $file_location,
-                'extension' => $extension,
-            ]);
-            \Log::info(''. $photo_id .''. $photo_type .print_r($upload));
-            //here we getting the base url and adding it to the file location
-            //$full_file_location = urlToPath($file_location);
-
-            // Dispatch the image processing job to the queue
-            //ProcessImage::dispatch($file_location, $photo_type, $directory, $filename, $extension);
-            $image = Image::make($file_location);
-            // Resize and process image according to its type
-            switch ($photo_type) {
-                case 'avatar':
-                    $image->fit(200, 200)->save($file_location);
-                    break;
-                case 'lead_image':
-                    $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
-                    
-                    //$image->fit(835, 467)->save($directory . $filename . '_835_467.' . $extension);
-                    //$image->fit(1920, 600)->save($directory . $filename . '_1920_600.' . $extension);
-
-                    // Apply watermark and save as a new file
-                    //$this->applyWatermark($image, $directory, $filename, $extension);
-                    $watermarkResizeImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark_200_300.' . $extension;
-                    $this->applyWatermark($file_location, $directory, $filename, $extension, $watermarkResizeImagePath);
-                    break;
-                case 'regular':
-                    $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
-                    
-                    // Apply watermark and save as a new file
-                    /* $watermarkImagePath = $directory . $filename . '.watermark.' . $extension;
-                    $this->applyWatermark($image, $watermarkImagePath); */
-                    break;
-                /* case 'event_photo':
-                    $image->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                    //$image->fit(800, 600)->save($file_location);
-                    break;
-                case 'category_photo':
-                    $image->fit(265, 163)->save($directory . $filename . '_265_163.' . $extension);
-                    $image->fit(400, 300)->save($file_location);
-                    break; */
-            } 
-
-            return response()->json($upload);
-        } else {
-            return response()->json('Error uploading file', 400);
-        }
-    }
-
-   /*  protected function applyWatermark($imageInstance, $watermarkImagePath)
-    {
-        $watermark = Image::make(public_path('assets/img/watermark.png'));
-
-        // Apply the watermark at the center of the image
-        $imageInstance->insert($watermark, 'center')->save($watermarkImagePath);
-    } */
 
     protected function applyWatermark($imagePath, $directory, $filename, $extension, $watermarkResizeImagePath)
     {
