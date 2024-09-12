@@ -161,13 +161,14 @@ class ProcessBulkPhotos implements ShouldQueue
 
                             $imagePath = $directory . $filename;
                             $imageInstance = Image::make($imagePath);
+                            $imageInstance2 = Image::make($imagePath);
 
                             $imageInstance->fit(200, 300)->save($directory . pathinfo($filename, PATHINFO_FILENAME) . '_200_300.' . $extension);
 
                             // Apply watermark and save as a new file
                             $watermarkImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark.' . $extension;
                             $watermarkResizeImagePath = $directory . pathinfo($filename, PATHINFO_FILENAME) . '.watermark_200_300.' . $extension;
-                            $this->applyWatermark($imageInstance, $watermarkImagePath, $watermarkResizeImagePath);
+                            $this->applyWatermark($imageInstance2, $watermarkImagePath, $watermarkResizeImagePath);
 
                             
                             /* $imageInstance->fit(400, 161)->save($directory . $filename . '_400_161.' . $extension); */
