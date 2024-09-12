@@ -83,18 +83,8 @@
         <div class="col-md-7">
             <!-- Lead Image Display -->
             <div class="lead-image mb-4 zoomable">
-                @php
-                    // Find the position of the last dot (.) before the extension
-                    $lastDotPosition = strrpos($lead_image, '.');
-
-                    // Extract the base name and the extension
-                    $baseName = substr($lead_image, 0, $lastDotPosition);
-                    $extension = substr($lead_image, $lastDotPosition);
-
-                    // Create the watermarked image path
-                    $watermarked_image = $baseName . '.watermark' . $extension;
-                @endphp
-                <img id="lead-image" src="{{ asset($watermarked_image) }}" alt="{{ $photo->name }}" class="img-fluid zoomable__img fade-image">
+               
+                <img id="lead-image" src="{{ asset($photo->leadImageWaterMark()) }}" alt="{{ $photo->name }}" class="img-fluid zoomable__img fade-image">
                 <div class="zoom-icon">
                     <i class="fas fa-search-plus"></i>
                 </div>
@@ -107,7 +97,7 @@
                         <div class="row">
                             <!-- First image is the lead image -->
                             <div class="col-md-3 col-6 mb-3">
-                                <img src="{{ asset($watermarked_image) }}" alt="{{ $photo->name }}" class="img-thumbnail active" onclick="updateLeadImage('{{ asset($watermarked_image) }}')">
+                                <img src="{{ asset($photo->leadImageWaterMark()) }}" alt="{{ $photo->name }}" class="img-thumbnail active" onclick="updateLeadImage('{{ asset($photo->leadImageWaterMark()) }}')">
                             </div>
                             @foreach($regular_images as $index => $image)
                                 @if($index > 0 && $index % 4 == 0) 
@@ -140,7 +130,8 @@
                     @foreach($recommendedPhotos as $recommended)
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('individual.photos', $recommended->id) }}">
-                                <img src="{{ asset('/'.$recommended->leadImage()?->file_path) }}" alt="{{ $recommended->name }}" class="img-fluid">
+                                
+                                <img src="{{ asset('/'.$recommended->leadImageWaterMark()) }}" alt="{{ $recommended->name }}" class="img-fluid">
                                 <p class="mt-2">{{ $recommended->name }}</p>
                             </a>
                         </div>
