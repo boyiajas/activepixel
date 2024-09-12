@@ -84,18 +84,8 @@
                 @foreach($photos as $photo)
                     <div class="col-md-2 mb-0">
                         <div class="card photo-card h-30 mt-0">
-                        @php
-                            // Find the position of the last dot (.) before the extension
-                            $lastDotPosition = strrpos($photo->leadImage()?->file_path, '.');
-
-                            // Extract the base name and the extension
-                            $baseName = substr($photo->leadImage()?->file_path, 0, $lastDotPosition);
-                            $extension = substr($photo->leadImage()?->file_path, $lastDotPosition);
-
-                            // Create the watermarked image path
-                            $watermarked_image = $baseName . '.watermark' . $extension;
-                        @endphp
-                            <img src="/{{ $watermarked_image }}" alt="{{ $photo->name }}" class="card-img-top">
+                       
+                            <img src="/{{ $photo->leadImageLowResolution() }}" alt="{{ $photo->name }}" class="card-img-top">
                             <div class="card-body">
                                 <h5 class="card-title">Race No: {{ $photo->race_number }}</h5>
                                 <p class="card-text">Price: R{{ number_format($photo->price, 2) }}</p>

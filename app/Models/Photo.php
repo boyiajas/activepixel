@@ -59,4 +59,27 @@ class Photo extends Model
         return $this->upload()->wherePhotoType('lead_image')->first();
     }
 
+    public function leadImageLowResolution()
+    {
+        $lastDotPosition = strrpos($this->leadImage()?->file_path, '.');
+
+        // Extract the base name and the extension
+        $baseName = substr($this->leadImage()?->file_path, 0, $lastDotPosition);
+        $extension = substr($this->leadImage()?->file_path, $lastDotPosition);
+                    // Create the watermarked image path
+        return  $baseName . '_200_300' . $extension;
+    }
+
+    public function leadImageWaterMark()
+    {
+        $lastDotPosition = strrpos($this->leadImage()?->file_path, '.');
+
+        // Extract the base name and the extension
+        $baseName = substr($this->leadImage()?->file_path, 0, $lastDotPosition);
+        $extension = substr($this->leadImage()?->file_path, $lastDotPosition);
+                    // Create the watermarked image path
+        return  $baseName . '.watermark' . $extension;
+        //return $this->upload()->wherePhotoType('lead_image')->first();
+    }
+
 }

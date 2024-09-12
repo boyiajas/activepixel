@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use File;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
+use Illuminate\Support\Facades\App;
 
 class ProcessBulkPhotos implements ShouldQueue
 {
@@ -124,6 +125,11 @@ class ProcessBulkPhotos implements ShouldQueue
                             $directory = 'uploads/photos/' . $photoId . '/';
                             $directoryToSave = 'uploads/photos/' . $photoId . '/';
                             $filename = $this->photoType . '_' . Str::random(12) . '.' . $extension;
+
+                            // On local environment, add 'public' to the path
+                            if (App::environment('local')) {
+                                $directory = 'public/' . $directory;
+                            }
 
                             // Check if the file exists in the temporary location
                             try {
