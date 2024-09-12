@@ -125,15 +125,39 @@ class ProcessBulkPhotos implements ShouldQueue
                             $directoryToSave = 'uploads/photos/' . $photoId . '/';
                             $filename = $this->photoType . '_' . Str::random(12) . '.' . $extension;
 
-                            if (!File::exists($directory)) {
-                                File::makeDirectory($directory, 0755, true);
-                                \Log::info("Directory did not exist and was created: {$directory}");
-                            } else {
-                                \Log::info("Directory already exists: {$directory}");
+                            // Check if the file exists in the temporary location
+                            try {
+                                // Check if directory exists; if not, create it
+                                if (!File::exists($directory)) {
+                                    File::makeDirectory($directory, 0755, true);
+                                    \Log::info("Directory did not exist and was created: {$directory}");
+                                } else {
+                                    \Log::info("Directory already exists: {$directory}");
+                                }
+                            
+                                // Check if the file exists in the temporary location
+                                if (File::exists($image->getPathname())) {
+                                    \Log::info("File exists at temporary location: " . $image->getPathname());
+                            
+                                    // Move the file to the new directory
+                                    if (File::move($image->getPathname(), $directory . $filename)) {
+                                        \Log::info("File was successfully moved to: {$directory}{$filename}");
+                            
+                                        // Verify if the file exists in the new location
+                                        if (File::exists($directory . $filename)) {
+                                            \Log::info("File confirmed in destination: {$directory}{$filename}");
+                                        } else {
+                                            \Log::error("File move failed: File not found at destination: {$directory}{$filename}");
+                                        }
+                                    } else {
+                                        \Log::error("File move operation failed: Unable to move file to {$directory}{$filename}");
+                                    }
+                                } else {
+                                    \Log::error("File not found at temporary location: " . $image->getPathname());
+                                }
+                            } catch (\Exception $e) {
+                                \Log::error("An error occurred while moving the file: " . $e->getMessage());
                             }
-
-                            \Log::info("Moving file to: {$directory}{$filename}");
-                            File::move($image->getPathname(), $directory . $filename);
 
                             $imagePath = $directory . $filename;
                             $imageInstance = Image::make($imagePath);
