@@ -121,7 +121,7 @@ class ProcessBulkPhotos implements ShouldQueue
                             // Save the new upload
                             $photoId = $photo->id;
 
-                            $directory = 'public/uploads/photos/' . $photoId . '/';
+                            $directory = 'uploads/photos/' . $photoId . '/';
                             $directoryToSave = 'uploads/photos/' . $photoId . '/';
                             $filename = $this->photoType . '_' . Str::random(12) . '.' . $extension;
 
