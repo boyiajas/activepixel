@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('photo_id')->constrained()->onDelete('cascade');
-            $table->string('download_link')->unique();
+            $table->string('download_link');
             $table->timestamp('expiry_date');
             $table->timestamps();
         });

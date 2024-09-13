@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\DigitalDownload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Cart;
+use App\Jobs\SendPurchasedPhotosEmail;
 use Brian2694\Toastr\Facades\Toastr;
 
 class PaymentController extends Controller
@@ -25,9 +27,48 @@ class PaymentController extends Controller
     public function success(Request $request)
     {
         
-        Toastr::success('Payment successful! Thank you for your order.','Success');
+        $user = Auth::user();
+    
+        // Retrieve the cart items
+        $cartItems = Cart::where('user_id', $user->id)->get();
+        $totalAmount = $cartItems->sum(function ($item) {
+            return $item->photo->price * $item->quantity;
+        });
 
-        return view('payments.success');
+        // Create the order in the database
+        $order = Order::create([
+            'order_number' => uniqid('ORD-'),
+            'user_id' => $user->id,
+            'total_amount' => $totalAmount,
+            'status' => 'completed', // Update based on status
+            'payment_method_id' => $request->payment_method_id,
+            'created_at' => now(),
+        ]);
+
+        // Generate download links for the purchased photos
+        $downloadLinks = DigitalDownload::generateDownloadLink($cartItems);
+
+        // Save digital download records for each photo
+        foreach ($cartItems as $item) {
+            foreach ($downloadLinks as $link) {
+                DigitalDownload::create([
+                    'order_id' => $order->id,
+                    'photo_id' => $item->photo_id,
+                    'download_link' => $link,
+                    'expiry_date' => now()->addDays(7), // Set the expiry date (e.g., 7 days)
+                ]);
+            }
+        }
+
+        // Clear the user's cart
+        Cart::where('user_id', $user->id)->delete();
+
+        // Dispatch job to send email with attachments
+        SendPurchasedPhotosEmail::dispatch($user, $downloadLinks, $order->order_number, $order->total_amount);
+
+        Toastr::success('Payment successful! Thank you for your order.','Success');//dd($downloadLinks);
+
+        return view('payments.success', compact('downloadLinks'), ['userEmail' => $user->email]);
     }
 
     /**

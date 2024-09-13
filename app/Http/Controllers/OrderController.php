@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use DB;
+use Brian2694\Toastr\Facades\Toastr;
 
 class OrderController extends Controller
 {
@@ -72,7 +73,7 @@ class OrderController extends Controller
 
         $data_arr = [];
         foreach ($records as $key => $record) {
-            $statusBadge = '<td><span class="badge badge-' . ($record->status === 'Completed' ? 'success' : 'warning') . '">' . $record->status . '</span></td>';
+            $statusBadge = '<td><span class="badge badge-' . ($record->status === 'completed' ? 'success' : 'warning') . '">' . $record->status . '</span></td>';
 
             $action = '<td class="text-right">
                             <div class="dropdown dropdown-action">
@@ -86,9 +87,14 @@ class OrderController extends Controller
                                     <a class="dropdown-item" href="' . route('admin.orders.edit', ['order' => $record->id]) . '">
                                         <i class="fas fa-pencil-alt m-r-5"></i> Edit
                                     </a>
-                                    <a class="dropdown-item" href="' . route('admin.orders.destroy', ['order' => $record->id]) . '" data-method="DELETE" data-confirm="Are you sure you want to delete this order?">
-                                        <i class="fas fa-trash-alt m-r-5"></i> Delete
-                                    </a>
+                                    <form action="' . route('admin.orders.destroy', $record->id) . '" method="POST" style="display:inline;">
+                                        ' . csrf_field() . '
+                                        ' . method_field('DELETE') . '
+                                        <button type="submit" class="dropdown-item" onclick="return confirm(\'Are you sure you want to delete this event?\')">
+                                            <i class="fas fa-trash-alt m-r-5"></i> Delete
+                                        </button>
+                                    </form>
+                                    
                                 </div>
                             </div>
                         </td>';
@@ -153,6 +159,16 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        try{
+            // Delete the event itself
+            $order->delete(); 
+        
+            Toastr::success('Order deleted successfully :)', 'Success');
+            return redirect()->back();
+
+        } catch (\Throwable $e) {
+            Toastr::error('Order deletion failed: ' . $e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 }

@@ -107,7 +107,7 @@
                                     <div class="row">
                                 @endif
                                 <div class="col-md-3 col-6 mb-3">
-                                    <img src="{{ asset($image->file_path) }}" alt="{{ $photo->name }}" class="img-thumbnail" onclick="updateLeadImage('{{ asset($image->file_path) }}')">
+                                    <img src="{{ asset($image) }}" alt="{{ $photo->name }}" class="img-thumbnail" onclick="updateLeadImage('{{ asset($image) }}')">
                                 </div>
                             @endforeach
                         </div>

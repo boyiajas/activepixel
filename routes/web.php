@@ -114,7 +114,7 @@ Route::group(['middleware' => ['sync.guest.cart']], function () {
 Route::prefix('customer')->middleware(['auth', 'role:admin|manager|user'])->group(function() {
         
     Route::get('/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard'); 
-    Route::get('/orders', [CustomerController::class, 'index2'])->name('customer.orders');
+    Route::get('/orders', [CustomerController::class, 'index'])->name('customer.orders');
     Route::get('/invoices', [CustomerController::class, 'index'])->name('customer.invoices');
     Route::get('/downloads', [CustomerController::class, 'index'])->name('customer.downloads');
     Route::get('/account/settings', [CustomerController::class, 'index'])->name('customer.account.settings');
@@ -244,12 +244,24 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             'edit' => 'admin.users.edit',
             'destroy' => 'admin.users.destroy',
         ]); */
-    
+    /* 
         Route::resource('orders', AdminController::class)->except(['show'])->names([
             'index' => 'admin.orders.index',
             'edit' => 'admin.orders.edit',
             'destroy' => 'admin.orders.destroy',
-        ]);
+        ]); */
+/* 
+        Route::prefix('orders')->controller(AdminController::class)->group(function () {
+            Route::get('index', 'index')->name('admin.orders.index');
+            Route::get('create', 'create')->name('admin.orders.create');
+            Route::get('edit/{order}', 'edit')->name('admin.orders.edit');
+            Route::put('update/{order}', 'update')->name('admin.orders.update');
+            Route::post('store', 'store')->name('admin.orders.store');
+            Route::delete('destroy/{order}', 'destroy')->name('admin.orders.destroy');
+            Route::get('show/{order}', 'show')->name('admin.orders.show');
+            Route::delete('delete', 'deleteSelected')->name('delete-orders-data');
+            Route::get('data', 'getOrderData')->name('get-orders-data');
+        }); */
 
         Route::prefix('categories')->controller(CategoryController::class)->group(function () {
             Route::get('index', 'index')->name('admin.categories.index');
@@ -283,12 +295,17 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         });
 
         // Order Management
-        Route::controller(OrderController::class)->group(function (){
-            Route::get('orders', 'index')->name('admin.orders.index'); 
-            Route::get('orders/create', 'create')->name('admin.orders.create');
+        Route::prefix('orders')->controller(OrderController::class)->group(function (){
+            Route::get('/', 'index')->name('admin.orders.index'); 
+            Route::get('show/{order}', 'show')->name('admin.orders.show');
+            Route::get('create', 'create')->name('admin.orders.create');
+            Route::get('edit/{order}', 'edit')->name('admin.orders.edit');
+            Route::delete('destroy/{order}', 'destroy')->name('admin.orders.destroy');
+            Route::delete('delete', 'deleteSelected')->name('delete-orders-data');
+            Route::get('data', 'getOrderData')->name('get-orders-data');
         });
 
-        Route::get('orders/data', [OrderController::class, 'getOrderData'])->name('get-orders-data');
+        //Route::get('orders/data', [OrderController::class, 'getOrderData'])->name('get-orders-data');
 
         // Cart Management
         //Route::resource('cart', CartController::class);

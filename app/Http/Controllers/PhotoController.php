@@ -37,7 +37,7 @@ class PhotoController extends Controller
     }
 
     public function getImage($filename)
-{
+    {
         $path = $filename; // Adjust the folder as needed
 
         if (Storage::exists($path)) {
@@ -525,7 +525,7 @@ class PhotoController extends Controller
     {
         //dd($photo);
         //$photo = Photo::with(['lead_image', 'regular_images'])->findOrFail($photo);
-        $regular_images = $photo->regularImages(); 
+        $regular_images = $photo->regularImagesWithWaterMark(); 
         $lead_image = $photo->leadImage()?->file_path;
 
         // Fetch 4 recommended photos from the same event

@@ -7,6 +7,7 @@ use App\Models\Checkout;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
 {
@@ -84,6 +85,12 @@ class CheckoutController extends Controller
             $totalAmount = $cartItems->sum(function ($item) {
                 return $item->photo->price * $item->quantity;
             });
+
+             // Generate download links for cart items
+            $downloadLinks = $this->getDownloadLinks($cartItems);
+            
+            // Store download links in the session
+            session(['downloadLinks' => $downloadLinks]);
 
             // Prepare data for PayFast payment
             $payfastData = [
@@ -182,5 +189,30 @@ class CheckoutController extends Controller
     public function destroy(Checkout $checkout)
     {
         //
+    }
+
+    private function getDownloadLinks($cartItems)
+    {
+        $links = [];
+        
+        foreach ($cartItems as $item) {
+            $photo = $item->photo;
+
+            // Get the lead image and regular images for each photo
+            $leadImage = $photo->leadImage(); // Lead image
+            $regularImages = $photo->regularImages(); // Regular images
+
+            // Add lead image download link (if available)
+            if ($leadImage) {
+                $links[] = $leadImage->file_path;
+            }
+
+            // Add regular image download links (if available)
+            foreach ($regularImages as $regularImage) {
+                $links[] = $regularImage->file_path;
+            }
+        }
+
+        return $links;
     }
 }
