@@ -125,28 +125,18 @@ class EventController extends Controller
         
         // Handle AJAX request
         if ($request->page) {
-            $photos = Photo::where('event_id', $event->id)->paginate(6);
+            $photos = Photo::where('event_id', $event->id)->paginate(12);
 
             
             return response()->json([
                 'photos' => $photos->map(function ($photo) {
-
-                    // Find the position of the last dot (.) before the extension
-                    $lastDotPosition = strrpos($photo->leadImage()?->file_path, '.');
-
-                    // Extract the base name and the extension
-                    $baseName = substr($photo->leadImage()?->file_path, 0, $lastDotPosition);
-                    $extension = substr($photo->leadImage()?->file_path, $lastDotPosition);
-
-                    // Create the watermarked image path
-                    $watermarked_image = $baseName . '.watermark' . $extension;
 
                     return [
                         'id' => $photo->id,
                         'name' => $photo->name,
                         'race_number' => $photo->race_number,
                         'price' => $photo->price,
-                        'lead_image' => $watermarked_image,
+                        'lead_image' => $photo->leadImageLowResolution(),
                     ];
                 }),
                 'current_page' => $photos->currentPage(),
@@ -155,7 +145,7 @@ class EventController extends Controller
         }
 
         // Initial page load
-        $photos = Photo::where('event_id', $event->id)->paginate(6); // Load 6 photos initially
+        $photos = Photo::where('event_id', $event->id)->paginate(12); // Load 6 photos initially
         return view('events.photos', compact('event', 'photos'));
     }
 

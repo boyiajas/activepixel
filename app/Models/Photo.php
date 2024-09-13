@@ -82,4 +82,24 @@ class Photo extends Model
         //return $this->upload()->wherePhotoType('lead_image')->first();
     }
 
+    // Retrieve watermarked versions of regular images
+    public function regularImagesWithWaterMark()
+    {
+        $regularImages = $this->regularImages();
+        $watermarkedImages = [];
+
+        foreach ($regularImages as $image) {
+            $lastDotPosition = strrpos($image->file_path, '.');
+
+            // Extract the base name and the extension
+            $baseName = substr($image->file_path, 0, $lastDotPosition);
+            $extension = substr($image->file_path, $lastDotPosition);
+
+            // Create the watermarked image path
+            $watermarkedImages[] = $baseName . '.watermark' . $extension;
+        }
+
+        return $watermarkedImages;
+    }
+
 }

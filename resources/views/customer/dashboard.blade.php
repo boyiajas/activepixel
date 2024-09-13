@@ -1,8 +1,8 @@
-@extends('layouts.appDefault')
+@extends('layouts.guest')
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+    <div class="row pt-5">
         <!-- Sidebar -->
         <div class="col-md-3">
             <div class="card">
