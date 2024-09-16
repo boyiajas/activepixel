@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row pt-5">
         <!-- Sidebar -->
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
             <div class="card">
                 <div class="card-body text-center">
                     <img src="{{ Auth::user()->profile_picture_url }}" class="rounded-circle img-thumbnail" alt="User Profile Picture" style="max-width: 150px;">
@@ -19,17 +19,41 @@
                     <li class="list-group-item"><a href="{{ route('customer.account.settings') }}">Account Settings</a></li>
                 </ul>
             </div>
-        </div>
+        </div> -->
+        @include('customer.partials.sidebar')
 
         <!-- Main Content -->
         <div class="col-md-9">
-            <div class="card">
+            <div class="card mt-0">
                 <div class="card-header">
-                    <h4 class="card-title">Customer Dashboard</h4>
+                    @if(Request::routeIs('customer.orders'))
+                        <h4 class="card-title">Order History</h4>
+                    @elseif(Request::routeIs('customer.invoices'))
+                        <h4 class="card-title">Invoices</h4>
+                    @elseif(Request::routeIs('customer.downloads'))
+                        <h4 class="card-title">Digital Downloads</h4>
+                    @elseif(Request::routeIs('customer.account.settings'))
+                        <h4 class="card-title">Account Settings</h4>
+                    @else
+                        <h4 class="card-title">Customer Dashboard</h4>
+                    @endif
                 </div>
                 <div class="card-body">
+                    @if(Request::routeIs('customer.orders'))
+                        @include('customer.partials.view-order-history')
+                    @elseif(Request::routeIs('customer.invoices'))
+                        @include('customer.partials.view-invoices')
+                    @elseif(Request::routeIs('customer.downloads'))
+                        @include('customer.partials.view-digital-downloads')
+                    @elseif(Request::routeIs('customer.account.settings'))
+                        <!-- Account Settings Form -->
+                        @include('customer.partials.account-settings')
+                    @else
+                        <!-- Default Dashboard Widgets -->
+                        @include('customer.partials.dashboard-widgets')
+                    @endif
                     <!-- Dashboard Widgets -->
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-4">
                             <div class="card text-center">
                                 <div class="card-body">
@@ -62,10 +86,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- More Widgets -->
-                    <div class="row mt-4">
+                    <!-- <div class="row mt-4">
                         <div class="col-md-4">
                             <div class="card text-center">
                                 <div class="card-body">
@@ -87,7 +111,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>

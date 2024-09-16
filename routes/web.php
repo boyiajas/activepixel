@@ -113,11 +113,23 @@ Route::group(['middleware' => ['sync.guest.cart']], function () {
   // Admin Routes
 Route::prefix('customer')->middleware(['auth', 'role:admin|manager|user'])->group(function() {
         
-    Route::get('/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard'); 
-    Route::get('/orders', [CustomerController::class, 'index'])->name('customer.orders');
-    Route::get('/invoices', [CustomerController::class, 'index'])->name('customer.invoices');
-    Route::get('/downloads', [CustomerController::class, 'index'])->name('customer.downloads');
-    Route::get('/account/settings', [CustomerController::class, 'index'])->name('customer.account.settings');
+    Route::controller(CustomerController::class)->group(function () {
+
+        Route::get('show/{order}', 'show')->name('customer.orders.show');
+        Route::get('show/{download}', 'show')->name('customer.downloads.show');
+
+
+        Route::get('/dashboard', 'index')->name('customer.dashboard');
+        Route::get('/orders', 'orderHistory')->name('customer.orders');
+        Route::get('/invoices', 'invoices')->name('customer.invoices');
+        Route::get('/downloads', 'digitalDownloads')->name('customer.downloads');
+        Route::get('/account/settings', 'index')->name('customer.account.settings');
+
+         // Data fetching routes for DataTables (Server-Side Processing)
+        Route::get('/get-order-history-data', 'getOrderHistoryData')->name('get-order-history-data');
+        Route::get('/get-invoices-data', 'getInvoicesData')->name('get-invoices-data');
+        Route::get('/get-digital-downloads-data', 'getDigitalDownloadsData')->name('get-digital-downloads-data');
+    });
 
 
      // Cart
