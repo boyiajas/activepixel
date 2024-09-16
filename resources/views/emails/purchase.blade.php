@@ -1588,7 +1588,7 @@
                                                         <strong>Order Number:</strong> {!! $order_number !!}
                                                     </p>
                                                     <p style="font-weight: 600;color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 24px">
-                                                        <strong>Total Cost:</strong> {!! $total_cost !!}
+                                                        <strong>Total Cost:</strong> R{!! $total_cost !!}
                                                     </p>
                                                     <p style="color: #60666d;font-size: 15px;font-family: 'Open Sans',sans-serif;line-height: 24px;margin-bottom: 24px">We appreciate your business. Below you can find the download links for the photos you purchased.</p>
 

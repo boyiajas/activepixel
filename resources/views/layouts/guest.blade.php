@@ -348,6 +348,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    
 
 
     <!-- the navbar content ends here -->
@@ -411,6 +413,16 @@
     <script src="{{URL::to('assets/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
     <script src="{{URL::to('assets/js/script.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+   
+    <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js" defer></script> -->
+	<script type="text/javascript" src="https://cdn.datatables.net/2.1.4/js/dataTables.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/dataTables.select.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/select.dataTables.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js" defer></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js" defer></script>
+   
+   
+
 </body>
 
 </html>
