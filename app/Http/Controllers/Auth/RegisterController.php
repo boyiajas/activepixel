@@ -23,6 +23,7 @@ class RegisterController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required|string|email|max:255|unique:users',
+            'captcha'      => 'required|captcha',
             //'role_name'    => 'required|string|max:255',
             'password'     => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required',
