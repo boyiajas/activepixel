@@ -15,6 +15,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CaptchaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentMethodController;
 
@@ -41,6 +42,8 @@ use App\Http\Controllers\PaymentMethodController;
 Route::get('/phpmyadmin', function () {
     abort(403);
 });
+
+Route::get('/reload-captcha', [CaptchaController::class, 'reloadCaptcha'])->name('reload-captcha');
 
 Route::controller(PageController::class)->group(function () {
     Route::get('/', 'index')->name('welcome');

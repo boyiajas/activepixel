@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\DigitalDownload;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -76,7 +77,10 @@ class CustomerController extends Controller
 
     public function getOrderHistoryData()
     {
-        $orders = Order::select(['id', 'order_number', 'total_amount', 'status', 'created_at']);
+        $userId = Auth::id(); // Get the ID of the currently authenticated user
+
+        $orders = Order::where('user_id', $userId) // Filter orders to only include those belonging to the current user
+            ->select(['id', 'order_number', 'total_amount', 'status', 'created_at']);
 
         return DataTables::of($orders)
             ->addColumn('action', function ($order) {
@@ -112,7 +116,11 @@ class CustomerController extends Controller
 
     public function getDigitalDownloadsData()
     {
-        $downloads = DigitalDownload::select(['id', 'order_id', 'photo_id', 'download_link']);
+        $userId = Auth::id(); // Get the ID of the currently authenticated user
+
+        $downloads = DigitalDownload::whereHas('order', function ($query) use ($userId) {
+            $query->where('user_id', $userId); // Filter downloads by orders belonging to the current user
+        })->select(['id', 'order_id', 'photo_id', 'download_link']);
 
         return DataTables::of($downloads)
             ->addColumn('download_image', function ($download) {
@@ -125,5 +133,5 @@ class CustomerController extends Controller
             })
             ->rawColumns(['download_image', 'action']) // Allow HTML rendering in columns
             ->make(true);
-    }
+        }
 }

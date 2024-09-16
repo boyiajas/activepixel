@@ -249,7 +249,12 @@
             <!-- Right-aligned links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login/Signup</a>
+                    @if(Auth::check()) 
+                        <a class="nav-link" href="/logout">Sign Out</a>
+                        <a class="nav-link" href="/customer/dashboard">Dashboard</a>
+                    @else
+                        <a class="nav-link" href="/login">Login/Signup</a>
+                    @endif
                 </li>
                 <li class="nav-item">
 

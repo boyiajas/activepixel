@@ -25,6 +25,21 @@
                                 <div class="form-group">
                                     <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm Password">
                                 </div>
+                                <div class="form-group">
+                                    <div class="captcha">
+                                        <span>{!! Captcha::img() !!}</span>
+                                        <button type="button" class="btn btn-danger reload" id="reload">&#x21bb</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group mb-2">
+                                    <input type="text" id="i-captcha" class="form-control{{ $errors->has('captcha') ? ' is-invalid' : '' }}" placeholder="Enter Captcha" name="captcha" required="true" >
+                                    @if ($errors->has('captcha'))
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $errors->first('captcha') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                                 <div class="form-group mb-0">
                                     <button class="btn btn-primary btn-block" type="submit">Register</button>
                                 </div>
@@ -50,4 +65,16 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $('#reload').click(function(){
+            $.ajax({
+                type:'GET',
+                url: 'reload-captcha',
+                success:function(data){
+                    $(".captcha span").html(data.captcha)
+                }
+            });
+        });
+    </script>
 @endsection
