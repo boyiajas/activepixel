@@ -233,7 +233,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
             Route::get('index', 'index')->name('admin.photos.index');
             Route::get('create', 'create')->name('admin.photos.create');
             Route::get('edit/{photo}', 'edit')->name('admin.photos.edit');
-            Route::post('update/{photo}', 'update')->name('admin.photos.update');
+            Route::put('update/{photo}', 'update')->name('admin.photos.update');
             Route::post('store', 'store')->name('admin.photos.store');
             Route::delete('destroy/{photo}', 'destroy')->name('admin.photos.destroy');
             Route::get('show/{photo}', 'show')->name('admin.photos.show');

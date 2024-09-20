@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
+            $table->enum('category_type', ['Club', 'No Club', 'Other'])->default('Club'); // New field for category type
+            $table->string('location')->nullable(); // New optional field for club location
             $table->timestamps();
         });
 
