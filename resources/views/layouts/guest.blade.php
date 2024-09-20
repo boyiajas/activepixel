@@ -288,7 +288,7 @@
         }
 
         .crumb {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.11)), url('/assets/img/runners.jpeg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.21)), url('/assets/img/runners.jpeg');
             filter: brightness(0.5);
             height: 200px;
             background-repeat: no-repeat;

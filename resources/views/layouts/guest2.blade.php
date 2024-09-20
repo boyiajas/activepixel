@@ -301,7 +301,7 @@
 
     <style>
         .crumb {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.11)), url('/assets/img/runners.jpeg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.31)), url('/assets/img/runners.jpeg');
 
             height: 400px;
             background-repeat: no-repeat;
