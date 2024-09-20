@@ -140,67 +140,67 @@
         .cart span {
             font-size: 20px;
         }
-        
-        .navbar-toggler{
+
+        .navbar-toggler {
             display: none;
         }
 
-        .nav-link-cart{
+        .nav-link-cart {
             padding: 14px 20px !important;
         }
 
-         /* Mobile navbar styles */
-    @media (max-width: 767px) {
-        .navbar-nav {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+        /* Mobile navbar styles */
+        @media (max-width: 767px) {
+            .navbar-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-        .nav-item {
-            margin-bottom: 10px;
-        }
+            .nav-item {
+                margin-bottom: 10px;
+            }
 
-        .navbar-brand {
-            position: static;
-            transform: none;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
+            .navbar-brand {
+                position: static;
+                transform: none;
+                margin-top: 0;
+                margin-bottom: 20px;
+            }
 
-        .navbar-collapse {
-            display: none;
-        }
+            .navbar-collapse {
+                display: none;
+            }
 
-        .navbar-toggler {
-            display: block;
-            background-color: #5ce1e6;
-            border: none;
-            border-radius: 4px;
-            padding: 10px;
-            color: #ffffff;
-        }
+            .navbar-toggler {
+                display: block;
+                background-color: #5ce1e6;
+                border: none;
+                border-radius: 4px;
+                padding: 10px;
+                color: #ffffff;
+            }
 
-        .navbar-toggler:focus {
-            outline: none;
-        }
+            .navbar-toggler:focus {
+                outline: none;
+            }
 
-        .navbar-nav {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            background-color: #0097b2;
-            padding: 10px;
-        }
+            .navbar-nav {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: #0097b2;
+                padding: 10px;
+            }
 
-        .navbar-nav.active {
-            display: flex;
-        }
+            .navbar-nav.active {
+                display: flex;
+            }
 
-        .nav-item {
-            width: 100%;
-            text-align: left;
+            .nav-item {
+                width: 100%;
+                text-align: left;
+            }
         }
-    }
     </style>
 </head>
 
@@ -209,7 +209,7 @@
     {!! Toastr::message() !!}
     <nav class="navbar">
         <div class="container">
-             <!-- Navbar Toggler for Mobile -->
+            <!-- Navbar Toggler for Mobile -->
             <button class="navbar-toggler" onclick="toggleNavbar()">☰</button>
             <!-- Left-aligned links -->
             <ul class="navbar-nav mr-auto">
@@ -225,22 +225,22 @@
             </ul>
 
             <!-- Centered Logo -->
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img src="/assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;border-radius: 3px;">
             </a>
 
             <!-- Right-aligned links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    
-                    @if(Auth::check()) 
+
+                    @if(Auth::check())
                         <a class="nav-link" href="/logout">Sign Out</a>
                         <a class="nav-link" href="/customer/dashboard">Dashboard</a>
                     @else
                         <a class="nav-link" href="/login">Login/Signup</a>
                     @endif
-                    
-                    
+
+
                 </li>
                 <li class="nav-item">
 
@@ -271,7 +271,7 @@
                             </span>
                         </div>
 
-                        
+
                         <!-- <img src="assets/img/cart.jpg" alt="Transparent Image" class="transparent-image" style="height: 24px;"> -->
                     </a>
                 </li>
@@ -356,8 +356,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    
+
+
 
 
     <!-- the navbar content ends here -->
@@ -371,7 +371,7 @@
                 <h3>MORE INFO</h3>
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/about-us">About</a></li>
+                    <li><a href="/about-us">About Us</a></li>
                     <li><a href="/contact-us">Contact Us</a></li>
                 </ul>
             </div>
@@ -389,8 +389,10 @@
             <div class="footer-section">
                 <h3>FOLLOW US</h3>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/activepixel_official" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.facebook.com/people/Active-Pixel/61558232257425" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/activepixel_official" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/people/Active-Pixel/61558232257425" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
                 </div>
             </div>
         </div>
@@ -401,8 +403,7 @@
 
     <!-- the footer content ends here -->
     <script>
-        $(document).ready(function()
-        { 
+        $(document).ready(function () {
             /* $(document).bind("contextmenu",function(e){
                     return false;
             });  */
@@ -421,15 +422,17 @@
     <script src="{{URL::to('assets/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
     <script src="{{URL::to('assets/js/script.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-   
+
     <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js" defer></script> -->
-	<script type="text/javascript" src="https://cdn.datatables.net/2.1.4/js/dataTables.js" defer></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/dataTables.select.js" defer></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/select.dataTables.js" defer></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js" defer></script>
-	<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js" defer></script>
-   
-   
+    <script type="text/javascript" src="https://cdn.datatables.net/2.1.4/js/dataTables.js" defer></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/dataTables.select.js" defer></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/2.0.5/js/select.dataTables.js" defer></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"
+        defer></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"
+        defer></script>
+
+
 
 </body>
 
