@@ -51,8 +51,10 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 999;
-            margin-top: 80px;
+        }
 
+        .navbar-brand img {
+            height: 50px;
         }
 
         .navbar-nav {
@@ -246,8 +248,8 @@
             </ul>
 
             <!-- Centered Logo -->
-            <a class="navbar-brand" href="#">
-                <img src="assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;border-radius: 3px;">
+            <a class="navbar-brand" href="/">
+                <img src="/assets/img/AP - White.png" alt="Site Logo">
             </a>
 
             <!-- Right-aligned links -->
@@ -299,7 +301,7 @@
 
     <style>
         .crumb {
-            background-image: url('assets/img/runners.jpeg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.11)), url('/assets/img/runners.jpeg');
 
             height: 400px;
             background-repeat: no-repeat;
@@ -307,7 +309,8 @@
             background-position: center;
             animation: fadeInImage 2s ease-in forwards;
             z-index: 1;
-
+            filter: grayscale(1%);
+            background-size: auto;
         }
 
         @keyframes fadeInImage {
@@ -321,14 +324,13 @@
         }
 
         .overlay-text {
-            position: absolute;
-            top: 40%;
-            left: 50%;
+            
             transform: translate(-50%, -50%);
             color: white;
             text-align: center;
             z-index: 2;
             padding: 10px 20px;
+            display: initial;
             /* Optional: Adds some padding around the text */
             /* Optional: Rounds the corners of the background */
         }
@@ -379,7 +381,6 @@
             text-align: center;
             color: #5ce1e6;
             font-size: 32px;
-            margin-bottom: 40px;
         }
 
         .step-section {

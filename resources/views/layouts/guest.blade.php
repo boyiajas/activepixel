@@ -25,13 +25,15 @@
     {{-- message toastr --}}
 
     <style>
-        .navbar-brand {
+         .navbar-brand {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             z-index: 999;
-            margin-top: 80px;
+        }
 
+        .navbar-brand img {
+            height: 50px;
         }
 
         .navbar-nav {
@@ -226,7 +228,7 @@
 
             <!-- Centered Logo -->
             <a class="navbar-brand" href="/">
-                <img src="/assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;border-radius: 3px;">
+                <img src="/assets/img/AP - White.png" alt="Site Logo">
             </a>
 
             <!-- Right-aligned links -->
@@ -286,7 +288,7 @@
         }
 
         .crumb {
-            background-image: url('/assets/img/runners.jpeg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.11)), url('/assets/img/runners.jpeg');
             filter: brightness(0.5);
             height: 200px;
             background-repeat: no-repeat;
@@ -294,6 +296,8 @@
             background-position: center;
             animation: fadeInImage 2s ease-in forwards;
             z-index: 1;
+            filter: grayscale(1%);
+            background-size: auto;
 
         }
 
@@ -344,8 +348,10 @@
 
     <div class="crumb-container">
         <div class="crumb"></div>
-        <div class="overlay-text">
-            <h1>@yield('crumb-overlay-text') </h1>
+        <div class="overlay-container">
+            <div class="overlay-text">
+                <h1>@yield('crumb-overlay-text') </h1>
+            </div>
         </div>
     </div>
 

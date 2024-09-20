@@ -2,23 +2,69 @@
 @section('title') Home @stop
 @section('content')
 
+<style>
+    .event-card {
+        position: relative;
+        padding: 0;
+        overflow: hidden; /* Ensure the overlay is contained */
+        border-radius: 15px;
+    }
+
+    .event-card .card-img-top {
+        height: 200px;
+        width: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .event-card:hover .card-img-top {
+        transform: scale(1.3); /* Slight zoom on hover */
+    }
+
+    /* Overlay styles */
+    .event-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: rgba(0, 151, 178, 0.5); /* Blue color with 50% opacity */
+        transform: translateY(100%); /* Hidden initially by pushing it down */
+        transition: transform 0.4s ease; /* Smooth animation for the overlay */
+    }
+
+    .event-card:hover .event-overlay {
+        transform: translateY(0); /* Slide overlay up on hover */
+    }
+
+    .event-card .card-body {
+        padding: 10px;
+    }
+
+    .event-gallery {
+        min-height: 300px;
+    }
+
+    body {
+        background-color: #fff;
+        height: fit-content;
+    }
+</style>
+
+
 <div class="crumb">
-    <div class="overlay-text">
-        <h1>@yield('crumb-overlay-text') </h1>
-        <div class="search-section">
-            <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Search by Event">
-                <button class="search-button">Find Event</button>
+    <div class="overlay-container">
+        <div class="overlay-text">
+            <h1>@yield('crumb-overlay-text') </h1>
+            <div class="search-section">
+                <div class="container">
+                    <input type="text" class="search-bar" placeholder="Search by Event">
+                    <button class="search-button">Find Event</button>
+                </div>
             </div>
-
         </div>
-
-
-
     </div>
 </div>
-</div>
-</div>
+
 <div class="banner">
     <div class="events-text">
         <h2>2024 EVENTS</h2>
@@ -27,23 +73,24 @@
 
 <div class="container">
 
-    <!-- Events Listing -->
+     <!-- Events Listing -->
     <div class="row event-gallery">
         @forelse($events as $event)
-            <div class="col-md-3 mb-4">
-                <div class="card event-card h-30">
-                    <img src="{{ $event->getEventImageUrlAttribute() }}" alt="{{ $event->name }}" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $event->name }}</h5>
-                        <p class="card-text"><strong>Start Date:</strong>
-                            {{ \Carbon\Carbon::parse($event->start_date)->format('F j, Y') }}</p>
-                        <a href="{{ route('events.photos', $event->id) }}"
-                            class="btn btn-primary form-control text-white">View Event</a>
-                    </div>
+        <div class="col-md-3 mb-4">
+            <div class="card event-card h-30">
+                <a href="{{ route('events.photos', $event->id) }}">
+                    <img src="{{ $event->getEventImageUrlAttribute() }}" alt="{{ $event->name }}" class="card-img-top" />
+                    <div class="event-overlay"></div> <!-- Overlay div -->
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ $event->name }}</h5>
+                    <p class="card-text"><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('F j, Y') }}</p>
+                    <!-- <a href="{{ route('events.photos', $event->id) }}" class="btn btn-primary form-control text-white">View Event</a> -->
                 </div>
             </div>
+        </div>
         @empty
-            <p>No events found.</p>
+        <p>No events found.</p>
         @endforelse
     </div>
 </div>
