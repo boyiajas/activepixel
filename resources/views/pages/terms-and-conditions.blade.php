@@ -60,14 +60,14 @@
         incurred as a result of the default, damages can also be claimed for this loss. If it should be impossible to
         debit the purchaser’s account due to insufficient cover or incorrect banking details, the purchaser will have to
         reimburse the handling fees incurred for the return debit and all other damages and expenses to Active Pixel. 
-        Card transactions will be acquired for Active Pixel via PayGate (Pty) Ltd who are the approved payment gateway
-        for all South African Acquiring Banks. PayGate uses the strictest form of encryption, namely Secure Socket Layer
-        3 (SSL3) and no Card details are stored on the website. Users may go to www.paygate.co.za to view their security
+        Card transactions will be acquired for Active Pixel via Payfast who are the approved payment gateway
+        for all South African Acquiring Banks. Payfast uses the strictest form of encryption, namely Secure Socket Layer
+        3 (SSL3) and no Card details are stored on the website. Users may go to payfast.io to view their security
         certificate and security policy.</p>
 
     <h5>9. Customer details separate from card details</h5>
     <p>Customer details will be stored by Active Pixel separately from card details which are entered by the client on
-        PayGate’s secure site. For more detail on PayGate refer to www.paygate.co.za.</p>
+        Payfast’s secure site. For more detail on PayGate refer to Payfast.io</p>
 
     <h5>10. Offsetting</h5>
 
@@ -167,7 +167,7 @@
         as Sole Proprietor.</p>
     <h5>21. Active Pixel Contact Details</h5>
     <p>Physical Address: 14 Bamboo Lane, New Germany, Kwa-Zulu Natal, South Africa. Email: info@activepixel.co.za
-        Telephone: +27 73 341 8052</p>
+    </p>
 
 </div>
 @endsection

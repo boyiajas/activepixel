@@ -25,30 +25,36 @@
     {{-- message toastr --}}
 
     <style>
-        .event-card{
+        .event-card {
             padding: 0px;
         }
-        .event-card .card-img-top{
+
+        .event-card .card-img-top {
             height: 200px;
         }
-        .event-card .card-body{
+
+        .event-card .card-body {
             padding: 10px;
         }
-        .event-gallery{
+
+        .event-gallery {
             min-height: 300px;
         }
-        body{
+
+        body {
             background-color: #fff;
             height: fit-content;
         }
-    
+
         .navbar-brand {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             z-index: 999;
-            margin-top: 80px;
+        }
 
+        .navbar-brand img {
+            height: 50px;
         }
 
         .navbar-nav {
@@ -157,67 +163,67 @@
         .cart span {
             font-size: 20px;
         }
-        
-        .navbar-toggler{
+
+        .navbar-toggler {
             display: none;
         }
 
-        .nav-link-cart{
+        .nav-link-cart {
             padding: 14px 20px !important;
         }
 
-         /* Mobile navbar styles */
-    @media (max-width: 767px) {
-        .navbar-nav {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+        /* Mobile navbar styles */
+        @media (max-width: 767px) {
+            .navbar-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-        .nav-item {
-            margin-bottom: 10px;
-        }
+            .nav-item {
+                margin-bottom: 10px;
+            }
 
-        .navbar-brand {
-            position: static;
-            transform: none;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
+            .navbar-brand {
+                position: static;
+                transform: none;
+                margin-top: 0;
+                margin-bottom: 20px;
+            }
 
-        .navbar-collapse {
-            display: none;
-        }
+            .navbar-collapse {
+                display: none;
+            }
 
-        .navbar-toggler {
-            display: block;
-            background-color: #5ce1e6;
-            border: none;
-            border-radius: 4px;
-            padding: 10px;
-            color: #ffffff;
-        }
+            .navbar-toggler {
+                display: block;
+                background-color: #5ce1e6;
+                border: none;
+                border-radius: 4px;
+                padding: 10px;
+                color: #ffffff;
+            }
 
-        .navbar-toggler:focus {
-            outline: none;
-        }
+            .navbar-toggler:focus {
+                outline: none;
+            }
 
-        .navbar-nav {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            background-color: #0097b2;
-            padding: 10px;
-        }
+            .navbar-nav {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: #0097b2;
+                padding: 10px;
+            }
 
-        .navbar-nav.active {
-            display: flex;
-        }
+            .navbar-nav.active {
+                display: flex;
+            }
 
-        .nav-item {
-            width: 100%;
-            text-align: left;
+            .nav-item {
+                width: 100%;
+                text-align: left;
+            }
         }
-    }
     </style>
 </head>
 
@@ -242,14 +248,14 @@
             </ul>
 
             <!-- Centered Logo -->
-            <a class="navbar-brand" href="#">
-                <img src="assets/img/ActivePixel.PNG" alt="Site Logo" style="height: 150px;border-radius: 3px;">
+            <a class="navbar-brand" href="/">
+                <img src="/assets/img/AP - White.png" alt="Site Logo">
             </a>
 
             <!-- Right-aligned links -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    @if(Auth::check()) 
+                    @if(Auth::check())
                         <a class="nav-link" href="/logout">Sign Out</a>
                         <a class="nav-link" href="/customer/dashboard">Dashboard</a>
                     @else
@@ -258,7 +264,7 @@
                 </li>
                 <li class="nav-item">
 
-                <a class="nav-link nav-link-cart" href="/cart">
+                    <a class="nav-link nav-link-cart" href="/cart">
                         <div class="cart">
                             <i class="fas fa-shopping-cart"></i>
                             <span>
@@ -285,7 +291,7 @@
                             </span>
                         </div>
 
-                        
+
                         <!-- <img src="assets/img/cart.jpg" alt="Transparent Image" class="transparent-image" style="height: 24px;"> -->
                     </a>
                 </li>
@@ -295,7 +301,7 @@
 
     <style>
         .crumb {
-            background-image: url('assets/img/runners.jpeg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.31)), url('/assets/img/runners.jpeg');
 
             height: 400px;
             background-repeat: no-repeat;
@@ -303,7 +309,8 @@
             background-position: center;
             animation: fadeInImage 2s ease-in forwards;
             z-index: 1;
-
+            filter: grayscale(1%);
+            background-size: auto;
         }
 
         @keyframes fadeInImage {
@@ -317,14 +324,13 @@
         }
 
         .overlay-text {
-            position: absolute;
-            top: 40%;
-            left: 50%;
+            
             transform: translate(-50%, -50%);
             color: white;
             text-align: center;
             z-index: 2;
             padding: 10px 20px;
+            display: initial;
             /* Optional: Adds some padding around the text */
             /* Optional: Rounds the corners of the background */
         }
@@ -360,6 +366,77 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             /* Optional: Add shadow for better card effect */
             z-index: 1;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+
+
+        h2 {
+            text-align: center;
+            color: #5ce1e6;
+            font-size: 32px;
+        }
+
+        .step-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-box {
+            display: flex;
+            background: linear-gradient(135deg, #0097b2 0%, #5ce1e6 52%, #0097b2 100%, #5ce1e6 100%);
+            padding: 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            margin-right: 20px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .step-content h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+
+        .step-content p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #34495e;
+        }
+
+        @media (min-width: 768px) {
+            .step-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+
+            .step-box {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
         }
     </style>
 
@@ -401,8 +478,10 @@
             <div class="footer-section">
                 <h3>FOLLOW US</h3>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/activepixel_official" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.facebook.com/people/Active-Pixel/61558232257425" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/activepixel_official" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/people/Active-Pixel/61558232257425" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
                 </div>
             </div>
         </div>
@@ -413,13 +492,12 @@
 
     <!-- the footer content ends here -->
     <script>
-        $(document).ready(function()
-        { 
-            $(document).bind("contextmenu",function(e){
-                    return false;
-            }); 
+        $(document).ready(function () {
+            /* $(document).bind("contextmenu", function (e) {
+                  return false;
+              });*/
         });
-        
+
         function toggleNavbar() {
             var navbar = document.querySelector('.navbar-nav');
             navbar.classList.toggle('active');
