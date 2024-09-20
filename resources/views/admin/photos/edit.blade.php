@@ -77,16 +77,35 @@
                             <!-- Category Selection -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Category</label>
-                                    <select class="form-control @error('category_id') is-invalid @enderror" name="category_id">
+                                    <label>Category Type</label>
+                                    <select class="form-control @error('category_types') is-invalid @enderror" name="category_types" id="category_types">
                                         <option value="">Select Category</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id', $photo->category_id) == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
+                                        @foreach($category_types as $type)
+                                            <option value="{{ $type }}" {{ old('category_types', 'Club') == $type ? 'selected' : ''  }}>
+                                                {{ $type }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @error('category_id')
+                                    @error('category_types')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                             <!-- Club Selection (shown if 'Category Type' is 'Club') -->
+                             <div class="col-md-4" id="club_select_div" style="display: none;">
+                                <div class="form-group">
+                                    <label>Select Club</label>
+                                    <select class="form-control @error('club_id') is-invalid @enderror" name="club_id">
+                                        <option value="">Select Club</option>
+                                        @foreach($clubs as $club)
+                                            <option value="{{ $club->id }}" {{ old('club_id', $photo->category_id) == $club->id ? 'selected' : '' }}>
+                                                {{ $club->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('club_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -191,6 +210,24 @@
     <script>
         
        $(document).ready(function(){
+
+             // Initially hide the 'Select Club' dropdown
+            var categoryType = $('#category_types').val();
+            if (categoryType === 'Club') {
+               
+                $('#club_select_div').show();
+            }
+
+            // Toggle the visibility of 'Select Club' dropdown based on 'Category Type'
+            $('#category_types').change(function() {
+                
+                var selectedType = $(this).val();
+                if (selectedType === 'Club') {
+                    $('#club_select_div').show();
+                } else {
+                    $('#club_select_div').hide();
+                }
+            });
 
             function removeAmpAndApostropheFromString(str) {
                 return str.replace(/amp;/g, '').replace(/&#039;/g, "'");
@@ -352,32 +389,6 @@
 
                 }
             });
-
-            /* $("#multifileUpload").sortable({
-                items: '.dz-preview',
-                cursor: 'move',
-                opacity: 0.5,
-                containment: '#multifileUpload',
-                distance: 20,
-                tolerance: 'pointer',
-                start: function (event, ui) {
-                    ui.item.startPos = ui.item.index();
-                },
-                stop: function (event, ui) {
-                    var startPosition = ui.item.startPos;
-                    var newPos = ui.item.index();
-                    $.ajax({
-                        type: "GET",
-                        url: "/upload/image/move/{{ 45 }}/" + startPosition + "/" + newPos,
-
-                    });
-                }
-            }); */
-
-
-       
-
-            //alert('testing 2');
 
        });
        

@@ -94,18 +94,23 @@
                 @foreach($photos as $photo)
                     <div class="col-md-2 mb-0">
                         <div class="card photo-card h-30 mt-0">
-                            <img src="/assets/img/placeholder.jpg" data-src="/{{ $photo->leadImageLowResolution() }}" alt="{{ $photo->name }}" class="card-img-top lazyload blur-up">
-                            <div class="card-body">
-                                <h5 class="card-title">Race No: {{ $photo->race_number }}</h5>
-                                <p class="card-text">Price: R{{ number_format($photo->price, 2) }}</p>
-                                
-                                <form action="{{ route('cart.add', ['photo_id' => $photo->id]) }}" method="POST" class="d-flex align-items-center justify-content-between">
-                                    @csrf
-                                    <input type="hidden" name="guest_token" value="{{ session('guest_token') }}">
-                                    <button type="submit" class="btn btn-primary btn-sm" style="width:49%;"><i class="fas fa-shopping-cart"></i></button>
-                                    <a href="{{ route('individual.photos', $photo->id) }}" class="btn btn-primary btn-sm" style="width:49%;">View</a>
-                                </form>
-                            </div>
+                            <a href='/individual-photos/{{$photo->id}}'>
+                                <img src="/assets/img/placeholder.jpg" data-src="/{{ $photo->leadImageLowResolution() }}" alt="{{ $photo->name }}" class="card-img-top lazyload blur-up" />
+                            </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">Race No: {{ $photo->race_number }}</h5>
+                                    <p class="card-text">Price: R{{ number_format($photo->price, 2) }}</p>
+                                    <div class="">
+                                        <form action="{{ route('cart.add', ['photo_id' => $photo->id]) }}" method="POST" class="d-flex align-items-center justify-content-between">
+                                            @csrf
+                                            <input type="hidden" name="guest_token" value="{{ session('guest_token') }}">
+                                            <button type="submit" class="btn btn-primary btn-sm" style="width:49%;"><i class="fas fa-shopping-cart"></i></button>
+                                            <a href="{{ route('individual.photos', $photo->id) }}" class="btn btn-primary btn-sm" style="width:49%;">View</a>
+                                        </form>
+                                        
+                                    </div>
+                                </div>
+                            
                         </div>
                     </div>
                 @endforeach
@@ -146,17 +151,19 @@
                     let photoCard = `
                         <div class="col-md-2">
                             <div class="card photo-card h-30 mt-0">
-                                <img src="/assets/img/placeholder.jpg" data-src="/${photo.lead_image}" alt="${photo.name}" class="card-img-top lazyload blur-up">
-                                <div class="card-body">
-                                    <h5 class="card-title">Race No: ${photo.race_number}</h5>
-                                    <p class="card-text">Price: R${photo.price}</p>
-                                    <form action="/cart/add/${photo.id}" method="POST" class="d-flex align-items-center justify-content-between">
-                                        @csrf
-                                        <input type="hidden" name="guest_token" value="{{ session('guest_token') }}">
-                                        <button type="submit" class="btn btn-primary btn-sm" style="width:49%;"><i class="fas fa-shopping-cart"></i></button>
-                                        <a href="/individual-photos/${photo.id}" class="btn btn-primary btn-sm" style="width:49%;">View</a>
-                                    </form>
-                                </div>
+                                <a href="/individual-photos/${photo.id}">
+                                    <img src="/assets/img/placeholder.jpg" data-src="/${photo.lead_image}" alt="${photo.name}" class="card-img-top lazyload blur-up">
+                                </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Race No: ${photo.race_number}</h5>
+                                        <p class="card-text">Price: R${photo.price}</p>
+                                        <form action="/cart/add/${photo.id}" method="POST" class="d-flex align-items-center justify-content-between">
+                                            @csrf
+                                            <input type="hidden" name="guest_token" value="{{ session('guest_token') }}">
+                                            <button type="submit" class="btn btn-primary btn-sm" style="width:49%;"><i class="fas fa-shopping-cart"></i></button>
+                                            <a href="/individual-photos/${photo.id}" class="btn btn-primary btn-sm" style="width:49%;">View</a>
+                                        </form>
+                                    </div>
                             </div>
                         </div>
                     `;

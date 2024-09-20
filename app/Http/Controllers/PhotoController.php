@@ -57,8 +57,10 @@ class PhotoController extends Controller
     {
         $events = Event::all();
         $categories = Category::all();
+        $category_types = ['Club', 'No Club', 'Other'];
+        $clubs = Category::whereCategoryType('Club')->get();
 
-        return view('admin.photos.create', compact('events', 'categories'));
+        return view('admin.photos.create', compact('events', 'categories', 'category_types','clubs'));
     }
 
     public function getPhotosData(Request $request)
@@ -187,7 +189,6 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
         try{
             $data = $request->validate([
                 'name' => 'required|string',
@@ -202,7 +203,31 @@ class PhotoController extends Controller
                 //'category_id' => 'required|exists:categories,id'
             ]);
 
-            $photo = Photo::create($request->all());
+           
+
+            // Create a new photo 
+            $photo = new Photo();
+            $photo->name = $request->name;
+            $photo->race_number = $request->race_number;
+            $photo->price = $request->price;
+            $photo->description = $request->description;
+            $photo->event_id = $request->event_id ?? null;
+            $photo->stock_status = 'in_stock';
+            $photo->downloadable = true;
+             // Handle category assignment based on category_types
+            if(empty($request->category_types) || $request->category_types == 'No Club'){
+                //dd('empty');
+                $photo->category_id = null;
+            }elseif($request->category_types == 'Club'){
+                //dd('not empty');
+                $photo->category_id = $request->club_id;
+            }else{
+                $photo->category_id = null;
+            }
+            
+            // Save the photo to the database
+            $photo->save();
+            
 
             Toastr::success('Photo created successfully.','Success');
 
@@ -232,7 +257,10 @@ class PhotoController extends Controller
         $lead_image = $photo->leadImage()?->file_path;
         $events = Event::all();
         $categories = Category::all();
-        return view('admin.photos.edit', compact('photo','lead_image', 'regular_images', 'events', 'categories'));
+        $category_types = ['Club', 'No Club', 'Other'];
+        $clubs = Category::whereCategoryType('Club')->get();
+
+        return view('admin.photos.edit', compact('photo','lead_image', 'regular_images', 'events', 'categories','category_types', 'clubs'));
     }
 
     /**
@@ -255,9 +283,28 @@ class PhotoController extends Controller
                 //'category_id' => 'required|exists:categories,id',
             ]);
 
+            $photo->name = $request->name;
+            $photo->race_number = $request->race_number;
+            $photo->price = $request->price;
+            $photo->description = $request->description;
+            $photo->event_id = $request->event_id ?? null;
+            $photo->stock_status = $request->stock_status ?? 'in_stock';
+            $photo->downloadable = $request->downloadable ?? true;
 
-            //dd($data);
-            $photo->update($request->all());
+            // Handle category assignment based on category_types
+            if(empty($request->category_types) || $request->category_types == 'No Club'){
+                //dd('empty');
+                $photo->category_id = null;
+            }elseif($request->category_types == 'Club'){
+                //dd('not empty');
+                $photo->category_id = $request->club_id;
+            }else{
+                $photo->category_id = null;
+            }
+
+
+            // Save the updated photo data
+            $photo->save();
 
             Toastr::success('Updated Photo successfully :)','Success');
             return redirect()->back();
