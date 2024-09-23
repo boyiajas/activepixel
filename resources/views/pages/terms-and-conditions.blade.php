@@ -67,7 +67,7 @@
 
     <h5>9. Customer details separate from card details</h5>
     <p>Customer details will be stored by Active Pixel separately from card details which are entered by the client on
-        Payfast’s secure site. For more detail on PayGate refer to Payfast.io</p>
+        Payfast’s secure site. For more detail on Payfast refer to Payfast.io</p>
 
     <h5>10. Offsetting</h5>
 
