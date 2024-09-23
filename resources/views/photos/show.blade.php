@@ -97,7 +97,7 @@
                         <div class="row">
                             <!-- First image is the lead image -->
                             <div class="col-md-3 col-6 mb-3">
-                                <img src="{{ asset($photo->leadImageWaterMark()) }}" alt="{{ $photo->name }}" class="img-thumbnail active" onclick="updateLeadImage('{{ asset($photo->leadImageWaterMark()) }}')">
+                                <img src="{{ asset($photo->leadImageWaterMark()) }}" alt="{{ $photo->name }}" class="img-thumbnail active" onclick="updateLeadImage('{{ asset($photo->leadImageWaterMark()) }}', true)">
                             </div>
                             @foreach($regular_images as $index => $image)
                                 @if($index > 0 && $index % 4 == 0) 
@@ -107,7 +107,7 @@
                                     <div class="row">
                                 @endif
                                 <div class="col-md-3 col-6 mb-3">
-                                    <img src="{{ asset($image) }}" alt="{{ $photo->name }}" class="img-thumbnail" onclick="updateLeadImage('{{ asset($image) }}')">
+                                    <img src="{{ asset($image) }}" alt="{{ $photo->name }}" class="img-thumbnail" onclick="updateLeadImage('{{ asset($image) }}', false)">
                                 </div>
                             @endforeach
                         </div>
@@ -156,6 +156,7 @@
                 <p><strong>Slug:</strong> {{ $photo->event->slug }}</p>
                 <p><strong>Category:</strong> {{ $photo->category?->name ?? 'None' }}</p>
                 <p><strong>Description: </strong>{{ $photo->event->description }}</p>
+                <p><strong id="image-details">Image:  Without Event Details</strong></p>
 
                 <!-- Add to Cart Button -->
                 <div class="add-to-cart mt-4">
@@ -176,8 +177,9 @@
 <!--Slick Carousel -->
 
 <script>
-    function updateLeadImage(imageSrc) {
+    function updateLeadImage(imageSrc, isLeadImage) {
         var leadImage = document.getElementById('lead-image');
+        var imageDetails = document.getElementById('image-details');
         
         // Remove the fade-in class
         leadImage.classList.remove('fade-in');
@@ -185,6 +187,13 @@
         // Set a timeout to allow the fade-out transition before changing the image source
         setTimeout(function() {
             leadImage.src = imageSrc;
+
+            // Update the image details text based on whether it's the lead image or a regular image
+            if (isLeadImage) {
+                imageDetails.innerHTML = 'Image: Without Event Details';
+            } else {
+                imageDetails.innerHTML = 'Image: With Event Details';
+            }
 
             // Re-apply the fade-in effect once the image is updated
             leadImage.classList.add('fade-in');
