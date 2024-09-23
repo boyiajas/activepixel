@@ -48,6 +48,88 @@
         background-color: #fff;
         height: fit-content;
     }
+
+    .search-section {
+        margin-top: 20px;
+    }
+
+    .dropdown-container {
+        flex: 1;
+        max-width: 150px;
+    }
+
+    .search-bar-container {
+        flex: 2;
+    }
+
+    .search-button-container {
+        flex: 1;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width:100%;
+    }
+
+    #search-category {
+        padding: 8px;
+    }
+
+    #search-bar {
+        padding: 10px;
+        width: 80%;
+    }
+
+    #search-button {
+        width: 10%;
+    }
+
+    .search-section {
+    margin-top: 100px;
+}
+
+.search-bar-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.search-dropdown {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none; /* Remove border between dropdown and input */
+    height: 45px;
+    padding: 8px 12px;
+    font-size: 16px;
+    width: 120px;
+}
+
+.search-input {
+    flex-grow: 1;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 45px;
+    font-size: 16px;
+    padding-left: 10px;
+}
+
+.search-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 45px;
+    font-size: 16px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 </style>
 
 
@@ -55,10 +137,20 @@
     <div class="overlay-container">
         <div class="overlay-text">
             <h1>@yield('crumb-overlay-text') </h1>
-            <div class="search-section">
-                <div class="container">
-                    <input type="text" class="search-bar" placeholder="Search by Event">
-                    <button class="search-button">Find Event</button>
+            <div class="search-section container">
+                <div class="search-container d-flex justify-content-center">
+                    <!-- Search input field with dropdown inside -->
+                    <div class="search-bar-wrapper d-flex">
+                        <div class="dropdown-container" style="color: #fff;background-color: #ffffff00 !important;">
+                            <select class="form-select search-dropdown" id="search-category">
+                                <option value="event">By Event</option>
+                                <option value="club">By Club</option>
+                                <option value="race_no">By Race No</option>
+                            </select>
+                        </div>
+                        <input type="text" class="form-control search-input" id="search-bar" placeholder="Search...">
+                        <button class="btn btn-primary search-button" id="search-button">Find</button>
+                    </div>
                 </div>
             </div>
         </div>

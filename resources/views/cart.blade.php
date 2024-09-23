@@ -12,7 +12,7 @@
                         <thead>
                             <tr>
                                 <th>Item Photo</th>
-                                <th>Slug & Description</th>
+                                <th>Description</th>
                                 <th>Price</th>
                                 <th>Qty</th>
                                 <th>Remove</th>
@@ -26,8 +26,9 @@
                                     <img src="{{ $item->photo->leadImage()->file_path }}" alt="{{ $item->photo->slug }}" style="width: 100px; height: 100px;">
                                 </td>
                                 <td>
-                                    <strong>{{ $item->photo->slug }}</strong>
-                                    <p>{{ $item->photo->description }}</p>
+                                    <div>Name - <strong>{{ $item->photo->name}}</strong></div>
+                                    <div>Race No - <strong>{{ $item->photo->race_number}}</strong></div>
+                                    <div>Event - <strong>{{$item->photo->event->name}}</strong></div>
                                 </td>
                                 <td>R{{ number_format($item->photo->price, 2) }}</td>
                                 <td>
