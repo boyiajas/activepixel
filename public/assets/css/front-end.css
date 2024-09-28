@@ -156,7 +156,7 @@ footer {
 .footer-section h3 {
     margin-bottom: 15px;
     font-size: 18px;
-    text-transform: uppercase;
+   /*  text-transform: uppercase; */
 }
 
 .footer-section ul {
@@ -174,7 +174,7 @@ footer {
 }
 
 .footer-section ul li a {
-    color: #5ce1e6;
+    color: #fff; /*#5ce1e6; */
     text-decoration: none;
     font-size: 14px;
 }
@@ -208,9 +208,13 @@ footer {
 }
 
 .footer-bottom {
-    padding: 20px;
+    padding: 10px;
     font-size: 14px;
     background-color: #5ce1e6;
+}
+
+.footer-bottom p {
+    font-size: 14px !important;
 }
 
 .footer-bottom p {

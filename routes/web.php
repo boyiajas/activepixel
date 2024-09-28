@@ -51,6 +51,7 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/about-us', 'about');
     Route::get('/terms-and-conditions', 'terms');
     Route::get('/privacy-policy', 'privacy');
+    Route::get('/refund-policy', 'refundPolicy');
 });
 
 Route::get('/individual-photos/{photo}', [PhotoController::class, 'individualPhoto'])->name('individual.photos');
@@ -82,6 +83,10 @@ Route::resource('photos', PhotoController::class)->only(['index', 'show']);
 Route::get('photos/download/{photo}', [PhotoController::class, 'download'])->name('photos.download');
 Route::get('photos/search', [PhotoController::class, 'search'])->name('photos.search');
 Route::get('photos/race/{race_number}', [PhotoController::class, 'photosByRace'])->name('admin.photos.race');
+Route::get('photos/filter/all', [PhotoController::class, 'allPhotos'])->name('photos.all');
+
+Route::get('items/search', [PhotoController::class, 'itemsSearch'])->name('items.search');
+
 
 
 /** set side bar active dynamic */

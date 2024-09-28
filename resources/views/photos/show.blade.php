@@ -153,7 +153,7 @@
             <!-- Event Details and Add to Cart Section -->
             <div class="event-details">
                 <h3>{{ $photo->event->name }}</h3>
-                <p><strong>Slug:</strong> {{ $photo->event->slug }}</p>
+                <!-- <p><strong>Slug:</strong> {{ $photo->event->slug }}</p> -->
                 <p><strong>Category:</strong> {{ $photo->category?->name ?? 'None' }}</p>
                 <p><strong>Description: </strong>{{ $photo->event->description }}</p>
                 <p><strong id="image-details">Image:  Without Event Details</strong></p>

@@ -1,6 +1,7 @@
 @extends('layouts.guest')
 
 @section('content')
+@section('crumb-overlay-text') All Events @stop
 <style>
     .event-card {
         position: relative;
@@ -50,7 +51,7 @@
 </style>
 
 <div class="container mt-5">
-    <h2 class="mb-4">All Events</h2>
+    <!-- <h2 class="mb-4">All Events</h2> -->
 
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb">
@@ -66,7 +67,7 @@
             <div class="form-group mr-2">
                 <label for="year" class="mr-2">Year:</label>
                 <select name="year" id="year" class="form-control">
-                    <option value="">All Years</option>
+                    <option value="">Years</option>
                     @foreach(range(date('Y'), date('Y') - 10) as $year)
                         <option value="{{ $year }}">{{ $year }}</option>
                     @endforeach
@@ -75,7 +76,7 @@
             <div class="form-group mr-2">
                 <label for="month" class="mr-2">Month:</label>
                 <select name="month" id="month" class="form-control">
-                    <option value="">All Months</option>
+                    <option value="">Months</option>
                     @foreach(range(1, 12) as $month)
                         <option value="{{ $month }}">{{ date('F', mktime(0, 0, 0, $month, 10)) }}</option>
                     @endforeach

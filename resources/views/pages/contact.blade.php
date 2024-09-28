@@ -6,10 +6,9 @@
 <div class="card">
 <div class="contact-container">
     <div class="contact-header">
-        
-        <h1>CONTACT US</h1>
-        <p>Send us a mail, we would love to hear from you!</p>
-        <p>Email: info@activepixel.com</p>
+    
+        <p>We would love to hear from you!</p>
+        <p>Email: <a href="mail:info@activepixel">info@activepixel.com</a></p>
     </div>
     
     <form class="contact-form">
@@ -27,7 +26,7 @@
             <textarea id="message" name="message" placeholder="Your Message..." required></textarea>
         </div>
         
-        <button type="submit">SUBMIT</button>
+        <button type="submit">Submit</button>
     </form>
 </div>
 </div> 

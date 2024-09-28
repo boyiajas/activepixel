@@ -315,6 +315,85 @@ class PhotoController extends Controller
         }
     }
 
+    public function allPhotos(Request $request)
+    {
+        $event = null;
+        $events = Event::all();
+        $clubs = Category::whereCategoryType('Club')->get();
+       
+        // Start with the Photo model query
+        /* $query = Photo::query();
+
+        // Apply filters if they are provided in the request
+        if ($request->filled('event_id')) {
+            $query->where('event_id', $request->input('event_id'));
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('created_at', $request->input('year'));
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('created_at', $request->input('month'));
+        }
+
+        if ($request->filled('race_no')) {
+            $query->where('race_number', 'like', '%' . $request->input('race_no') . '%');
+        }
+
+        if ($request->filled('club_name')) {
+            $query->where('club_name', 'like', '%' . $request->input('club_name') . '%');
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        // Paginate the filtered photos
+        $photos = $query->paginate(12); */
+
+        // Start with the Photo model query
+            $query = Photo::with(['event', 'category']) // Eager load event and category relationships
+            ->images(); // Scope to ensure we only get photos with images (lead or regular)
+
+        // Apply filters based on the request
+
+        if ($request->filled('event_id')) {
+        $query->where('event_id', $request->input('event_id'));
+        }
+
+        if ($request->filled('year')) {
+        $query->whereYear('published_date', $request->input('year')); // Filter by year
+        }
+
+        if ($request->filled('month')) {
+        $query->whereMonth('published_date', $request->input('month')); // Filter by month
+        }
+
+        if ($request->filled('race_no')) {
+        $query->where('race_number', 'like', '%' . $request->input('race_no') . '%');
+        }
+
+        if ($request->filled('club_name')) {
+        // Filter by category with a 'Club' category_type and matching name
+        $query->whereHas('category', function ($q) use ($request) {
+        $q->where('category_type', Category::CATEGORY_TYPE_CLUB)
+        ->where('name', 'like', '%' . $request->input('club_name') . '%');
+        });
+        }
+
+        if ($request->filled('location')) {
+        $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        // Paginate the filtered photos
+        $photos = $query->paginate(12);
+
+        // Return the filtered photos to the view
+        return view('photos.index', compact('photos', 'event', 'events', 'clubs'));
+    }
+
+
     // Search for photos
     public function search(Request $request)
     {
@@ -324,6 +403,54 @@ class PhotoController extends Controller
             ->get();
 
         return view('admin.photos.index', compact('photos'));
+    }
+
+    public function itemsSearch(Request $request)
+    {
+        //dd($request->all());
+        // Get search category and query from the request
+        $category = $request->input('search_category');
+        $query = $request->input('search_query');
+
+        $event = null;
+        $events = Event::all();
+        $clubs = Category::whereCategoryType('Club')->get();
+
+        // Initialize an empty query builder for Photo model
+        $photos = Photo::with(['event', 'category'])->images();
+
+        // Search by selected category
+        switch ($category) {
+            case 'event':
+                // Search by event name
+                $photos->whereHas('event', function($q) use ($query) {
+                    $q->where('name', 'like', '%' . $query . '%');
+                });
+                break;
+
+            case 'club':
+                // Search by club name within the 'Club' category type
+                $photos->whereHas('category', function($q) use ($query) {
+                    $q->where('name', 'like', '%' . $query . '%')
+                      ->where('category_type', Category::CATEGORY_TYPE_CLUB);
+                });
+                break;
+
+            case 'race_no':
+                // Search by race number
+                $photos->where('race_number', 'like', '%' . $query . '%');
+                break;
+
+            default:
+                // If category is not found, return no results
+                return view('items.search', ['photos' => collect()], compact('event', 'events', 'clubs'));
+        }
+
+        // Get the filtered photos
+        $photos = $photos->paginate(12);
+
+        // Return the search results view
+        return view('items.search', compact('photos', 'event', 'events', 'clubs'));
     }
 
     public function deleteSelected(Request $request)
