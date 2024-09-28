@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Photo;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
@@ -33,6 +34,40 @@ class EventController extends Controller
         $query = Event::query();
 
         // Apply filters based on the request
+        if ($request->filled('year')) {
+            $query->whereYear('start_date', $request->input('year'));
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('start_date', $request->input('month'));
+        }
+
+        if ($request->filled('race_no')) {
+            $query->whereHas('photos', function ($q) use ($request) {
+                $q->where('race_number', 'like', '%' . $request->input('race_no') . '%');
+            });
+        }
+
+        if ($request->filled('club_name')) {
+            $query->where('name', 'like', '%' . $request->input('club_name') . '%');
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        // Paginate the filtered results
+        $events = $query->paginate(12);
+
+        return view('events.index', compact('events'));
+    }
+
+/* 
+    public function allEvents(Request $request)
+    {
+        $query = Event::query();
+
+        // Apply filters based on the request
         if ($request->has('year')) {
             $query->whereYear('start_date', $request->input('year'));
         }
@@ -48,7 +83,7 @@ class EventController extends Controller
 
         $events = $query->paginate(12); // Paginate results, adjust the number as needed
         return view('events.index', compact('events'));
-    }
+    } */
 
     /* public function showEventPhotos(Event $event)
     {
@@ -122,6 +157,8 @@ class EventController extends Controller
     {
         //dd(request()->all());
         $event = Event::findOrFail($event->id);
+        $events = Event::all();
+        $clubs = Category::whereCategoryType('Club')->get();
         
         // Handle AJAX request
         if ($request->page) {
@@ -146,7 +183,7 @@ class EventController extends Controller
 
         // Initial page load
         $photos = Photo::where('event_id', $event->id)->paginate(12); // Load 6 photos initially
-        return view('events.photos', compact('event', 'photos'));
+        return view('events.photos', compact('event', 'photos', 'events', 'clubs'));
     }
 
 

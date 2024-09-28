@@ -1,7 +1,6 @@
 @extends('layouts.guest')
 
 @section('content')
-@section('crumb-overlay-text') Photos @stop
 <style>
     .photo-card {
         padding: 0px;
@@ -36,23 +35,7 @@
 </style>
 
 <div class="container mt-5">
-    <!-- <h2 class="mb-4">{{ $event->name }} Photos</h2> -->
-
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white pl-0">
-            <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('events.all') }}">Events</a></li>
-            <li class="breadcrumb-item"><a href="#">{{ $event->name }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Photos</li>
-        </ol>
-    </nav>
-
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <p><strong>Description:</strong> {{ $event->description }}</p>
-        </div>
-    </div>
+    <h2 class="mb-4">Search Results</h2>
 
     <div class="row">
         <!-- Filters Section -->
@@ -95,7 +78,7 @@
                 <div class="mt-3">
                     <label for="event_id">Event:</label>
                     <select name="event_id" id="event_id" class="form-control">
-                        <option value="">Events</option>
+                        <option value="">All Events</option>
                         @foreach($events as $event)
                             <option value="{{ $event->id }}">{{ $event->name }}</option>
                         @endforeach
@@ -104,7 +87,7 @@
                 <div class="mt-3">
                     <label for="year">Year:</label>
                     <select name="year" id="year" class="form-control">
-                        <option value="">Years</option>
+                        <option value="">All Years</option>
                         @foreach(range(date('Y'), date('Y') - 10) as $year)
                             <option value="{{ $year }}">{{ $year }}</option>
                         @endforeach
@@ -113,7 +96,7 @@
                 <div class="mt-3">
                     <label for="month">Month:</label>
                     <select name="month" id="month" class="form-control">
-                        <option value="">Months</option>
+                        <option value="">All Months</option>
                         @foreach(range(1, 12) as $month)
                             <option value="{{ $month }}">{{ date('F', mktime(0, 0, 0, $month, 10)) }}</option>
                         @endforeach
@@ -126,7 +109,7 @@
                 <div class="mt-3">
                     <label for="club_name">Club Name:</label>
                     <select name="club_id" id="club_id" class="form-control">
-                        <option value="">Clubs</option>
+                        <option value="">All Clubs</option>
                         @foreach($clubs as $club)
                             <option value="{{ $club->id }}">{{ $club->name }}</option>
                         @endforeach
@@ -145,7 +128,7 @@
 
             <!-- Photo Gallery -->
             <div class="row photo-gallery" id="photoGallery">
-                @foreach($photos as $photo)
+                @forelse($photos as $photo)
                     <div class="col-md-2 mb-0">
                         <div class="card photo-card h-30 mt-0">
                             <a href='/individual-photos/{{$photo->id}}'>
@@ -167,7 +150,9 @@
                             
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <p>No photos found matching your search.</p>
+                @endforelse
             </div>
             <!-- Load More Button -->
             <div class="pull-right">
@@ -227,3 +212,4 @@
     }
 </script>
 @endsection
+

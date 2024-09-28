@@ -23,8 +23,14 @@ class PageController extends Controller
         return view('pages.contact');
     }
 
-    public function privacy(){
+    public function privacy()
+    {
         return view('pages.privacy-policy');
+    }
+
+    public function refundPolicy()
+    {
+        return view('pages.refund-policy');
     }
 
     public function terms()

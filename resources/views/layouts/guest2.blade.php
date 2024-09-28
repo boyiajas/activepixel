@@ -56,7 +56,16 @@
         .navbar-brand img {
             height: 50px;
         }
+        .navbar-brand.footer{
+            left: none !important;
+            position:initial;
+            transform: initial;
+        }
 
+        .navbar-brand.footer img{
+            height: 40px;
+        }
+        
         .navbar-nav {
             flex-direction: row;
         }
@@ -245,6 +254,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/about-us">About Us</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact-us">Contact Us</a>
+                </li>
             </ul>
 
             <!-- Centered Logo -->
@@ -259,6 +271,7 @@
                         <a class="nav-link" href="/logout">Sign Out</a>
                         <a class="nav-link" href="/customer/dashboard">Dashboard</a>
                     @else
+                        <a class="nav-link" href="#how-to-order" style="color:yellow;">How to Order?</a>
                         <a class="nav-link" href="/login">Login/Signup</a>
                     @endif
                 </li>
@@ -391,18 +404,18 @@
 
         .step-box {
             display: flex;
-            background: linear-gradient(135deg, #0097b2 0%, #5ce1e6 52%, #0097b2 100%, #5ce1e6 100%);
+            background: linear-gradient(135deg, #fbfbfb 0%, #bafdff 52%, #fff 100%, #5ce1e6 100%); /* linear-gradient(135deg, #0097b2 0%, #5ce1e6 52%, #0097b2 100%, #5ce1e6 100%); */
             padding: 20px;
             border: 2px solid #ecf0f1;
-            border-radius: 10px;
+            border-radius: 5px;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
         }
 
         .step-number {
             font-size: 48px;
             font-weight: bold;
-            color: white;
+            color: #0097b2;
             margin-right: 20px;
             text-align: center;
             line-height: 1;
@@ -454,29 +467,28 @@
 
     <!-- the footer content goes in here -->
 
-    <footer>
+    <footer class="mt-5">
         <div class="footer-container">
-            <div class="footer-section">
-                <h3>MORE INFO</h3>
+        <div class="footer-section">
+                <h3>More Info</h3>
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/about-us">About</a></li>
+                    <li><a href="/about-us">About Us</a></li>
                     <li><a href="/contact-us">Contact Us</a></li>
+                    <li><a href="#how-to-order">How to Order?</a></li>
                 </ul>
             </div>
             <div class="footer-divider"></div> <!-- Divider -->
             <div class="footer-section">
-                <h3>LEGALS & HELP</h3>
-                <ul>
-                    <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
-                    <li><a href="/privacy-policy">Privacy Policy</a></li>
-                    <li><a href="#">POPIA</a></li>
-                    <li><a href="/contact-us">Need Help?</a></li>
-                </ul>
-            </div>
-            <div class="footer-divider"></div> <!-- Divider -->
-            <div class="footer-section">
-                <h3>FOLLOW US</h3>
+                <div>
+                    <a class="navbar-brand footer" href="/">
+                        <img src="/assets/img/AP - White.png" alt="Site Logo">
+                    </a>
+                </div>
+                
+                <div>
+                    <br/><h3>Follow Us</h3>
+                </div>
                 <div class="social-icons">
                     <a href="https://www.instagram.com/activepixel_official" target="_blank"><i
                             class="fab fa-instagram"></i></a>
@@ -484,9 +496,20 @@
                             class="fab fa-facebook"></i></a>
                 </div>
             </div>
+            <div class="footer-divider"></div> <!-- Divider -->
+            <div class="footer-section">
+                <h3>Legals & Help</h3>
+                <ul>
+                    <li><a href="/terms-and-conditions">Terms & Conditions</a></li>
+                    <li><a href="/privacy-policy">Privacy Policy</a></li>
+                    <li><a href="/refund-policy">Refund Policy</a></li>
+                    <li><a href="{{asset('/uploads/Active Pixel - POPIA 2024.pdf')}}" target="_blank">POPIA</a></li>
+                    <li><a href="/contact-us">Need Help?</a></li>
+                </ul>
+            </div>
         </div>
         <div class="footer-bottom">
-            <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath.jpeg</p>
+            <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath</p>
         </div>
     </footer>
 
