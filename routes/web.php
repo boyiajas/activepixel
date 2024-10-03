@@ -18,6 +18,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CaptchaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\EmailPreviewController;
+use App\Http\Controllers\SubscriptionController;
 
 
 
@@ -42,6 +44,14 @@ use App\Http\Controllers\PaymentMethodController;
 Route::get('/phpmyadmin', function () {
     abort(403);
 });
+
+// Subscription Routes
+Route::get('/subscribe/{encoded}', [SubscriptionController::class, 'subscribe'])->name('subscribe');
+Route::get('/unsubscribe/{encoded}', [SubscriptionController::class, 'unsubscribe'])->name('unsubscribe');
+
+//build email
+Route::get('/email-preview', [EmailPreviewController::class, 'purchaseEmailPreview']);
+
 
 Route::get('/reload-captcha', [CaptchaController::class, 'reloadCaptcha'])->name('reload-captcha');
 
@@ -131,7 +141,8 @@ Route::prefix('customer')->middleware(['auth', 'role:admin|manager|user'])->grou
         Route::get('/orders', 'orderHistory')->name('customer.orders');
         Route::get('/invoices', 'invoices')->name('customer.invoices');
         Route::get('/downloads', 'digitalDownloads')->name('customer.downloads');
-        Route::get('/account/settings', 'index')->name('customer.account.settings');
+        Route::get('/account/settings', 'settings')->name('customer.account.settings');
+        Route::put('/account/settings', 'accountUpdate')->name('customer.account.update');
 
          // Data fetching routes for DataTables (Server-Side Processing)
         Route::get('/get-order-history-data', 'getOrderHistoryData')->name('get-order-history-data');
@@ -156,7 +167,7 @@ Route::prefix('customer')->middleware(['auth', 'role:admin|manager|user'])->grou
 });
 
 // Newsletter Subscription
-Route::post('/subscribe', [PageController::class, 'subscribe'])->name('subscribe');
+//Route::post('/subscribe', [PageController::class, 'subscribe'])->name('subscribe');
 
 
 // User Profile & Shopping Cart

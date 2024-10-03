@@ -36,7 +36,7 @@ class SendPurchasedPhotosEmail implements ShouldQueue
     public function handle()
     {
         Mail::to($this->user->email)
-            ->send(new PurchasedPhotosEmail($this->user->name, $this->downloadLinks, $this->order_number, $this->total_cost
+            ->send(new PurchasedPhotosEmail($this->user, $this->downloadLinks, $this->order_number, $this->total_cost
         ));
     }
 }

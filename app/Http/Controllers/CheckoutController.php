@@ -78,6 +78,9 @@ class CheckoutController extends Controller
                 'billing_country'
             ]);
             $user->billing_information = $billingInfo;
+            // Handle the optin checkbox (set false if not present)
+            $user->optin = $request->has('optin') ? true : false;
+            
             $user->save();
 
             // Calculate total price
