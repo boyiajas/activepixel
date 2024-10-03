@@ -121,7 +121,7 @@
         .three-col {
             Margin-left: auto;
             Margin-right: auto;
-            width: 600px;
+            width: 750px;
         }
 
         .two-col .image {
@@ -263,7 +263,7 @@
         }
 
         .sidebar {
-            width: 600px;
+            width: 750px;
         }
 
         .first.wider .padded {
@@ -538,7 +538,7 @@
         .header {
             Margin-left: auto;
             Margin-right: auto;
-            width: 600px;
+            width: 750px;
         }
 
         .header .logo {
@@ -1533,7 +1533,7 @@
     <tr>
         <td style="padding: 0;vertical-align: top">
             <center>
-                <table class="header" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 600px">
+                <table class="header" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 750px">
                     <tbody>
                     <tr>
                         <td style="padding: 0;vertical-align: top">
@@ -1562,12 +1562,12 @@
                     <tr>
                         <td class="border" style="padding: 0;vertical-align: top;font-size: 1px;line-height: 1px;background-color: #cacbcd;width: 1px">&#8203;</td>
                         <td style="padding: 0;vertical-align: top">
-                            <table class="one-col" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 600px;background-color: #ffffff">
+                            <table class="one-col" style="border-collapse: collapse;border-spacing: 0;Margin-left: auto;Margin-right: auto;width: 750px;background-color: #ffffff">
                                 <tbody>
                                 <tr>
                                     <td class="column" style="padding: 0;vertical-align: top;text-align: left">
-                                        <div class="image" style="font-size: 0;Margin-bottom: 24px" align="center">
-                                            <img style="border: 0;-ms-interpolation-mode: bicubic;display: block;max-width: 600px" src="{{ URL::to('/assets/img/ActivePixel.PNG') }}" alt="Active Pixel Email Header" width="600" height="146">
+                                        <div class="image" style="font-size: 0;Margin-bottom: 24px; background-color: #5de0e5;" align="center">
+                                            <img style="border: 0;-ms-interpolation-mode: bicubic;display: block;max-width: 750px" src="{{ URL::to('/assets/img/ActivePixel.PNG') }}" alt="Active Pixel Email Header" width="auto" height="100">
                                         </div>
                                         <table class="contents" style="border-collapse: collapse;border-spacing: 0;width: 100%">
                                             <tbody>
@@ -1582,11 +1582,19 @@
                                             <tbody>
                                             <tr>
                                                 <td class="padded" style="padding: 0;vertical-align: top;padding-left: 50px;padding-right: 50px">
-                                                    <h1 style="font-weight: 700;color: #333;font-size: 20px;font-family: 'Open Sans',sans-serif;line-height: 28px;margin-bottom: 20px">Thank You for Your Purchase, {!! $name !!}!</h1>
-                                                    <!-- Order Number and Total Cost -->
-                                                    <p style="font-weight: 600;color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 24px">
-                                                        <strong>Order Number:</strong> {!! $order_number !!}
+                                                     <!-- Order Number and Total Cost -->
+                                                    <p style="text-align:center;font-weight: 600;color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 24px">
+                                                        <strong>Order Confirmed:</strong> {!! $order_number !!}
                                                     </p>
+                                                    <h1 style="text-align:center;font-weight: 700;color: #333;font-size: 20px;font-family: 'Open Sans',sans-serif;line-height: 28px;margin-bottom: 20px">Thank You for Your Purchase, {!! $name !!}!</h1>
+                                                   
+                                                    <p style="color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 0px">
+                                                        Active Pixel strives to give you an easy way of reaching your athletic memories!
+                                                    </p>
+                                                    <p style="color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 24px">
+                                                        Be sure to tag us on Facebook and invite us as collaborators on Instagram!
+                                                    </p>
+
                                                     <p style="font-weight: 600;color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 24px">
                                                         <strong>Total Cost:</strong> R{!! $total_cost !!}
                                                     </p>
@@ -1599,6 +1607,14 @@
                                                         @endforeach
                                                     </ul>
 
+                                                    <h4 style="font-weight: 600;color: #333;font-size: 16px;font-family: 'Open Sans',sans-serif;line-height: 24px;">Stay Updated!</h4>
+                                                    <p>Click below to subscribe or unsubscribe from our newsletter:</p>
+                                                    <a href="{{ $subscribeLink }}" target="_blank">Subscribe</a> |
+                                                    <a href="{{ $unsubscribeLink }}" target="_blank">Unsubscribe</a>
+
+                                                    <p style="font-size: 12px;line-height: 18px;margin-top: 10px;">
+                                                        Enjoy your day! INSTAPIX shall take all reasonable measures to protect the personal information of users and for the purpose of this disclaimer. "personal information" shall be defined as detailed in the Promotion of Access to Information Act, Act 2 of 2000 ("PAIA") and the Protection of Personal Information Act, Act 4 of 2013 ("POPI"). INSTAPIX, may submit some Personal Information on your behalf by utilizing a third party contracted agent for the processing of a financial transaction through your selected payment method. We do not collect, hold, store or share any of your financial information. Full details on our Privacy Policy is available on our website <a href="www.instapix.co.za">www.instapix.co.za</a>
+                                                    </p>
                                                    
                                                 </td>
                                             </tr>
@@ -1631,7 +1647,7 @@
                                   <span class="hide"> &nbsp;|&nbsp; </span>
                                 </span>
                                 <span class="block">
-                                  <a style="letter-spacing: 0.03em;font-style: normal;font-weight: 700;text-decoration: none;color: #b9b9b9" href="#" target="_blank">Unsubscribe</a>
+                                  <a style="letter-spacing: 0.03em;font-style: normal;font-weight: 700;text-decoration: none;color: #b9b9b9" href="{{ $unsubscribeLink }}" target="_blank">Unsubscribe</a>
                                 </span>
                             </center>
                         </td>

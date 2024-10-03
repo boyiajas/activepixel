@@ -6,11 +6,11 @@
 <div class="container-fluid">
     <div class="row pt-5">
         <!-- Sidebar -->
-        @include('partials.sidebar')
+        @include('customer.partials.sidebar')
 
         <!-- Main Content -->
         <div class="col-md-9">
-            <div class="card">
+            <div class="card mt-0">
                 <div class="card-header">
                     <h4 class="card-title">Account Settings</h4>
                 </div>
@@ -26,7 +26,7 @@
 
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', Auth::user()->email) }}" required>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', Auth::user()->email) }}" disabled required>
                         </div>
 
                         <div class="form-group">

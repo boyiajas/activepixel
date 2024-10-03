@@ -183,8 +183,8 @@
         </div>
     </div>
 </div>
-
-<div class="banner">
+<div class="mt-1 mb-0"><marquee style="color: #955; font-size: 20px;" scrollamount="3"><strong>Active Pixel is a group of photographers that are set to bring you images of athletic events that are not usually covered every week. We strive to give you and easy way of reaching your athletic memories!</strong></marquee></div>
+<div class="banner mt-0">
     <div class="events-text">
         <h2 class="mb-0">UPCOMING EVENTS</h2>
     </div>

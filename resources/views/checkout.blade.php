@@ -57,6 +57,10 @@
                                 <label for="billing_country">Country</label>
                                 <input type="text" name="billing_country" id="billing_country" class="form-control" value="{{ old('billing_country', $billingInformation['billing_country'] ?? '') }}" required>
                             </div>
+                            <div class="form-group">
+                            <input type="checkbox" class="optin" name="optin" value="optin" {{ old('optin', Auth::user()->optin) ? 'checked' : '' }}>
+                             <span style="font-size: 17px;font-weight: 400; color: #333;">I want to subscribe for receive news on the latest event listings, upcoming events, new service offerings and Whatsapp communication.</span>
+                            </div>
 
                             <button type="submit" class="btn btn-primary mt-3">Place Order</button>
                         </div>

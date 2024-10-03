@@ -9,6 +9,8 @@ use App\Models\DigitalDownload;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Auth;
+use Brian2694\Toastr\Facades\Toastr;
+use Hash;
 
 class CustomerController extends Controller
 {
@@ -66,6 +68,38 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function settings()
+    {
+        return view('customer.partials.account-settings');
+    }
+
+    public function accountUpdate(Request $request)
+    {
+         // Validate the request data
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Update user's name
+        $user->name = $request->name;
+
+        // Update password if provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        // Save the changes
+        $user->save();
+
+        Toastr::success('Account settings updated successfully.', 'Success');
+         // Redirect back with success message
+        return redirect()->back()->with('status', 'Account settings updated successfully.');
     }
 
     public function orderHistory()
