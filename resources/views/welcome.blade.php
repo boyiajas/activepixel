@@ -1,7 +1,10 @@
 @extends('layouts.guest2')
 @section('title') Home @stop
 @section('content')
-
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
 <style>
     .event-card {
         position: relative;
@@ -145,6 +148,7 @@
     font-weight: bolder;
     color:#0097b2;
 }
+
 </style>
 
 
@@ -153,7 +157,9 @@
         <div class="overlay-text">
             <h1>@yield('crumb-overlay-text') </h1>
             <div class="search-section container">
+            
                 <div class="search-container d-flex justify-content-center">
+                    
                     <!-- Search input field with dropdown inside -->
                     <form action="{{ route('items.search') }}" method="GET" class="search-bar-wrapper d-flex">
                         <div class="dropdown-container" style="color: #fff;background-color: #ffffff00 !important;">
@@ -179,11 +185,25 @@
                         <button class="btn btn-primary search-button" id="search-button">Find</button>
                     </div> -->
                 </div>
+                
             </div>
         </div>
     </div>
 </div>
-<div class="mt-1 mb-0"><marquee style="color: #955; font-size: 20px;" scrollamount="3"><strong>Active Pixel is a group of photographers that are set to bring you images of athletic events that are not usually covered every week. We strive to give you and easy way of reaching your athletic memories!</strong></marquee></div>
+
+<div class="banner mt-0">
+    <div class="events-text">
+        <h2 class="mb-0">OUR VISION</h2>
+    </div>
+</div>
+<div class="container"><div class="" style="height:120px;">
+<h2 class="white" style="text-align: center;
+  color: #8e9091;
+  font-size: 25px;
+  margin: 30px;line-height:50px;"><i><strong style="color:#0097b2;">ActivePixel</strong></i><span id="typedtext"> </span></h2>
+</div>
+</div>
+
 <div class="banner mt-0">
     <div class="events-text">
         <h2 class="mb-0">UPCOMING EVENTS</h2>
@@ -307,5 +327,48 @@
         </div>
     </div>
 </div>
+
+<script>
+
+// set up text to print, each item in array is new line
+var aText = new Array(
+"is a group of photographers that are set to bring you images of athletic events that are not usually covered every week. We strive to give you and easy way of reaching your athletic memories!", 
+/* "Those who understand binary, and those who don't" */
+);
+var iSpeed = 100; // time delay of print out
+var iIndex = 0; // start printing array at this posision
+var iArrLength = aText[0].length; // the length of the text array
+var iScrollAt = 20; // start scrolling up at this many lines
+ 
+var iTextPos = 0; // initialise text position
+var sContents = ''; // initialise contents variable
+var iRow; // initialise current row
+ 
+function typewriter()
+{
+ sContents =  ' ';
+ iRow = Math.max(0, iIndex-iScrollAt);
+ var destination = document.getElementById("typedtext");
+ 
+ while ( iRow < iIndex ) {
+  sContents += aText[iRow++] + '<br />';
+ }
+ destination.innerHTML = sContents + aText[iIndex].substring(0, iTextPos) + "_";
+ if ( iTextPos++ == iArrLength ) {
+  iTextPos = 0;
+  iIndex++;
+  if ( iIndex != aText.length ) {
+   iArrLength = aText[iIndex].length;
+   setTimeout("typewriter()", 500);
+  }
+ } else {
+  setTimeout("typewriter()", iSpeed);
+ }
+}
+
+
+typewriter();
+
+</script>
 
 @endsection
