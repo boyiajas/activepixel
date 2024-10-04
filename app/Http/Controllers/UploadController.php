@@ -160,6 +160,8 @@ class UploadController extends Controller
                     break;
                 case 'regular':
                     $image->fit(200, 300)->save($directory . $filename . '_200_300.' . $extension);
+                    $watermarkResizeImagePath = $directory . $filename . '.watermark_200_300.' . $extension;
+                    $this->applyWatermark($file_location, $directory, $filename, $extension, $watermarkResizeImagePath);
                     break;
             }
 
@@ -252,25 +254,25 @@ class UploadController extends Controller
 
         // Delete the resized images
         foreach ($sizes as $size) {
-            $sizedFilePath = $directory . '/' . $filename . $size . '.' . $extension; \Log::info("resize path : {$sizedFilePath}");
+            $sizedFilePath = $directory . '/' . $filename . $size . '.' . $extension; //\Log::info("resize path : {$sizedFilePath}");
             if (File::exists($sizedFilePath)) {
                 File::delete($sizedFilePath);
             }
         }
 
         // Delete the original image file
-        if (File::exists($originalFilePath)) { \Log::info("resize path : {$originalFilePath}");
+        if (File::exists($originalFilePath)) { //\Log::info("resize path : {$originalFilePath}");
             File::delete($originalFilePath);
         }
 
         // Check if the directory is empty and delete it if it is
         if (is_dir($directory) && count(glob($directory . '/*')) === 0) {
-            \Log::info("Deleting empty directory: {$directory}");
+            //\Log::info("Deleting empty directory: {$directory}");
             rmdir($directory);
         }
 
         // Delete the record from the database
-        //$file->delete();
+        $file->delete();
 
         return response()->json('File deleted successfully', 200);
     }
