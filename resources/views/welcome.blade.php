@@ -196,11 +196,21 @@
         <h2 class="mb-0">OUR VISION</h2>
     </div>
 </div>
-<div class="container"><div class="" style="height:120px;">
+<div class="container"><div class="" style="height: 120px;
+  border: solid 5px #5de1e5;
+  margin-bottom: 100px;
+  background: #0097b29e;
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;">
 <h2 class="white" style="text-align: center;
-  color: #8e9091;
+  color: #0097b2;
   font-size: 25px;
-  margin: 30px;line-height:50px;"><i><strong style="color:#0097b2;">ActivePixel</strong></i><span id="typedtext"> </span></h2>
+  margin: 30px;
+  line-height: 50px;
+  border: ;
+  background: linear-gradient(135deg, #fbfbfb 0%, #bafdff 52%, #fff 100%, #5ce1e6 100%);
+  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;height: 150px;"><i><strong style="color:#0097b2;">ActivePixel</strong></i><span id="typedtext"> </span></h2>
 </div>
 </div>
 

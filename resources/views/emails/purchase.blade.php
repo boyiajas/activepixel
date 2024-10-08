@@ -1603,7 +1603,9 @@
                                                     <p style="font-weight: 600;color: #333;font-size: 16px;font-family: 'Open Sans',sans-serif;line-height: 24px;margin-bottom: 24px">Download Your Photos:</p>
                                                     <ul style="list-style-type: none;padding-left: 0;font-family: 'Open Sans',sans-serif;font-size: 14px;color: #60666d;">
                                                         @foreach($downloadLinks as $link)
-                                                            <li style="margin-bottom: 10px;"><a href="{{ $link }}" style="text-decoration: none;color: #008CBA;" target="_blank">{{ basename($link) }}</a></li>
+                                                            <li style="margin-bottom: 10px;"><a href="{{ $link }}" style="text-decoration: none;color: #008CBA;" target="_blank">
+                                                                {{ strpos(basename($link), 'lead') !== false ? basename($link) : 'Event Details: ' . basename($link) }}
+                                                            </a></li>
                                                         @endforeach
                                                     </ul>
 
