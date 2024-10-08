@@ -15,7 +15,9 @@
             <ul class="list-group mt-3">
                 @foreach($downloadLinks as $link)
                     <li class="list-group-item">
-                        <a href="{{ $link }}" download>Download Photo</a>
+                        <a href="{{ $link }}" download>
+                            {{ strpos(basename($link), 'lead') !== false ? 'Download Photo - No Event Details' : 'Download Photo - With Event Details' }}
+                        </a>
                     </li>
                 @endforeach
             </ul>
