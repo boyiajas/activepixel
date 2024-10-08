@@ -1604,7 +1604,7 @@
                                                     <ul style="list-style-type: none;padding-left: 0;font-family: 'Open Sans',sans-serif;font-size: 14px;color: #60666d;">
                                                         @foreach($downloadLinks as $link)
                                                             <li style="margin-bottom: 10px;"><a href="{{ $link }}" style="text-decoration: none;color: #008CBA;" target="_blank">
-                                                                {{ strpos(basename($link), 'lead') !== false ? basename($link) : 'Event Details: ' . basename($link) }}
+                                                                {{ strpos(basename($link), 'lead') !== false ? 'No Event Details - '.basename($link) : 'With Event Details - ' . basename($link) }}
                                                             </a></li>
                                                         @endforeach
                                                     </ul>
