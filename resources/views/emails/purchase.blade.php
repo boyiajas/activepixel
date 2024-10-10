@@ -1598,12 +1598,12 @@
                                                     <p style="font-weight: 600;color: #60666d;font-size: 15px;font-family: &quot;Open Sans&quot;,sans-serif !important;line-height: 24px;margin-bottom: 24px">
                                                         <strong>Total Cost:</strong> R{!! $total_cost !!}
                                                     </p>
-                                                    <p style="color: #60666d;font-size: 15px;font-family: 'Open Sans',sans-serif;line-height: 24px;margin-bottom: 24px">We appreciate your business. Below you can find the download links for the photos you purchased.</p>
+                                                    <p style="color: #60666d;font-size: 15px;font-family: 'Open Sans',sans-serif;line-height: 24px;margin-bottom: 24px">Please find below the links to your images:</p>
 
                                                     <p style="font-weight: 600;color: #333;font-size: 16px;font-family: 'Open Sans',sans-serif;line-height: 24px;margin-bottom: 24px">Download Your Photos:</p>
                                                     <ul style="list-style-type: none;padding-left: 0;font-family: 'Open Sans',sans-serif;font-size: 14px;color: #60666d;">
                                                         @foreach($downloadLinks as $link)
-                                                            <li style="margin-bottom: 10px;"><a href="{{ $link }}" style="text-decoration: none;color: #008CBA;" target="_blank">
+                                                            <li style="margin-bottom: 10px;"><a href="{{ $link }}" download="{{ basename($link) }}" style="text-decoration: none;color: #008CBA;" target="_blank">
                                                                 {{ strpos(basename($link), 'lead') !== false ? 'No Event Details - '.basename($link) : 'With Event Details - ' . basename($link) }}
                                                             </a></li>
                                                         @endforeach
@@ -1615,7 +1615,9 @@
                                                     <a href="{{ $unsubscribeLink }}" target="_blank">Unsubscribe</a>
 
                                                     <p style="font-size: 12px;line-height: 18px;margin-top: 10px;">
-                                                        Enjoy your day! INSTAPIX shall take all reasonable measures to protect the personal information of users and for the purpose of this disclaimer. "personal information" shall be defined as detailed in the Promotion of Access to Information Act, Act 2 of 2000 ("PAIA") and the Protection of Personal Information Act, Act 4 of 2013 ("POPI"). INSTAPIX, may submit some Personal Information on your behalf by utilizing a third party contracted agent for the processing of a financial transaction through your selected payment method. We do not collect, hold, store or share any of your financial information. Full details on our Privacy Policy is available on our website <a href="www.instapix.co.za">www.instapix.co.za</a>
+                                                    Active Pixel shall take all reasonable measures to protect the personal information of users and for the purpose of this disclaimer. "personal information" shall be defined as detailed in the Promotion of Access to Information Act, Act 2 of 2000 ("PAIA") and the Protection of Personal Information Act, Act 4 of 2013 ("POPI"). 
+Active Pixel, may submit some Personal Information on your behalf by utilizing a third party contracted agent for the processing of a financial transaction through your selected payment method. 
+We do not collect, hold, store or share any of your financial information. Full details on our Privacy Policy is available on <a href="www.activepixel.co.za" target="_blank">www.activepixel.co.za</a>
                                                     </p>
                                                    
                                                 </td>

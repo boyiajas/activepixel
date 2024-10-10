@@ -509,7 +509,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath</p>
+            <p>Copyright © 2024 | All Rights Reserved | Powered by LeoSath.jpeg</p>
         </div>
     </footer>
 
