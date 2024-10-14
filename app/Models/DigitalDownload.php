@@ -35,7 +35,7 @@ class DigitalDownload extends Model
                 $leadImage = $photo->leadImage();
                 if ($leadImage) {
                     // Generate a download link using the download route, passing both photo_id and the file name
-                    $links[] = route('downloadFile', ['photo_id' => $photo->id, 'file' => basename($leadImage->file_path)]);
+                    $links[] = route('downloadFile', ['photo_id' => $photo->id, 'filePath' => $leadImage->file_path]);
                 }
             } elseif ($item->photo_type === 'regular_image') {
                 // Get the regular image download link (assuming there could be multiple regular images)
@@ -43,7 +43,7 @@ class DigitalDownload extends Model
                 if ($regularImages->isNotEmpty()) {
                     foreach ($regularImages as $regularImage) {
                         // Generate a download link using the download route, passing both photo_id and the file name
-                        $links[] = route('downloadFile', ['photo_id' => $photo->id, 'file' => basename($regularImage->file_path)]);
+                        $links[] = route('downloadFile', ['photo_id' => $photo->id, 'filePath' => $regularImage->file_path]);
                     }
                 }
             }
