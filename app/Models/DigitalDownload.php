@@ -28,7 +28,7 @@ class DigitalDownload extends Model
         return url('/download/' . uniqid($photoId . '_', true));
     } */
 
-    public static function generateDownloadLink($cartItems)
+    /* public static function generateDownloadLink($cartItems)
     {
         $links = [];
 
@@ -51,6 +51,37 @@ class DigitalDownload extends Model
         }
 
         return $links;
+    } */
+
+    public static function generateDownloadLink($cartItems)
+    {
+        $links = [];
+
+        foreach ($cartItems as $item) {
+            $photo = $item->photo;
+
+            // Get the lead image and regular images for each photo
+            $leadImage = $photo->leadImage(); // Lead image
+            $regularImages = $photo->regularImages(); // Regular images
+
+            // Add lead image download link (if available)
+            if ($leadImage) {
+                // Generate a download link using the download route, passing both photo_id and the file name
+                $links[] = route('downloadFile', ['photo_id' => $photo->id, 'file' => basename($leadImage->file_path)]);
+            }
+
+            // Add regular image download links (if available)
+            foreach ($regularImages as $regularImage) {
+                // Generate a download link using the download route, passing both photo_id and the file name
+                $links[] = route('downloadFile', ['photo_id' => $photo->id, 'file' => basename($regularImage->file_path)]);
+            }
+        }
+
+        return $links;
     }
+
+
+
+
 
 }
