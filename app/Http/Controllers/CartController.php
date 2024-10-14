@@ -49,38 +49,59 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         $photoId = $request->photo_id;
+        $photoType = $request->photo_type ?? 'lead_image'; // Default to 'lead_image' if not provided
         $quantity = $request->quantity ?? 1;
 
         try {
             if (Auth::check()) {
-                // User is logged in
-                $cartItem = Cart::firstOrCreate([
-                    'user_id' => Auth::id(),
-                    'photo_id' => $photoId,
-                ]);
+                // Check if the item with the same photo_id and photo_type already exists in the cart
+                $cartItem = Cart::where('user_id', Auth::id())
+                                ->where('photo_id', $photoId)
+                                ->where('photo_type', $photoType)
+                                ->first();
             } else {
                 // User is a guest
                 $guestToken = session('guest_token', Cart::generateGuestToken());
                 session(['guest_token' => $guestToken]);
 
-                $cartItem = Cart::firstOrCreate([
-                    'guest_token' => $guestToken,
-                    'photo_id' => $photoId,
-                ]);
+                // Check if the item with the same photo_id and photo_type already exists in the cart for the guest
+                $cartItem = Cart::where('guest_token', $guestToken)
+                                ->where('photo_id', $photoId)
+                                ->where('photo_type', $photoType)
+                                ->first();
             }
 
-            $cartItem->quantity += $quantity;
-            $cartItem->save();
+            if ($cartItem) {
+                // If the item already exists, we don't increment the quantity
+                Toastr::info('This item is already in your cart.','Info');
+            } else {
+                // Create a new cart item
+                if (Auth::check()) {
+                    $cartItem = Cart::create([
+                        'user_id' => Auth::id(),
+                        'photo_id' => $photoId,
+                        'photo_type' => $photoType,
+                        'quantity' => $quantity
+                    ]);
+                } else {
+                    $cartItem = Cart::create([
+                        'guest_token' => $guestToken,
+                        'photo_id' => $photoId,
+                        'photo_type' => $photoType,
+                        'quantity' => $quantity
+                    ]);
+                }
 
-            Toastr::success('Item added to cart.','Success');
+                Toastr::success('Item added to cart.', 'Success');
+            }
+
             return redirect()->back();
-
         } catch (\Throwable $th) {
-
-            Toastr::error('Item added to cart fail :)','Error');
+            Toastr::error('Failed to add item to cart.', 'Error');
             return redirect()->back();
         }
     }
+
 
     public function removeFromCart(Request $request, Cart $cart)
     {

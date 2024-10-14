@@ -201,6 +201,35 @@ class CheckoutController extends Controller
         foreach ($cartItems as $item) {
             $photo = $item->photo;
 
+            // Check the photo_type in the cart item
+            if ($item->photo_type === 'lead_image') {
+                // Get the lead image link
+                $leadImage = $photo->leadImage();
+                if ($leadImage) {
+                    $links[] = $leadImage->file_path;
+                }
+            } elseif ($item->photo_type === 'regular_image') {
+                // Get the regular image link
+                $regularImages = $photo->regularImages();
+                if ($regularImages->isNotEmpty()) {
+                    foreach ($regularImages as $regularImage) {
+                        $links[] = $regularImage->file_path;
+                    }
+                }
+            }
+        }
+
+        return $links;
+    }
+
+
+   /*  private function getDownloadLinks($cartItems)
+    {
+        $links = [];
+        
+        foreach ($cartItems as $item) {
+            $photo = $item->photo;
+
             // Get the lead image and regular images for each photo
             $leadImage = $photo->leadImage(); // Lead image
             $regularImages = $photo->regularImages(); // Regular images
@@ -217,5 +246,5 @@ class CheckoutController extends Controller
         }
 
         return $links;
-    }
+    } */
 }

@@ -113,14 +113,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <button class="carousel-control-prev" type="button" data-bs-target="#thumbnailCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#thumbnailCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button> -->
             </div>
 
             <!-- Recommended Photos Section -->
@@ -156,12 +148,30 @@
                 <!-- <p><strong>Slug:</strong> {{ $photo->event->slug }}</p> -->
                 <p><strong>Category:</strong> {{ $photo->category?->name ?? 'None' }}</p>
                 <p><strong>Description: </strong>{{ $photo->event->description }}</p>
-                <p><strong id="image-details">Image:  Without Event Details</strong></p>
+
+                <!-- Select Option for Image Details -->
+                <p><strong id="image-details">Image: Without Event Details</strong></p>
+               <!--  <div class="form-group">
+                    <label for="imageDetailsSelect">Select Image Details:</label>
+                    <select id="imageDetailsSelect" class="form-control" onchange="updateImageDetailsSelect()">
+                        <option value="without">Without Event Details</option>
+                        <option value="with">With Event Details</option>
+                    </select>
+                </div> -->
 
                 <!-- Add to Cart Button -->
                 <div class="add-to-cart mt-4">
                     <form action="{{ route('cart.add', ['photo_id' => $photo->id]) }}" method="POST">
                         @csrf
+
+                        <div class="form-group">
+                            <label for="imageDetailsSelect">Select Image Details:</label>
+                            <select id="imageDetailsSelect" name="photo_type" class="form-control" onchange="updateImageDetailsSelect()">
+                                <option value="lead_image">Without Event Details</option>
+                                <option value="regular_image">With Event Details</option>
+                            </select>
+                        </div>
+
                         <input type="hidden" name="guest_token" value="{{ session('guest_token') }}">
                         <button type="submit" class="btn btn-primary btn-block">
                             <i class="fas fa-shopping-cart"></i> Add to Cart - R{{ number_format($photo->price, 2) }}
@@ -180,6 +190,7 @@
     function updateLeadImage(imageSrc, isLeadImage) {
         var leadImage = document.getElementById('lead-image');
         var imageDetails = document.getElementById('image-details');
+        var imageDetailsSelect = document.getElementById('imageDetailsSelect');
         
         // Remove the fade-in class
         leadImage.classList.remove('fade-in');
@@ -191,8 +202,10 @@
             // Update the image details text based on whether it's the lead image or a regular image
             if (isLeadImage) {
                 imageDetails.innerHTML = 'Image: Without Event Details';
+                imageDetailsSelect.value = 'lead_image'; // Set select option to "Without Event Details"
             } else {
                 imageDetails.innerHTML = 'Image: With Event Details';
+                imageDetailsSelect.value = 'regular_image'; // Set select option to "With Event Details"
             }
 
             // Re-apply the fade-in effect once the image is updated
