@@ -55,7 +55,9 @@ Route::get('/email-preview', [EmailPreviewController::class, 'purchaseEmailPrevi
 
 
 
-Route::get('/download-page/{photo_id}/{file}', [DownloadController::class, 'downloadFile'])->name('downloadFile');
+Route::get('/download-page/{photo_id}/{filePath}', [DownloadController::class, 'downloadFile'])
+->where('filePath', '.*') // This allows slashes in the filePath
+->name('downloadFile');
 
 
 

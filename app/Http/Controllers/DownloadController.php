@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DownloadController extends Controller
 {
-    public function downloadFile($photo_id, $file)
+    public function downloadFile($photo_id, $filePath)
     {
         // Retrieve the photo based on the provided photo_id
         $photo = Photo::find($photo_id); 
@@ -21,10 +21,10 @@ class DownloadController extends Controller
         }
 
         // Construct the file path based on the photo_id and file name
-        $filePath = public_path("/uploads/photos/{$photo_id}/{$file}");
+        $fileFullPath = public_path($filePath);
 
         // Check if the file exists in the file system
-        if (!file_exists($filePath)) {
+        if (!file_exists($fileFullPath)) {
             return abort(404, 'File not found');
         }
 
@@ -33,7 +33,7 @@ class DownloadController extends Controller
             ob_end_clean();
         }
         // Return the file as a download response
-        return response()->download($filePath);
+        return response()->download($fileFullPath);
     }
 }
 
