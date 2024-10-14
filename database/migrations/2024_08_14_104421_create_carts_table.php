@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('guest_token')->nullable();
             $table->foreignId('photo_id')->constrained()->onDelete('cascade');
             $table->integer('quantity')->nullable()->default(0);
+            $table->string('photo_type')->nullable(); // Add photo_type column
             $table->timestamps();
         });
     }

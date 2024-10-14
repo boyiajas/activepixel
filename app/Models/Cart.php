@@ -10,7 +10,7 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'guest_token', 'photo_id', 'quantity'];
+    protected $fillable = ['user_id', 'guest_token', 'photo_id', 'quantity', 'photo_type'];
 
     // Generate a guest token
     public static function generateGuestToken()

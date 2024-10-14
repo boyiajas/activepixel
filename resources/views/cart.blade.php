@@ -23,12 +23,27 @@
                             @foreach($cartItems as $item)
                             <tr>
                                 <td>
+                                    <a href="/individual-photos/{{$item->photo_id}}">
                                     <img src="{{ $item->photo->leadImage()->file_path }}" alt="{{ $item->photo->slug }}" style="width: 100px; height: 100px;">
+                                    </a>
                                 </td>
                                 <td>
                                     <div>Name - <strong>{{ $item->photo->name}}</strong></div>
                                     <div>Race No - <strong>{{ $item->photo->race_number}}</strong></div>
                                     <div>Event - <strong>{{$item->photo->event->name}}</strong></div>
+                                    @php
+                                        switch($item->photo_type){
+                                            case 'lead_image':
+                                                $formatString = 'Without Event Details';
+                                                break;
+                                            case 'regular_image':
+                                                $formatString = 'With Event Details';
+                                                break;
+                                            default:
+                                            break;
+                                        }
+                                    @endphp
+                                    <div>Image Type - <strong>{{$formatString}}</strong></div>
                                 </td>
                                 <td>R{{ number_format($item->photo->price, 2) }}</td>
                                 <td>
