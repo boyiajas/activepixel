@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\EmailPreviewController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\DownloadController;
 
 
 
@@ -51,6 +52,11 @@ Route::get('/unsubscribe/{encoded}', [SubscriptionController::class, 'unsubscrib
 
 //build email
 Route::get('/email-preview', [EmailPreviewController::class, 'purchaseEmailPreview']);
+
+
+
+Route::get('/download-page/{photo_id}/{file}', [DownloadController::class, 'downloadFile'])->name('downloadFile');
+
 
 
 Route::get('/reload-captcha', [CaptchaController::class, 'reloadCaptcha'])->name('reload-captcha');
