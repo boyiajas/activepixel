@@ -54,7 +54,7 @@ class PaymentController extends Controller
                 DigitalDownload::create([
                     'order_id' => $order->id,
                     'photo_id' => $item->photo_id,
-                    'download_link' => $link,
+                    'download_link' => json_encode($link),
                     'expiry_date' => now()->addDays(7), // Set the expiry date (e.g., 7 days)
                 ]);
             }
