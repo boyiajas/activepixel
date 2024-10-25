@@ -1602,9 +1602,9 @@
 
                                                     <p style="font-weight: 600;color: #333;font-size: 16px;font-family: 'Open Sans',sans-serif;line-height: 24px;margin-bottom: 24px">Download Your Photos:</p>
                                                     <ul style="list-style-type: none;padding-left: 0;font-family: 'Open Sans',sans-serif;font-size: 14px;color: #60666d;">
-                                                        @foreach($downloadLinks as $link)
-                                                            <li style="margin-bottom: 10px;"><a href="{{ $link }}" download="" rel="noopener noreferrer" style="text-decoration: none;color: #008CBA;">
-                                                                {{ strpos(basename($link), 'lead') !== false ? 'No Event Details - '.basename($link) : 'With Event Details - ' . basename($link) }}
+                                                        @foreach($downloadLinks as $item)
+                                                            <li style="margin-bottom: 10px;"><a href="{{ $item['link'] }}" download="" rel="noopener noreferrer" style="text-decoration: none;color: #008CBA;">
+                                                                {{ strpos(basename($item['link']), 'lead') !== false ? 'No Event Details - '.$item['race_number'].' - '.$item['event'] : 'With Event Details - ' .$item['race_number'].' - '.$item['event'] }}
                                                             </a></li>
                                                         @endforeach
                                                     </ul>

@@ -13,10 +13,13 @@
         @if(!empty($downloadLinks))
             <h4 class="mt-4">You can also download your photos directly below:</h4>
             <ul class="list-group mt-3">
-                @foreach($downloadLinks as $link)
+                @foreach($downloadLinks as $item)
                     <li class="list-group-item">
-                        <a href="{{ $link }}" download>
-                            {{ strpos(basename($link), 'lead') !== false ? 'Download Photo - No Event Details' : 'Download Photo - With Event Details' }}
+                        <a href="{{ $item['link'] }}" download>
+                            {{ strpos(basename($item['link']), 'lead') !== false ? 
+                            'Download Photo - No Event Details'.' - '.$item['race_number'].' - '.$item['event']: 
+                            'Download Photo - With Event Details'.' - '.$item['race_number'].' - '.$item['event']
+                            }}
                         </a>
                     </li>
                 @endforeach
